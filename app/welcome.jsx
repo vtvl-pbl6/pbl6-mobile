@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
-import Button from '../components/Button'
+import BaseButton from '../components/BaseButton'
 import ScreenWapper from '../components/ScreenWapper'
 import { theme } from '../constants/theme'
 import { hp, wp } from '../helpers/common'
@@ -24,7 +24,7 @@ const Welcome = () => {
 
                 {/* footer */}
                 <View style={styles.footer}>
-                    <Button
+                    <BaseButton
                         title='Getting Started'
                         buttonStyle={{marginHorizontal: wp(3)}}
                         onPress={() => {}}

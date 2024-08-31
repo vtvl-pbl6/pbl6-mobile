@@ -4,7 +4,7 @@ import { theme } from '../constants/theme'
 import { hp } from '../helpers/common'
 import Loading from './Loading'
 
-const Button = ({
+const BaseButton = ({
     buttonStyle,
     textStyle,
     title = '',
@@ -35,7 +35,7 @@ const Button = ({
     )
 }
 
-export default Button
+export default BaseButton
 
 const styles = StyleSheet.create({
     button: {

@@ -9,6 +9,8 @@ const index = () => {
         <ScreenWapper>
             <Text>Index</Text>
             <Button title="welcome" onPress={() => router.push('welcome')}/>
+            <Button title="home" onPress={() => router.push('tabs/home')}/>
+            <Button title="profile" onPress={() => router.push('tabs/profile')}/>
         </ScreenWapper>
     )
 }
