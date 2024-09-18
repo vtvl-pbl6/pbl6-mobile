@@ -3,7 +3,7 @@ import axios from 'axios'
 import {
     getTokensFromStorage,
     saveTokensToStorage
-} from '../helpers/authStorage'
+} from '../utils/storageUtils'
 
 const apiClient = axios.create({
     baseURL: API_URL,

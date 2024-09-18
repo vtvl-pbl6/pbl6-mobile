@@ -1,47 +1,52 @@
 import React from 'react'
-import { Button, StyleSheet, Text, View } from 'react-native'
-import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import { Button, Text, View } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
 import colors from '../../constants/color'
-import useThemeColors from '../../hooks/useThemeColors'
+import { setLanguage } from '../../store/slices/languageSlice'
 import { toggleDarkMode } from '../../store/slices/themeSlice'
 
 const HomeScreen = () => {
     const dispatch = useDispatch()
-    const currentColors = useThemeColors()
+    const { t, i18n } = useTranslation()
+
+    const isDarkMode = useSelector(state => state.theme.isDarkMode)
+    const language = useSelector(state => state.language.language)
+    const currentColors = isDarkMode ? colors.darkMode : colors.lightMode
+
+    const handleLanguageChange = lng => {
+        dispatch(setLanguage(lng))
+        i18n.changeLanguage(lng)
+    }
+
+    const handleToggleDarkMode = () => {
+        dispatch(toggleDarkMode())
+    }
 
     return (
         <View
-            style={[
-                styles.container,
-                { backgroundColor: currentColors.background }
-            ]}
+            style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: currentColors.background
+            }}
         >
-            <Text style={[styles.text, { color: currentColors.text }]}>
-                Welcome to Home Screen!
-            </Text>
+            <Text style={{ color: currentColors.text }}>{t('welcome')}</Text>
+            <Button
+                title={t('changeLanguage')}
+                onPress={() =>
+                    handleLanguageChange(language === 'vi' ? 'en' : 'vi')
+                }
+            />
             <Button
                 title={
-                    currentColors === colors.darkMode
-                        ? 'Switch to Light Mode'
-                        : 'Switch to Dark Mode'
+                    isDarkMode ? t('switchToLightMode') : t('switchToDarkMode')
                 }
-                onPress={() => dispatch(toggleDarkMode())}
+                onPress={handleToggleDarkMode}
             />
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20
-    },
-    text: {
-        fontSize: 24,
-        marginBottom: 20
-    }
-})
 
 export default HomeScreen

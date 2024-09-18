@@ -1,10 +1,12 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button, StyleSheet, Text, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { login } from '../../store/slices/authSlice'
 
 const LoginScreen = () => {
     const dispatch = useDispatch()
+    const { t } = useTranslation()
 
     const handleLogin = () => {
         dispatch(login())
@@ -12,8 +14,8 @@ const LoginScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Text>Login Screen</Text>
-            <Button title="Login" onPress={handleLogin} />
+            <Text>{t('textLogin')}</Text>
+            <Button title={t('login')} onPress={handleLogin} />
         </View>
     )
 }
