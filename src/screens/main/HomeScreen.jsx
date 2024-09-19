@@ -2,7 +2,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Text, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import colors from '../../constants/color'
+import theme from '../../constants/theme'
 import { setLanguage } from '../../store/slices/languageSlice'
 import { toggleDarkMode } from '../../store/slices/themeSlice'
 
@@ -12,7 +12,9 @@ const HomeScreen = () => {
 
     const isDarkMode = useSelector(state => state.theme.isDarkMode)
     const language = useSelector(state => state.language.language)
-    const currentColors = isDarkMode ? colors.darkMode : colors.lightMode
+    const currentColors = isDarkMode
+        ? theme.colors.darkMode
+        : theme.colors.lightMode
 
     const handleLanguageChange = lng => {
         dispatch(setLanguage(lng))

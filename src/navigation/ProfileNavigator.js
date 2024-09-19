@@ -7,7 +7,7 @@ import ProfileScreen from '../screens/profile/ProfileScreen'
 const Stack = createNativeStackNavigator()
 
 const ProfileNavigator = () => (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="ProfileMain" component={ProfileScreen} />
         <Stack.Screen name="Privacy" component={PrivacyScreen} />
         <Stack.Screen

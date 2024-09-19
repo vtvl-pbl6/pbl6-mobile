@@ -6,7 +6,6 @@ import {
 import React, { useEffect } from 'react'
 import { StatusBar } from 'react-native'
 import { Provider, useDispatch, useSelector } from 'react-redux'
-import colors from './src/constants/color'
 import './src/i18n'
 import AppNavigator from './src/navigation/AppNavigator'
 import { initializeLanguage } from './src/store/slices/languageSlice'
@@ -20,9 +19,6 @@ const App = () => {
     const language = useSelector(state => state.language.language)
 
     const theme = isDarkMode ? DarkTheme : DefaultTheme
-    const backgroundColor = isDarkMode
-        ? colors.darkMode.background
-        : colors.lightMode.background
 
     useEffect(() => {
         dispatch(initializeTheme())
@@ -31,7 +27,7 @@ const App = () => {
 
     return (
         <>
-            <StatusBar backgroundColor={backgroundColor} />
+            <StatusBar />
             <NavigationContainer theme={theme}>
                 <AppNavigator />
             </NavigationContainer>
