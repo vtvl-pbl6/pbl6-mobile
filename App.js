@@ -5,7 +5,10 @@ import {
 } from '@react-navigation/native'
 import React, { useEffect } from 'react'
 import { StatusBar } from 'react-native'
+import { ToastProvider } from 'react-native-toast-notifications'
 import { Provider, useDispatch, useSelector } from 'react-redux'
+import Toast from './src/components/toast/Toast'
+import ToastManager from './src/components/toast/ToastManager'
 import './src/i18n'
 import AppNavigator from './src/navigation/AppNavigator'
 import { initializeLanguage } from './src/store/slices/languageSlice'
@@ -38,7 +41,10 @@ const App = () => {
 const RootApp = () => {
     return (
         <Provider store={store}>
-            <App />
+            <ToastProvider renderToast={toast => <Toast {...toast} />}>
+                <App />
+                <ToastManager />
+            </ToastProvider>
         </Provider>
     )
 }

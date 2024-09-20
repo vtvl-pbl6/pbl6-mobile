@@ -1,7 +1,8 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Text, View } from 'react-native'
+import { Button, Text } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
+import ScreenWapper from '../../components/ScreenWapper'
 import theme from '../../constants/theme'
 import { setLanguage } from '../../store/slices/languageSlice'
 import { toggleDarkMode } from '../../store/slices/themeSlice'
@@ -26,14 +27,7 @@ const HomeScreen = () => {
     }
 
     return (
-        <View
-            style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: currentColors.background
-            }}
-        >
+        <ScreenWapper styles={{ backgroundColor: currentColors.background }}>
             <Text style={{ color: currentColors.text }}>{t('welcome')}</Text>
             <Button
                 title={t('changeLanguage')}
@@ -47,7 +41,7 @@ const HomeScreen = () => {
                 }
                 onPress={handleToggleDarkMode}
             />
-        </View>
+        </ScreenWapper>
     )
 }
 
