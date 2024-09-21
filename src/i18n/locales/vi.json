@@ -1,0 +1,9 @@
+{
+    "welcome": "Chào mừng bạn đến với ứng dụng!",
+    "changeLanguage": "Thay đổi ngôn ngữ",
+    "textLogin": "Đăng nhập",
+    "modal": {
+        "confirm": "Xác nhận",
+        "cancel": "Huỷ"
+    }
+}

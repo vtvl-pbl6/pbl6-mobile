@@ -1,10 +1,17 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
+import Loading from '../../components/Loading'
 
 const ComposeScreen = () => {
     return (
         <View>
-            <Text>ComposeScreen</Text>
+            <Loading
+                containerStyle={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100%'
+                }}
+            />
         </View>
     )
 }
