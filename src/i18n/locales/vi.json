@@ -49,5 +49,8 @@
         "passwordMinLength": "Mật khẩu phải có ít nhất 6 ký tự",
         "confirmPasswordRequired": "Xác nhận mật khẩu là bắt buộc",
         "passwordMismatch": "Mật khẩu không khớp"
+    },
+    "error": {
+        "default": "Có lỗi xảy ra!"
     }
 }

@@ -37,16 +37,16 @@ export const clearLanguage = () => removeFromStorage('lang')
 export const getLangFromStorage = () => getFromStorage('lang', 'vi')
 
 // Using AsyncStorage for token
-export const saveTokensToStorage = ({ accessToken, refreshToken }) => {
-    saveToStorage('accessToken', accessToken)
-    saveToStorage('refreshToken', refreshToken)
+export const saveTokensToStorage = async ({ accessToken, refreshToken }) => {
+    await saveToStorage('accessToken', accessToken)
+    await saveToStorage('refreshToken', refreshToken)
 }
-export const clearTokensFromStorage = () => {
-    removeFromStorage('accessToken')
-    removeFromStorage('refreshToken')
+export const clearTokensFromStorage = async () => {
+    await removeFromStorage('accessToken')
+    await removeFromStorage('refreshToken')
 }
-export const getTokensFromStorage = () => {
-    const accessToken = getFromStorage('accessToken', null)
-    const refreshToken = getFromStorage('refreshToken', null)
+export const getTokensFromStorage = async () => {
+    const accessToken = await getFromStorage('accessToken', null)
+    const refreshToken = await getFromStorage('refreshToken', null)
     return { accessToken, refreshToken }
 }

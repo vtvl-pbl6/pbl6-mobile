@@ -17,9 +17,11 @@ const apiClient = axios.create({
 // Attach token to each request
 apiClient.interceptors.request.use(
     async config => {
-        const { accessToken } = await getTokensFromStorage()
-        if (accessToken) {
-            config.headers.Authorization = `Bearer ${accessToken}`
+        if (config.url !== '/auth/login' && config.url !== '/auth/register') {
+            const { accessToken } = await getTokensFromStorage()
+            if (accessToken) {
+                config.headers.Authorization = `Bearer ${accessToken}`
+            }
         }
         return config
     },

@@ -11,6 +11,7 @@ import Toast from './src/components/toast/Toast'
 import ToastManager from './src/components/toast/ToastManager'
 import './src/i18n'
 import AppNavigator from './src/navigation/AppNavigator'
+import { checkAuthentication } from './src/store/slices/authSlice'
 import { initializeLanguage } from './src/store/slices/languageSlice'
 import { initializeTheme } from './src/store/slices/themeSlice'
 import store from './src/store/store'
@@ -26,6 +27,7 @@ const App = () => {
     useEffect(() => {
         dispatch(initializeTheme())
         dispatch(initializeLanguage())
+        dispatch(checkAuthentication())
     }, [dispatch])
 
     return (

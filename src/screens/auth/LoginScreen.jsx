@@ -6,24 +6,30 @@ import { useDispatch, useSelector } from 'react-redux'
 import BackButton from '../../components/BackButton'
 import BaseButton from '../../components/base/BaseButton'
 import BaseInput from '../../components/base/BaseInput'
+import Loading from '../../components/Loading'
 import ScreenWapper from '../../components/ScreenWapper'
 import theme from '../../constants/theme'
+import authService from '../../services/authServices'
 import { login } from '../../store/slices/authSlice'
+import { setLoading } from '../../store/slices/loadingSlice'
 import { showToast } from '../../store/slices/toastSlice'
 import { hp, wp } from '../../utils/dimensionUtils'
+import useHandleError from '../../utils/handlers/errorHandler'
+import { saveTokensToStorage } from '../../utils/storageUtils'
 
 const LoginScreen = ({ navigation }) => {
     const dispatch = useDispatch()
     const { t } = useTranslation()
 
+    const loading = useSelector(state => state.loading)
     const isDarkMode = useSelector(state => state.theme.isDarkMode)
     const currentColors = isDarkMode
         ? theme.colors.darkMode
         : theme.colors.lightMode
+    const handleError = useHandleError(navigation)
 
     const emailRef = useRef('')
     const passwordRef = useRef('')
-    const [loading, setLoading] = useState(false)
     const [errors, setErrors] = useState({})
 
     const validateLoginForm = () => {
@@ -37,17 +43,37 @@ const LoginScreen = ({ navigation }) => {
         return errors
     }
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         const validationErrors = validateLoginForm()
         setErrors(validationErrors)
 
         if (Object.keys(validationErrors).length === 0) {
-            setLoading(true)
-            dispatch(login())
-            dispatch(
-                showToast({ message: t('login.success'), type: 'success' })
-            )
-            setLoading(false)
+            dispatch(setLoading(true))
+            try {
+                const response = await authService.login({
+                    email: emailRef.current,
+                    password: passwordRef.current
+                })
+                const { access_token, refresh_token } = response.data
+                await saveTokensToStorage({
+                    accessToken: access_token,
+                    refreshToken: refresh_token
+                })
+                dispatch(login())
+
+                dispatch(
+                    showToast({ message: t('login.success'), type: 'success' })
+                )
+
+                // const tokens = await getTokensFromStorage()
+                // console.log("TOKENS: ", tokens)
+
+                // Thực hiện chuyển hướng hoặc xử lý logic khác ở đây
+            } catch (error) {
+                handleError(error)
+            } finally {
+                dispatch(setLoading(false))
+            }
         } else {
             dispatch(
                 showToast({ message: t('login.fixErrors'), type: 'error' })
@@ -131,12 +157,16 @@ const LoginScreen = ({ navigation }) => {
                         {t('login.forgotPassword')}
                     </Text>
 
-                    {/* button */}
-                    <BaseButton
-                        title={t('login.loginButton')}
-                        loading={loading}
-                        onPress={onSubmit}
-                    />
+                    {/* Show button or loading based on state */}
+                    {loading ? (
+                        <Loading />
+                    ) : (
+                        <BaseButton
+                            title={t('login.loginButton')}
+                            loading={loading}
+                            onPress={onSubmit}
+                        />
+                    )}
                 </View>
 
                 {/* footer */}
