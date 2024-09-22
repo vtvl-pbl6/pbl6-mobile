@@ -1,9 +1,40 @@
 {
-    "welcome": "Welcome to the app!",
     "changeLanguage": "Change Language",
-    "textLogin": "Login",
     "modal": {
         "confirm": "Confirm",
         "cancel": "Cancel"
+    },
+    "welcome": {
+        "title": "LinkUp!",
+        "punchline": "We clean up the information – just like your mom cleans your room!",
+        "buttonTitle": "Getting Started",
+        "loginTitle": "Already have an account!",
+        "login": "Login"
+    },
+    "register": {
+        "titleTop": "Let's",
+        "titleBottom": "Get Started",
+        "formTitle": "Please fill the details to create an account",
+        "usernamePlaceholder": "Enter your username",
+        "emailPlaceholder": "Enter your email",
+        "passwordPlaceholder": "Enter password",
+        "confirmPasswordPlaceholder": "Enter confirm password",
+        "signUp": "Sign up",
+        "loginTitle": "Already have an account!",
+        "login": "Login",
+        "success": "Success",
+        "registrationComplete": "Registration completed successfully!",
+        "error": "Error",
+        "fixErrors": "Please fix the errors before submitting"
+    },
+    "validation": {
+        "usernameRequired": "Username is required",
+        "usernameMinLength": "Username must be more than 5 characters",
+        "emailRequired": "Email is required",
+        "invalidEmail": "Invalid email address",
+        "passwordRequired": "Password is required",
+        "passwordMinLength": "Password must be at least 6 characters",
+        "confirmPasswordRequired": "Confirm password is required",
+        "passwordMismatch": "Passwords do not match"
     }
 }

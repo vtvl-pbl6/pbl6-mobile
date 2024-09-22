@@ -1,9 +1,41 @@
 {
-    "welcome": "Chào mừng bạn đến với ứng dụng!",
     "changeLanguage": "Thay đổi ngôn ngữ",
     "textLogin": "Đăng nhập",
     "modal": {
         "confirm": "Xác nhận",
         "cancel": "Huỷ"
+    },
+    "welcome": {
+        "title": "Kết nối!",
+        "punchline": "Chúng tôi dọn dẹp thông tin – giống như mẹ dọn phòng của bạn!",
+        "buttonTitle": "Bắt đầu ngay",
+        "loginTitle": "Đã có tài khoản!",
+        "login": "Đăng nhập"
+    },
+    "register": {
+        "titleTop": "Nào!",
+        "titleBottom": "Cùng Bắt Đầu",
+        "formTitle": "Vui lòng điền thông tin để tạo tài khoản",
+        "usernamePlaceholder": "Nhập tên đăng nhập",
+        "emailPlaceholder": "Nhập email",
+        "passwordPlaceholder": "Nhập mật khẩu",
+        "confirmPasswordPlaceholder": "Nhập lại mật khẩu",
+        "signUp": "Đăng ký",
+        "loginTitle": "Đã có tài khoản!",
+        "login": "Đăng nhập",
+        "success": "Thành công",
+        "registrationComplete": "Đăng ký thành công!",
+        "error": "Lỗi",
+        "fixErrors": "Vui lòng sửa các lỗi trước khi gửi"
+    },
+    "validation": {
+        "usernameRequired": "Tên đăng nhập là bắt buộc",
+        "usernameMinLength": "Tên đăng nhập phải lớn hơn 5 ký tự",
+        "emailRequired": "Email là bắt buộc",
+        "invalidEmail": "Email không hợp lệ",
+        "passwordRequired": "Mật khẩu là bắt buộc",
+        "passwordMinLength": "Mật khẩu phải có ít nhất 6 ký tự",
+        "confirmPasswordRequired": "Xác nhận mật khẩu là bắt buộc",
+        "passwordMismatch": "Mật khẩu không khớp"
     }
 }
