@@ -14,7 +14,7 @@
     "register": {
         "titleTop": "Let's",
         "titleBottom": "Get Started",
-        "formTitle": "Please fill the details to create an account",
+        "prompt": "Please fill the details to create an account",
         "usernamePlaceholder": "Enter your username",
         "emailPlaceholder": "Enter your email",
         "passwordPlaceholder": "Enter password",
@@ -26,6 +26,18 @@
         "registrationComplete": "Registration completed successfully!",
         "error": "Error",
         "fixErrors": "Please fix the errors before submitting"
+    },
+    "login": {
+        "welcomeBack": "Hey, Welcome Back",
+        "loginPrompt": "Please login to continue",
+        "emailPlaceholder": "Enter your email",
+        "passwordPlaceholder": "Enter your password",
+        "forgotPassword": "Forgot Password?",
+        "loginButton": "Login",
+        "noAccount": "Don't have an account?",
+        "signUp": "Sign up",
+        "success": "Login successful!",
+        "fixErrors": "Please fix the errors."
     },
     "validation": {
         "usernameRequired": "Username is required",

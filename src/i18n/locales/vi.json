@@ -15,7 +15,7 @@
     "register": {
         "titleTop": "Nào!",
         "titleBottom": "Cùng Bắt Đầu",
-        "formTitle": "Vui lòng điền thông tin để tạo tài khoản",
+        "prompt": "Vui lòng điền thông tin để tạo tài khoản",
         "usernamePlaceholder": "Nhập tên đăng nhập",
         "emailPlaceholder": "Nhập email",
         "passwordPlaceholder": "Nhập mật khẩu",
@@ -27,6 +27,18 @@
         "registrationComplete": "Đăng ký thành công!",
         "error": "Lỗi",
         "fixErrors": "Vui lòng sửa các lỗi trước khi gửi"
+    },
+    "login": {
+        "welcomeBack": "Chào, Mừng Trở Lại!",
+        "loginPrompt": "Vui lòng đăng nhập để tiếp tục",
+        "emailPlaceholder": "Nhập email của bạn",
+        "passwordPlaceholder": "Nhập mật khẩu",
+        "forgotPassword": "Quên mật khẩu?",
+        "loginButton": "Đăng nhập",
+        "noAccount": "Bạn chưa có tài khoản?",
+        "signUp": "Đăng ký",
+        "success": "Đăng nhập thành công!",
+        "fixErrors": "Vui lòng sửa các lỗi."
     },
     "validation": {
         "usernameRequired": "Tên đăng nhập là bắt buộc",
