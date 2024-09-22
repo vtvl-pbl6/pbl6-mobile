@@ -5,6 +5,19 @@
         "confirm": "Xác nhận",
         "cancel": "Huỷ"
     },
+    "validation": {
+        "usernameRequired": "Tên đăng nhập là bắt buộc",
+        "usernameMinLength": "Tên đăng nhập phải lớn hơn 5 ký tự",
+        "emailRequired": "Email là bắt buộc",
+        "invalidEmail": "Email không hợp lệ",
+        "passwordRequired": "Mật khẩu là bắt buộc",
+        "passwordMinLength": "Mật khẩu phải có ít nhất 6 ký tự",
+        "confirmPasswordRequired": "Xác nhận mật khẩu là bắt buộc",
+        "passwordMismatch": "Mật khẩu không khớp"
+    },
+    "error": {
+        "default": "Có lỗi xảy ra!"
+    },
     "welcome": {
         "title": "Kết nối!",
         "punchline": "Chúng tôi dọn dẹp thông tin – giống như mẹ dọn phòng của bạn!",
@@ -40,17 +53,19 @@
         "success": "Đăng nhập thành công!",
         "fixErrors": "Vui lòng sửa các lỗi."
     },
-    "validation": {
-        "usernameRequired": "Tên đăng nhập là bắt buộc",
-        "usernameMinLength": "Tên đăng nhập phải lớn hơn 5 ký tự",
-        "emailRequired": "Email là bắt buộc",
-        "invalidEmail": "Email không hợp lệ",
-        "passwordRequired": "Mật khẩu là bắt buộc",
-        "passwordMinLength": "Mật khẩu phải có ít nhất 6 ký tự",
-        "confirmPasswordRequired": "Xác nhận mật khẩu là bắt buộc",
-        "passwordMismatch": "Mật khẩu không khớp"
-    },
-    "error": {
-        "default": "Có lỗi xảy ra!"
+    "compose": {
+        "cancel": "Huỷ",
+        "newThread": "Thread mới",
+        "addThread": "Thêm vào thread...",
+        "scope": {
+            "everybody": "Bất kì ai cũng có thể xem",
+            "friend": "Chỉ có bạn bè mới có thể xem",
+            "private": "Chỉ bạn có thể xem"
+        },
+        "submit": "Đăng",
+        "errorLoadImg": "Tải ảnh không thành công",
+        "noAccessToLibrary": "Bạn cần cấp quyền truy cập thư viện ảnh",
+        "cameraPermission": "Bạn cần cấp quyền sử dụng camera",
+        "noContent": "Vui lòng nhập nội dung hoặc chọn ảnh"
     }
 }

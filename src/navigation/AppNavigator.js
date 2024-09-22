@@ -1,7 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import ComposeScreen from '../screens/main/ComposeScreen'
 import AuthNavigator from './AuthNavigator'
 import TabNavigator from './TabNavigator'
 
@@ -25,11 +24,6 @@ const AppNavigator = () => {
                     options={{ headerShown: false }}
                 />
             )}
-            <RootStack.Screen
-                name="ComposeModal"
-                component={ComposeScreen}
-                options={{ presentation: 'modal', headerShown: false }}
-            />
         </RootStack.Navigator>
     )
 }

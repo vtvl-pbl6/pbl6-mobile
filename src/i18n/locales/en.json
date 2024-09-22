@@ -4,6 +4,19 @@
         "confirm": "Confirm",
         "cancel": "Cancel"
     },
+    "validation": {
+        "usernameRequired": "Username is required",
+        "usernameMinLength": "Username must be more than 5 characters",
+        "emailRequired": "Email is required",
+        "invalidEmail": "Invalid email address",
+        "passwordRequired": "Password is required",
+        "passwordMinLength": "Password must be at least 6 characters",
+        "confirmPasswordRequired": "Confirm password is required",
+        "passwordMismatch": "Passwords do not match"
+    },
+    "error": {
+        "default": "Something went wrong!"
+    },
     "welcome": {
         "title": "LinkUp!",
         "punchline": "We clean up the information – just like your mom cleans your room!",
@@ -39,17 +52,19 @@
         "success": "Login successful!",
         "fixErrors": "Please fix the errors."
     },
-    "validation": {
-        "usernameRequired": "Username is required",
-        "usernameMinLength": "Username must be more than 5 characters",
-        "emailRequired": "Email is required",
-        "invalidEmail": "Invalid email address",
-        "passwordRequired": "Password is required",
-        "passwordMinLength": "Password must be at least 6 characters",
-        "confirmPasswordRequired": "Confirm password is required",
-        "passwordMismatch": "Passwords do not match"
-    },
-    "error": {
-        "default": "Something went wrong!"
+    "compose": {
+        "cancel": "Cancel",
+        "newThread": "New thread",
+        "addThread": "Start a thread...",
+        "scope": {
+            "everybody": "Anyone can reply & quote",
+            "friend": "Only friend can reply & quote",
+            "private": "Only me can see"
+        },
+        "submit": "Post",
+        "errorLoadImg": "Image upload failed",
+        "noAccessToLibrary": "You need to enable permissions to access the image library",
+        "cameraPermission": "You need permission to use the camera",
+        "noContent": "Please enter text or select image"
     }
 }
