@@ -49,7 +49,7 @@ const TabBar = ({ state, navigation }) => {
                     >
                         <Ionicons
                             name={tab.icon}
-                            size={32}
+                            size={wp(8)}
                             style={{
                                 color:
                                     selectedIndex === index
@@ -70,7 +70,7 @@ const TabBar = ({ state, navigation }) => {
                                     ? tab.activeIcon
                                     : tab.icon
                             }
-                            size={24}
+                            size={wp(6)}
                             color={
                                 selectedIndex === index
                                     ? currentColors.text

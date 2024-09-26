@@ -3,7 +3,7 @@ import { Button, StyleSheet, Text, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { logout } from '../../store/slices/authSlice'
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }) => {
     const dispatch = useDispatch()
 
     const handleLogout = () => {
@@ -13,6 +13,10 @@ const ProfileScreen = () => {
         <View style={styles.container}>
             <Text>Profile Screen</Text>
             <Button title="Logout" onPress={handleLogout} />
+            <Button
+                title="EditProfile"
+                onPress={() => navigation.navigate('EditProfile')}
+            />
         </View>
     )
 }
