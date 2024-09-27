@@ -69,6 +69,8 @@
     },
     "profile": {
         "followers": "followers",
-        "editProfile": "Edit profile"
+        "editProfile": "Edit profile",
+        "thread": "Threads",
+        "reposts": "Reposts"
     }
 }

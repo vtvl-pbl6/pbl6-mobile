@@ -70,6 +70,8 @@
     },
     "profile": {
         "followers": "người theo dõi",
-        "editProfile": "Chỉnh sửa trang cá nhân"
+        "editProfile": "Chỉnh sửa trang cá nhân",
+        "thread": "Thread",
+        "reposts": "Bài đăng lại"
     }
 }
