@@ -7,7 +7,7 @@ import ScreenWapper from '../../components/ScreenWapper'
 import theme from '../../constants/theme'
 import { showToast } from '../../store/slices/toastSlice'
 
-const ActivityScreen = () => {
+const ActivityScreen = ({ navigation }) => {
     const dispatch = useDispatch()
     const { t, i18n } = useTranslation()
     const [isConfirmVisible, setConfirmVisible] = useState(false)
@@ -36,6 +36,14 @@ const ActivityScreen = () => {
                 <Button
                     title="Show Confirm"
                     onPress={() => setConfirmVisible(true)}
+                />
+                <Button
+                    title="Edit profile"
+                    onPress={() =>
+                        navigation.navigate('Profile', {
+                            screen: 'EditProfile'
+                        })
+                    }
                 />
             </View>
             <BaseModal

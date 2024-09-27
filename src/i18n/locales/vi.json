@@ -67,5 +67,9 @@
         "noAccessToLibrary": "Bạn cần cấp quyền truy cập thư viện ảnh",
         "cameraPermission": "Bạn cần cấp quyền sử dụng camera",
         "noContent": "Vui lòng nhập nội dung hoặc chọn ảnh"
+    },
+    "profile": {
+        "followers": "người theo dõi",
+        "editProfile": "Chỉnh sửa trang cá nhân"
     }
 }

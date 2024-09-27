@@ -66,5 +66,9 @@
         "noAccessToLibrary": "You need to enable permissions to access the image library",
         "cameraPermission": "You need permission to use the camera",
         "noContent": "Please enter text or select image"
+    },
+    "profile": {
+        "followers": "followers",
+        "editProfile": "Edit profile"
     }
 }

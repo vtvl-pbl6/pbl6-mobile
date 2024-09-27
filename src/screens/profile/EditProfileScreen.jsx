@@ -4,10 +4,11 @@ import { Button, StyleSheet, Text } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import ScreenWapper from '../../components/ScreenWapper'
 import theme from '../../constants/theme'
+import { logout } from '../../store/slices/authSlice'
 import { setLanguage } from '../../store/slices/languageSlice'
 import { toggleDarkMode } from '../../store/slices/themeSlice'
 
-const EditProfileScreen = () => {
+const EditProfileScreen = ({ navigation }) => {
     const dispatch = useDispatch()
     const { t, i18n } = useTranslation()
 
@@ -26,6 +27,10 @@ const EditProfileScreen = () => {
         dispatch(toggleDarkMode())
     }
 
+    const handleLogout = () => {
+        dispatch(logout())
+    }
+
     return (
         <ScreenWapper styles={{ backgroundColor: currentColors.background }}>
             <Text style={{ color: currentColors.text }}>{t('welcome')}</Text>
@@ -41,6 +46,8 @@ const EditProfileScreen = () => {
                 }
                 onPress={handleToggleDarkMode}
             />
+
+            <Button title="Logout" onPress={handleLogout} />
         </ScreenWapper>
     )
 }
