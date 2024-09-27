@@ -1,7 +1,6 @@
 import { Ionicons } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
 import React, { useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import {
     Image,
     KeyboardAvoidingView,
@@ -16,21 +15,20 @@ import {
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
-import ImagePreview from '../../components/thread/ImagePreview'
+import { ImagePreview } from '../../components'
 import theme from '../../constants/theme'
-import { showToast } from '../../store/slices/toastSlice'
-import { hp, wp } from '../../utils/dimensionUtils'
+import { useLanguage, useTheme } from '../../contexts'
+import { showToast } from '../../store/slices'
+import { hp, wp } from '../../utils'
 
 const ComposeScreen = () => {
     const dispatch = useDispatch()
-    const { t } = useTranslation()
+    const { currentColors } = useTheme()
+    const { t } = useLanguage()
+
     const insets = useSafeAreaInsets()
 
     const loading = useSelector(state => state.loading)
-    const isDarkMode = useSelector(state => state.theme.isDarkMode)
-    const currentColors = isDarkMode
-        ? theme.colors.darkMode
-        : theme.colors.lightMode
 
     const [selectedScope, setSelectedScope] = useState('everybody')
     const [isDropdownVisible, setDropdownVisible] = useState(false)
@@ -426,8 +424,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: wp(4),
         borderRadius: wp(5),
         alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: wp(2)
+        justifyContent: 'center'
     },
     createButtonText: {
         fontSize: wp(4),

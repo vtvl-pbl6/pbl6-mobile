@@ -9,6 +9,7 @@ import {
     View
 } from 'react-native'
 import { useDispatch } from 'react-redux'
+import theme from '../../constants/theme'
 import { showToast } from '../../store/slices/toastSlice'
 
 const ImagePreview = ({ images, onRemove }) => {
@@ -112,7 +113,8 @@ const styles = StyleSheet.create({
     },
     image: {
         width: '100%',
-        height: 200
+        height: 200,
+        borderRadius: theme.radius.xxs
     },
     deleteButton: {
         position: 'absolute',

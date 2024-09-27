@@ -1,6 +1,5 @@
 import { Ionicons } from '@expo/vector-icons'
 import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import {
     FlatList,
     Pressable,
@@ -10,21 +9,17 @@ import {
     View
 } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import UserInfo from '../../components/profile/ProfileInfo'
-import Thread from '../../components/thread/Thread'
+import { ProfileInfo, Thread } from '../../components'
 import theme from '../../constants/theme'
-import { hp, wp } from '../../utils/dimensionUtils'
-import { getSafeAreaTop } from '../../utils/safeAreaUtils'
+import { useLanguage, useTheme } from '../../contexts'
+import { getSafeAreaTop, hp, wp } from '../../utils'
 
 const ProfileScreen = () => {
     const dispatch = useDispatch()
-    const { t } = useTranslation()
+    const { currentColors } = useTheme()
+    const { t } = useLanguage()
 
     const loading = useSelector(state => state.loading)
-    const isDarkMode = useSelector(state => state.theme.isDarkMode)
-    const currentColors = isDarkMode
-        ? theme.colors.darkMode
-        : theme.colors.lightMode
 
     const [selectedTab, setSelectedTab] = useState('thread')
 
@@ -213,7 +208,7 @@ const ProfileScreen = () => {
                                         />
                                     </Pressable>
                                 </View>
-                                <UserInfo />
+                                <ProfileInfo />
                                 <Pressable
                                     style={[
                                         styles.editButton,

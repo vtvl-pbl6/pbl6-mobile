@@ -2,11 +2,9 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, StyleSheet, Text } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import ScreenWapper from '../../components/ScreenWapper'
+import { ScreenWapper } from '../../components'
 import theme from '../../constants/theme'
-import { logout } from '../../store/slices/authSlice'
-import { setLanguage } from '../../store/slices/languageSlice'
-import { toggleDarkMode } from '../../store/slices/themeSlice'
+import { logout, setLanguage, toggleDarkMode } from '../../store/slices'
 
 const EditProfileScreen = ({ navigation }) => {
     const dispatch = useDispatch()

@@ -1,19 +1,14 @@
 import React from 'react'
-import { useTranslation } from 'react-i18next'
 import { FlatList, StyleSheet } from 'react-native'
-import { useDispatch, useSelector } from 'react-redux'
-import ScreenWapper from '../../components/ScreenWapper'
+import { useDispatch } from 'react-redux'
+import { ScreenWapper } from '../../components'
 import Thread from '../../components/thread/Thread'
-import theme from '../../constants/theme'
+import { useLanguage, useTheme } from '../../contexts'
 
 const HomeScreen = () => {
     const dispatch = useDispatch()
-    const { t } = useTranslation()
-
-    const isDarkMode = useSelector(state => state.theme.isDarkMode)
-    const currentColors = isDarkMode
-        ? theme.colors.darkMode
-        : theme.colors.lightMode
+    const { currentColors } = useTheme()
+    const { t } = useLanguage()
 
     const threadData = [
         {

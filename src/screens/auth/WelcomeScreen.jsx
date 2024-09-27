@@ -1,21 +1,16 @@
 import LottieView from 'lottie-react-native'
 import { React } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { useDispatch, useSelector } from 'react-redux'
-import BaseButton from '../../components/base/BaseButton'
-import ScreenWapper from '../../components/ScreenWapper'
+import { useDispatch } from 'react-redux'
+import { BaseButton, ScreenWapper } from '../../components'
 import theme from '../../constants/theme'
-import { hp, wp } from '../../utils/dimensionUtils'
+import { useLanguage, useTheme } from '../../contexts'
+import { hp, wp } from '../../utils'
 
 const WelcomeScreen = ({ navigation }) => {
     const dispatch = useDispatch()
-    const { t } = useTranslation()
-
-    const isDarkMode = useSelector(state => state.theme.isDarkMode)
-    const currentColors = isDarkMode
-        ? theme.colors.darkMode
-        : theme.colors.lightMode
+    const { currentColors } = useTheme()
+    const { t } = useLanguage()
 
     return (
         <ScreenWapper styles={{ backgroundColor: currentColors.background }}>

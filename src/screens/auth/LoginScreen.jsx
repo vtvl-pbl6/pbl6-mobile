@@ -1,31 +1,28 @@
 import { Ionicons } from '@expo/vector-icons'
 import React, { useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import BackButton from '../../components/BackButton'
-import BaseButton from '../../components/base/BaseButton'
-import BaseInput from '../../components/base/BaseInput'
-import Loading from '../../components/Loading'
-import ScreenWapper from '../../components/ScreenWapper'
+import {
+    BackButton,
+    BaseButton,
+    BaseInput,
+    Loading,
+    ScreenWapper
+} from '../../components'
 import theme from '../../constants/theme'
+import { useLanguage, useTheme } from '../../contexts'
 import authService from '../../services/authServices'
-import { login } from '../../store/slices/authSlice'
-import { setLoading } from '../../store/slices/loadingSlice'
-import { showToast } from '../../store/slices/toastSlice'
-import { hp, wp } from '../../utils/dimensionUtils'
+import { login, setLoading, showToast } from '../../store/slices'
+import { hp, saveTokensToStorage, wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
-import { saveTokensToStorage } from '../../utils/storageUtils'
 
 const LoginScreen = ({ navigation }) => {
     const dispatch = useDispatch()
-    const { t } = useTranslation()
+
+    const { currentColors } = useTheme()
+    const { t } = useLanguage()
 
     const loading = useSelector(state => state.loading)
-    const isDarkMode = useSelector(state => state.theme.isDarkMode)
-    const currentColors = isDarkMode
-        ? theme.colors.darkMode
-        : theme.colors.lightMode
     const handleError = useHandleError(navigation)
 
     const emailRef = useRef('')
@@ -68,7 +65,7 @@ const LoginScreen = ({ navigation }) => {
                 // const tokens = await getTokensFromStorage()
                 // console.log("TOKENS: ", tokens)
 
-                // Thực hiện chuyển hướng hoặc xử lý logic khác ở đây
+                // Thực hiện chuyển hướng
             } catch (error) {
                 handleError(error)
             } finally {

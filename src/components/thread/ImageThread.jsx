@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, Image, StyleSheet, View } from 'react-native'
 import { useDispatch } from 'react-redux'
+import theme from '../../constants/theme'
 import { showToast } from '../../store/slices/toastSlice'
 
 const ImageThread = ({ images }) => {
@@ -87,7 +88,8 @@ const styles = StyleSheet.create({
         marginRight: 10
     },
     image: {
-        width: '100%'
+        width: '100%',
+        borderRadius: theme.radius.xxs
     },
     emptyContainer: {
         height: 0
