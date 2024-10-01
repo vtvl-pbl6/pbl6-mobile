@@ -5,20 +5,24 @@ import { useDispatch } from 'react-redux'
 import theme from '../../constants/theme'
 import { showToast } from '../../store/slices/toastSlice'
 
-const ImageThread = ({ images }) => {
+const ImageThread = ({ files }) => {
     const dispatch = useDispatch()
     const { t } = useTranslation()
     const [imageDimensions, setImageDimensions] = useState([])
 
+    const imageUrls = files ? files.map(file => file.url) : []
+
     const fetchImageDimensions = async () => {
         try {
             const dimensions = await Promise.all(
-                images.map(async uri => {
+                imageUrls.map(async uri => {
                     return new Promise((resolve, reject) => {
                         Image.getSize(
                             uri,
                             (width, height) => resolve({ width, height }),
-                            error => reject(error)
+                            error => {
+                                resolve({ width: 200, height: 200 })
+                            }
                         )
                     })
                 })
@@ -32,16 +36,16 @@ const ImageThread = ({ images }) => {
     }
 
     useEffect(() => {
-        if (images.length > 0) {
+        if (imageUrls.length > 0) {
             fetchImageDimensions()
         }
-    }, [images])
+    }, [imageUrls])
 
     return (
         <View style={styles.container}>
-            {images.length > 0 ? (
+            {imageUrls.length > 0 ? (
                 <FlatList
-                    data={images}
+                    data={imageUrls}
                     renderItem={({ item, index }) => {
                         const { width, height } = imageDimensions[index] || {
                             width: 0,
@@ -49,6 +53,7 @@ const ImageThread = ({ images }) => {
                         }
 
                         if (width === 0 || height === 0) return null
+
                         const aspectRatio = width / height
                         const calculatedWidth = 200 * aspectRatio
 
@@ -82,6 +87,15 @@ const ImageThread = ({ images }) => {
 const styles = StyleSheet.create({
     container: {
         marginTop: 10
+    },
+    skeletonContainer: {
+        flexDirection: 'row'
+    },
+    skeletonImage: {
+        width: 200,
+        height: 200,
+        borderRadius: theme.radius.xxs,
+        marginRight: 10
     },
     imageContainer: {
         position: 'relative',

@@ -1,3 +1,4 @@
+export { daysUntilToday } from './dateUtils'
 export { hp, wp } from './dimensionUtils'
 export { getSafeAreaBottom, getSafeAreaTop } from './safeAreaUtils'
 export {

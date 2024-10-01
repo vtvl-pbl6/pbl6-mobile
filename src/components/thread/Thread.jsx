@@ -5,20 +5,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { useSelector } from 'react-redux'
 import theme from '../../constants/theme'
-import { hp, wp } from '../../utils/dimensionUtils'
+import { daysUntilToday, hp, wp } from '../../utils'
 import ImageThread from './ImageThread'
 
-const Thread = ({
-    username,
-    time,
-    text,
-    images,
-    likes,
-    comments,
-    shares,
-    send,
-    avatar
-}) => {
+const Thread = ({ thread }) => {
     const { t } = useTranslation()
     const insets = useSafeAreaInsets()
 
@@ -40,18 +30,26 @@ const Thread = ({
             {/* Header */}
             <View style={styles.header}>
                 <View style={styles.user}>
-                    <Image
-                        source={{ uri: avatar }}
-                        style={styles.image}
-                        resizeMode="cover"
-                    />
+                    {thread.author.avatar_file ? (
+                        <Image
+                            source={{ uri: thread.author.avatar_file.url }}
+                            style={styles.image}
+                            resizeMode="cover"
+                        />
+                    ) : (
+                        <Ionicons
+                            name="person-circle-outline"
+                            size={wp(10)}
+                            color={currentColors.lightGray}
+                        />
+                    )}
                     <Text
                         style={[styles.username, { color: currentColors.text }]}
                     >
-                        {username}
+                        {thread.author.display_name}
                     </Text>
                     <Text style={[styles.time, { color: currentColors.gray }]}>
-                        {time}
+                        {daysUntilToday(thread.created_at)}
                     </Text>
                 </View>
                 <Pressable style={styles.more}>
@@ -66,9 +64,11 @@ const Thread = ({
             {/* Content */}
             <View style={styles.content}>
                 <Text style={[styles.text, { color: currentColors.text }]}>
-                    {text}
+                    {thread.content}
                 </Text>
-                <ImageThread images={images} />
+                {Array.isArray(thread.files) && thread.files.length > 0 ? (
+                    <ImageThread files={thread.files} />
+                ) : null}
             </View>
 
             {/* Actions */}
@@ -85,7 +85,7 @@ const Thread = ({
                             { color: currentColors.gray }
                         ]}
                     >
-                        {likes}
+                        {thread.reaction_num}
                     </Text>
                 </Pressable>
                 <Pressable style={styles.actionButton}>
@@ -101,7 +101,7 @@ const Thread = ({
                             { color: currentColors.gray }
                         ]}
                     >
-                        {comments}
+                        {thread.comments ? thread.comments.length : 0}
                     </Text>
                 </Pressable>
                 <Pressable style={styles.actionButton}>
@@ -116,22 +116,7 @@ const Thread = ({
                             { color: currentColors.gray }
                         ]}
                     >
-                        {shares}
-                    </Text>
-                </Pressable>
-                <Pressable style={styles.actionButton}>
-                    <Ionicons
-                        name="paper-plane-outline"
-                        size={wp(5.2)}
-                        color={currentColors.gray}
-                    />
-                    <Text
-                        style={[
-                            styles.numberAction,
-                            { color: currentColors.gray }
-                        ]}
-                    >
-                        {send}
+                        {thread.shared_num}
                     </Text>
                 </Pressable>
             </View>

@@ -72,5 +72,9 @@
         "editProfile": "Edit profile",
         "thread": "Threads",
         "reposts": "Reposts"
+    },
+    "home": {
+        "noMoreThread": "No more threads available",
+        "fetchFailed": "Failed to fetch threads!"
     }
 }

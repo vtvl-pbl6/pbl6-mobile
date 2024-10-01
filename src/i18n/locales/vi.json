@@ -73,5 +73,9 @@
         "editProfile": "Chỉnh sửa trang cá nhân",
         "thread": "Thread",
         "reposts": "Bài đăng lại"
+    },
+    "home": {
+        "noMoreThread": "Không còn thread nào cũ hơn",
+        "fetchFailed": "Tải thất bại!"
     }
 }
