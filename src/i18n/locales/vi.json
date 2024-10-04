@@ -18,6 +18,10 @@
     "error": {
         "default": "Có lỗi xảy ra!"
     },
+    "headerShown": {
+        "back": "Quay lại",
+        "setting": "Cài đặt"
+    },
     "welcome": {
         "title": "Kết nối!",
         "punchline": "Chúng tôi dọn dẹp thông tin – giống như mẹ dọn phòng của bạn!",
@@ -74,6 +78,9 @@
         "editProfile": "Chỉnh sửa trang cá nhân",
         "thread": "Thread",
         "reposts": "Bài đăng lại"
+    },
+    "setting": {
+        "logout": "Đăng xuất"
     },
     "home": {
         "noMoreThread": "Không còn thread nào cũ hơn",

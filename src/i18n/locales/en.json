@@ -17,6 +17,10 @@
     "error": {
         "default": "Something went wrong!"
     },
+    "headerShown": {
+        "back": "Back",
+        "setting": "Setting"
+    },
     "welcome": {
         "title": "LinkUp!",
         "punchline": "We clean up the information – just like your mom cleans your room!",
@@ -73,6 +77,9 @@
         "editProfile": "Edit profile",
         "thread": "Threads",
         "reposts": "Reposts"
+    },
+    "setting": {
+        "logout": "Log out"
     },
     "home": {
         "noMoreThread": "No more threads available",

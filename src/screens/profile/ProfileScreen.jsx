@@ -14,7 +14,7 @@ import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
 import { getSafeAreaTop, hp, wp } from '../../utils'
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }) => {
     const dispatch = useDispatch()
     const { currentColors } = useTheme()
     const { t } = useLanguage()
@@ -197,7 +197,14 @@ const ProfileScreen = () => {
                                             ]}
                                         />
                                     </Pressable>
-                                    <Pressable style={styles.navigatorButton}>
+                                    <Pressable
+                                        style={styles.navigatorButton}
+                                        onPress={() =>
+                                            navigation.navigate('Profile', {
+                                                screen: 'SettingScreen'
+                                            })
+                                        }
+                                    >
                                         <Ionicons
                                             name="menu-outline"
                                             size={wp(8)}
