@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 import { showToast } from '../../store/slices'
 
 const TOKEN_ERROR_CODES = ['ERR_API0101']
+const SKIP_ERROR_CODES = ['ERR_REP0101']
 
 const useHandleError = navigation => {
     const dispatch = useDispatch()
@@ -11,8 +12,10 @@ const useHandleError = navigation => {
     const handleError = error => {
         if (error && error.errors && error.errors.length > 0) {
             error.errors.forEach(err => {
-                const message = err.message || t('error.default')
-                dispatch(showToast({ message, type: 'error' }))
+                if (!SKIP_ERROR_CODES.includes(err.code)) {
+                    const message = err.message || t('error.default')
+                    dispatch(showToast({ message, type: 'error' }))
+                }
             })
         } else {
             dispatch(showToast({ message: t('error.default'), type: 'error' }))

@@ -1,11 +1,12 @@
+import { Ionicons } from '@expo/vector-icons'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
 import { useSelector } from 'react-redux'
 import theme from '../../constants/theme'
 import { hp, wp } from '../../utils/dimensionUtils'
 
-const ProfileInfo = () => {
+const ProfileInfo = ({ user }) => {
     const { t } = useTranslation()
 
     const isDarkMode = useSelector(state => state.theme.isDarkMode)
@@ -13,34 +14,49 @@ const ProfileInfo = () => {
         ? theme.colors.darkMode
         : theme.colors.lightMode
 
+    if (!user) {
+        return (
+            <View style={styles.loaderContainer}>
+                <ActivityIndicator size="large" color={currentColors.text} />
+            </View>
+        )
+    }
+
     return (
         <View style={styles.container}>
-            <View style={styles.user}>
+            <View style={styles.userContainer}>
                 <View style={styles.displayName}>
                     <Text style={[styles.name, { color: currentColors.text }]}>
-                        Mau Truong
+                        {user.first_name + ' ' + user.last_name}
                     </Text>
                     <Text
                         style={[styles.username, { color: currentColors.text }]}
                     >
-                        03.nmt
+                        {user.display_name}
                     </Text>
                 </View>
-                <Image
-                    source={{
-                        uri: 'https://instagram.fdad2-1.fna.fbcdn.net/v/t51.2885-19/370611718_190012080634808_4812977847151989586_n.jpg?stp=dst-jpg_s640x640&_nc_ht=instagram.fdad2-1.fna.fbcdn.net&_nc_cat=108&_nc_ohc=hTPr3rC81_0Q7kNvgF3fqSh&_nc_gid=d5ed816c4ddc4363ac787910fe5312ee&edm=AAZTMJEBAAAA&ccb=7-5&oh=00_AYCu3VyjRoiAeps33DgGx6lAyUgiNTU4151iTsSjlBoB8g&oe=66FC13F8&_nc_sid=49cb7f'
-                    }}
-                    style={styles.avatar}
-                    resizeMode="cover"
-                />
+                {user.avatar_file ? (
+                    <Image
+                        source={{ uri: user.avatar_file.url }}
+                        style={styles.avatar}
+                        resizeMode="cover"
+                    />
+                ) : (
+                    <Ionicons
+                        name="person-circle-outline"
+                        size={wp(20)}
+                        color={currentColors.lightGray}
+                    />
+                )}
             </View>
             <Text style={[styles.bio, { color: currentColors.text }]}>
-                Ai cũng xứng đáng đc chết chìm trong ánh mắt của nửa kia ❤️❤️❤️
+                {user.bio}
             </Text>
             <Text
                 style={[styles.followersNumber, { color: currentColors.gray }]}
             >
-                206 {t('profile.followers')}
+                {user.followers ? user.followers.length : 0}{' '}
+                {t('profile.followers')}
             </Text>
         </View>
     )
@@ -54,7 +70,7 @@ const styles = StyleSheet.create({
         paddingVertical: hp(1),
         gap: wp(1)
     },
-    user: {
+    userContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between'
     },

@@ -15,11 +15,15 @@
         "passwordMismatch": "Passwords do not match"
     },
     "error": {
-        "default": "Something went wrong!"
+        "default": "Something went wrong!",
+        "fetchFailed": "Failed to fetch threads!"
     },
     "headerShown": {
         "back": "Back",
         "setting": "Setting"
+    },
+    "status": {
+        "creating": "In progress..."
     },
     "welcome": {
         "title": "LinkUp!",
@@ -76,13 +80,15 @@
         "followers": "followers",
         "editProfile": "Edit profile",
         "thread": "Threads",
-        "reposts": "Reposts"
+        "reposts": "Reposts",
+        "noData": "You don't have any threads yet",
+        "noMoreThread": "No more threads available",
+        "noMoreReposts": "No more reposts available"
     },
     "setting": {
         "logout": "Log out"
     },
     "home": {
-        "noMoreThread": "No more threads available",
-        "fetchFailed": "Failed to fetch threads!"
+        "noMoreThread": "No more threads available"
     }
 }

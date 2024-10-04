@@ -6,6 +6,7 @@ import { ScreenWapper, Thread } from '../../components'
 import { useLanguage, useTheme } from '../../contexts'
 import threadService from '../../services/threadServices'
 import { showToast } from '../../store/slices/toastSlice'
+import { wp } from '../../utils'
 
 const HomeScreen = () => {
     const dispatch = useDispatch()
@@ -35,7 +36,7 @@ const HomeScreen = () => {
                 setHasMore(false)
                 dispatch(
                     showToast({
-                        message: t('home.fetchFailed'),
+                        message: t('error.fetchFailed'),
                         type: 'error'
                     })
                 )
@@ -114,7 +115,8 @@ export default HomeScreen
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        padding: wp(2)
     },
     noMoreText: {
         textAlign: 'center',

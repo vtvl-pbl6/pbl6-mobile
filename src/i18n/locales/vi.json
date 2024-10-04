@@ -16,11 +16,15 @@
         "passwordMismatch": "Mật khẩu không khớp"
     },
     "error": {
-        "default": "Có lỗi xảy ra!"
+        "default": "Có lỗi xảy ra!",
+        "fetchFailed": "Tải thất bại!"
     },
     "headerShown": {
         "back": "Quay lại",
         "setting": "Cài đặt"
+    },
+    "status": {
+        "creating": "Đang xử lí..."
     },
     "welcome": {
         "title": "Kết nối!",
@@ -77,13 +81,15 @@
         "followers": "người theo dõi",
         "editProfile": "Chỉnh sửa trang cá nhân",
         "thread": "Thread",
-        "reposts": "Bài đăng lại"
+        "reposts": "Bài đăng lại",
+        "noData": "Bạn chưa có thread nào",
+        "noMoreThread": "Không còn thread nào cũ hơn",
+        "noMoreReposts": "Không còn bài đăng lại nào cũ hơn"
     },
     "setting": {
         "logout": "Đăng xuất"
     },
     "home": {
-        "noMoreThread": "Không còn thread nào cũ hơn",
-        "fetchFailed": "Tải thất bại!"
+        "noMoreThread": "Không còn thread nào cũ hơn"
     }
 }
