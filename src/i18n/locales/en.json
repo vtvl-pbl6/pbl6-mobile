@@ -65,7 +65,8 @@
         "errorLoadImg": "Image upload failed",
         "noAccessToLibrary": "You need to enable permissions to access the image library",
         "cameraPermission": "You need permission to use the camera",
-        "noContent": "Please enter text or select image"
+        "noContent": "Please enter text or select image",
+        "success": "Thread has been submitted successfully!"
     },
     "profile": {
         "followers": "followers",

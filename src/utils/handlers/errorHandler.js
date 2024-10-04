@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { showToast } from '../../store/slices/toastSlice'
+import { showToast } from '../../store/slices'
 
 const TOKEN_ERROR_CODES = ['ERR_API0101']
 

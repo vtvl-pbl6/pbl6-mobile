@@ -23,6 +23,12 @@ apiClient.interceptors.request.use(
                 config.headers.Authorization = `Bearer ${accessToken}`
             }
         }
+
+        // Adjust headers if data is FormData
+        if (config.data instanceof FormData) {
+            config.headers['Content-Type'] = 'multipart/form-data'
+        }
+
         return config
     },
     error => {

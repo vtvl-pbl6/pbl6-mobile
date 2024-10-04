@@ -23,6 +23,10 @@ const Thread = ({ thread }) => {
         setLiked(!liked)
     }
 
+    if (!thread || !thread.author) {
+        return null
+    }
+
     return (
         <View
             style={[styles.container, { borderColor: currentColors.lightGray }]}

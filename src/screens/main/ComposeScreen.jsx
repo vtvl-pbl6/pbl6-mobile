@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons'
+import * as FileSystem from 'expo-file-system'
 import * as ImagePicker from 'expo-image-picker'
 import React, { useRef, useState } from 'react'
 import {
@@ -18,10 +19,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ImagePreview } from '../../components'
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
+import threadServices from '../../services/threadServices'
 import { showToast } from '../../store/slices'
 import { hp, wp } from '../../utils'
+import useHandleError from '../../utils/handlers/errorHandler'
 
-const ComposeScreen = () => {
+const ComposeScreen = ({ navigation }) => {
     const dispatch = useDispatch()
     const { currentColors } = useTheme()
     const { t } = useLanguage()
@@ -30,14 +33,15 @@ const ComposeScreen = () => {
 
     const loading = useSelector(state => state.loading)
 
-    const [selectedScope, setSelectedScope] = useState('everybody')
+    const [selectedScope, setSelectedScope] = useState('PUBLIC')
     const [isDropdownVisible, setDropdownVisible] = useState(false)
     const [selectedImages, setSelectedImages] = useState([])
+    const handleError = useHandleError(navigation)
 
     const scopeOptions = [
-        { label: t('compose.scope.everybody'), value: 'everybody' },
-        { label: t('compose.scope.friend'), value: 'friend' },
-        { label: t('compose.scope.private'), value: 'private' }
+        { label: t('compose.scope.everybody'), value: 'PUBLIC' },
+        { label: t('compose.scope.friend'), value: 'FRIEND_ONLY' },
+        { label: t('compose.scope.private'), value: 'PRIVATE' }
     ]
 
     const inputRef = useRef(null)
@@ -104,7 +108,7 @@ const ComposeScreen = () => {
         )
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         const contentText = inputRef.current.value
 
         if (!contentText && selectedImages.length === 0) {
@@ -114,16 +118,41 @@ const ComposeScreen = () => {
             return
         }
 
-        console.log('Submitting Thread:', {
-            text: contentText,
-            scope: selectedScope,
-            images: selectedImages
-        })
+        const formData = new FormData()
 
-        // Clear input and images after submission
-        setSelectedImages([])
-        if (inputRef.current) {
-            inputRef.current.clear()
+        formData.append('content', contentText)
+        formData.append('visibility', selectedScope)
+
+        for (const file of selectedImages) {
+            const fileInfo = await FileSystem.getInfoAsync(file)
+
+            if (fileInfo.exists) {
+                formData.append('files', {
+                    // uri: fileInfo.uri,
+                    name: fileInfo.uri.split('/').pop(),
+                    type: fileInfo.mimeType || 'image/jpeg',
+                    uri:
+                        Platform.OS === 'ios'
+                            ? fileInfo.uri.replace('file://', '')
+                            : fileInfo.uri
+                })
+            }
+        }
+
+        try {
+            await threadServices.createThread(formData)
+            dispatch(
+                showToast({ message: t('compose.success'), type: 'success' })
+            )
+
+            // Clear input and images after submission
+            setSelectedImages([])
+            if (inputRef.current) {
+                inputRef.current.clear()
+            }
+        } catch (error) {
+            handleError(error)
+            console.error('Error creating thread:', error)
         }
     }
 
