@@ -8,34 +8,20 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
+import ImageSize from 'react-native-image-size'
 import { useDispatch } from 'react-redux'
 import theme from '../../constants/theme'
-import { showToast } from '../../store/slices/toastSlice'
 
 const ImagePreview = ({ images, onRemove }) => {
     const dispatch = useDispatch()
     const { t } = useTranslation()
 
     const [imageDimensions, setImageDimensions] = useState([])
-    const [error, setError] = useState(false)
 
     const fetchImageDimensions = async () => {
-        setError(false)
         try {
             const dimensions = await Promise.all(
-                images.map(async uri => {
-                    return new Promise((resolve, reject) => {
-                        Image.getSize(
-                            uri,
-                            (width, height) => {
-                                resolve({ width, height })
-                            },
-                            error => {
-                                reject(error)
-                            }
-                        )
-                    })
-                })
+                images.map(uri => ImageSize.getSize(uri))
             )
             setImageDimensions(dimensions)
         } catch (error) {
@@ -57,25 +43,20 @@ const ImagePreview = ({ images, onRemove }) => {
                 <FlatList
                     data={images}
                     renderItem={({ item, index }) => {
-                        const { width, height } = imageDimensions[index] || {
-                            width: 0,
-                            height: 0
-                        }
-
-                        if (width === 0 || height === 0) return null
+                        const { width = 200, height = 200 } =
+                            imageDimensions[index] || {}
                         const aspectRatio = width / height
                         const calculatedWidth = 200 * aspectRatio
 
                         return (
-                            <View
-                                style={[
-                                    styles.imageContainer,
-                                    { width: calculatedWidth }
-                                ]}
-                            >
+                            <View style={styles.imageContainer}>
                                 <Image
                                     source={{ uri: item }}
-                                    style={[styles.image, { height: 200 }]}
+                                    style={{
+                                        width: calculatedWidth,
+                                        height: 200,
+                                        borderRadius: theme.radius.xxs
+                                    }}
                                     resizeMode="cover"
                                 />
                                 <TouchableOpacity
@@ -110,11 +91,6 @@ const styles = StyleSheet.create({
     imageContainer: {
         position: 'relative',
         marginRight: 10
-    },
-    image: {
-        width: '100%',
-        height: 200,
-        borderRadius: theme.radius.xxs
     },
     deleteButton: {
         position: 'absolute',

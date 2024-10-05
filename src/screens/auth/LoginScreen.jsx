@@ -52,20 +52,14 @@ const LoginScreen = ({ navigation }) => {
                     password: passwordRef.current
                 })
                 const { access_token, refresh_token } = response.data
-                await saveTokensToStorage({
+                saveTokensToStorage({
                     accessToken: access_token,
                     refreshToken: refresh_token
                 })
                 dispatch(login())
-
                 dispatch(
                     showToast({ message: t('login.success'), type: 'success' })
                 )
-
-                // const tokens = await getTokensFromStorage()
-                // console.log("TOKENS: ", tokens)
-
-                // Thực hiện chuyển hướng
             } catch (error) {
                 handleError(error)
             } finally {

@@ -1,7 +1,6 @@
 import { Ionicons } from '@expo/vector-icons'
 import React, { useEffect, useState } from 'react'
 import {
-    ActivityIndicator,
     FlatList,
     Pressable,
     StyleSheet,
@@ -9,8 +8,13 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
-import { useDispatch } from 'react-redux'
-import { ProfileInfo, Thread } from '../../components'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+    ProfileInfo,
+    ProfileInfoLoader,
+    Thread,
+    ThreadLoader
+} from '../../components'
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
 import repostService from '../../services/repostService'
@@ -25,20 +29,26 @@ const ProfileScreen = ({ navigation }) => {
     const { currentColors } = useTheme()
     const { t } = useLanguage()
     const handleError = useHandleError(navigation)
+    const loading = useSelector(state => state.loading)
+    const update = useSelector(state => state.update)
 
     const [selectedTab, setSelectedTab] = useState('thread')
     const [threads, setThreads] = useState([])
     const [reposts, setReposts] = useState([])
     const [user, setUser] = useState(null)
-    const [loading, setLoading] = useState(false)
     const [threadPage, setThreadPage] = useState(1)
     const [repostPage, setRepostPage] = useState(1)
     const [hasThreadMore, setThreadHasMore] = useState(true)
     const [hasRepostMore, setRepostHasMore] = useState(true)
+    const [refreshing, setRefreshing] = useState(false)
+    const [loadUserInfo, setLoadUserInfo] = useState(false)
+    const [loadThread, setLoadThread] = useState(false)
+    const [loadRepost, setLoadRepost] = useState(false)
+    const currentUser = useSelector(state => state.user.user)
 
     const getUserInfo = async () => {
-        if (loading || !hasThreadMore) return
-        setLoading(true)
+        if (loadUserInfo) return
+        setLoadUserInfo(true)
 
         try {
             const response = await userService.getUserInfo()
@@ -46,45 +56,34 @@ const ProfileScreen = ({ navigation }) => {
 
             if (is_success) {
                 setUser(data)
-                fetchData('thread')
             }
         } catch (error) {
             handleError(error)
         } finally {
-            setLoading(false)
+            setLoadUserInfo(false)
         }
     }
 
-    const fetchData = async type => {
-        if (loading || !user) return
-        setLoading(true)
+    const fetchThread = async () => {
+        if (!currentUser || loadThread) return
+        setLoadThread(true)
 
         try {
-            let response
-            if (type === 'thread') {
-                response = await threadService.getThreadsByAuthor(
-                    threadPage,
-                    user.id
-                )
-            } else if (type === 'reposts') {
-                response =
-                    await repostService.getRepostByCurrentUser(repostPage)
-            }
+            const response = await threadService.getThreadsByAuthor(
+                threadPage,
+                currentUser.id
+            )
 
             const { data, is_success, metadata } = response
 
             if (is_success) {
-                if (type === 'thread') {
-                    setThreads(prev => [...prev, ...data])
-                    setThreadHasMore(
-                        metadata.current_page < metadata.total_page
+                setThreads(prev => {
+                    const newThreads = data.filter(
+                        thread => !prev.some(t => t.id === thread.id)
                     )
-                } else if (type === 'reposts') {
-                    setReposts(prev => [...prev, ...data])
-                    setRepostHasMore(
-                        metadata.current_page < metadata.total_page
-                    )
-                }
+                    return [...prev, ...newThreads]
+                })
+                setThreadHasMore(metadata.current_page < metadata.total_page)
             } else {
                 dispatch(
                     showToast({
@@ -96,140 +95,141 @@ const ProfileScreen = ({ navigation }) => {
         } catch (error) {
             handleError(error)
         } finally {
-            setLoading(false)
+            setLoadThread(false)
         }
+    }
+
+    const fetchRepost = async () => {
+        if (loadRepost) return
+        setLoadRepost(true)
+
+        try {
+            const response =
+                await repostService.getRepostByCurrentUser(repostPage)
+
+            const { data, is_success, metadata } = response
+
+            if (is_success) {
+                setReposts(prev => {
+                    const newRepost = data.filter(
+                        thread => !prev.some(t => t.id === thread.id)
+                    )
+                    return [...prev, ...newRepost]
+                })
+                setRepostHasMore(metadata.current_page < metadata.total_page)
+            } else {
+                dispatch(
+                    showToast({
+                        message: t('error.fetchFailed'),
+                        type: 'error'
+                    })
+                )
+            }
+        } catch (error) {
+            handleError(error)
+        } finally {
+            setLoadRepost(false)
+        }
+    }
+
+    const reloadAPIs = async () => {
+        setRefreshing(true)
+        setThreads([])
+        setReposts([])
+        setThreadPage(1)
+        setRepostPage(1)
+        setThreadHasMore(true)
+        setRepostHasMore(true)
+
+        await getUserInfo()
+        await Promise.all([fetchThread(), fetchRepost()])
+        setRefreshing(false)
+    }
+
+    useEffect(() => {
+        if (update) {
+            reloadAPIs()
+        }
+    }, [update])
+
+    const handleRefresh = async () => {
+        setRefreshing(true)
+        if (selectedTab === 'thread') {
+            setThreads([])
+            setThreadPage(1)
+            setThreadHasMore(true)
+            await fetchThread()
+        } else if (selectedTab === 'reposts') {
+            setReposts([])
+            setRepostPage(1)
+            setRepostHasMore(true)
+            await fetchRepost()
+        }
+
+        await getUserInfo()
+
+        await Promise.all([fetchThread(), fetchRepost()])
+        setRefreshing(false)
     }
 
     useEffect(() => {
         getUserInfo()
+        fetchThread()
+        fetchRepost()
     }, [])
-
-    const loadMoreThreads = () => {
-        if (selectedTab === 'thread' && hasThreadMore && !loading) {
-            setThreadPage(prevPage => prevPage + 1)
-            fetchData('thread')
-        } else if (selectedTab === 'reposts' && hasRepostMore && !loading) {
-            setRepostPage(prevPage => prevPage + 1)
-            fetchData('reposts')
-        }
-    }
 
     const handleChangeTab = tab => {
         if (tab !== selectedTab) {
             setSelectedTab(tab)
-            if (tab === 'reposts') {
-                fetchData('reposts')
-            } else {
-                fetchData('thread')
-            }
         }
     }
 
-    const renderFooter = () => {
-        if (loading) {
-            return (
-                <ActivityIndicator
-                    size="small"
-                    color={currentColors.text}
-                    style={{ paddingVertical: 30 }}
-                />
-            )
-        }
-        if (!hasThreadMore && selectedTab === 'thread') {
-            return (
-                <Text
-                    style={[styles.noMoreText, { color: currentColors.text }]}
-                >
-                    {t('profile.noMoreThread')}
-                </Text>
-            )
-        }
-        if (!hasRepostMore && selectedTab === 'reposts') {
-            return (
-                <Text
-                    style={[styles.noMoreText, { color: currentColors.text }]}
-                >
-                    {t('profile.noMoreReposts')}
-                </Text>
-            )
-        }
-        return null
-    }
-
-    const renderThreadList = data => {
-        if (!data.length && !loading) {
-            return (
-                <Text
-                    style={{
-                        textAlign: 'center',
-                        color: currentColors.text,
-                        padding: wp(4)
-                    }}
-                >
-                    {t('profile.noData')}
-                </Text>
-            )
-        }
-
-        return (
-            <FlatList
-                data={data}
-                keyExtractor={item => item.id.toString()}
-                renderItem={({ item }) => <Thread thread={item} />}
-                onEndReached={loadMoreThreads}
-                onEndReachedThreshold={0.5}
-                showsVerticalScrollIndicator={false}
-                ListFooterComponent={renderFooter}
-            />
-        )
-    }
-
-    const renderContent = () => {
-        return selectedTab === 'thread'
-            ? renderThreadList(threads)
-            : renderThreadList(reposts)
-    }
-
-    const renderHeader = () => (
-        <View style={styles.top}>
-            <View style={styles.navigator}>
-                <Pressable style={styles.navigatorButton}>
-                    <Ionicons
-                        name="globe-outline"
-                        size={wp(6.2)}
-                        style={[styles.icon, { color: currentColors.text }]}
-                    />
-                </Pressable>
+    const renderHeader = () =>
+        loadUserInfo ? (
+            <ProfileInfoLoader />
+        ) : (
+            <View style={styles.top}>
+                <View style={styles.navigator}>
+                    <Pressable style={styles.navigatorButton}>
+                        <Ionicons
+                            name="globe-outline"
+                            size={wp(6.2)}
+                            style={[styles.icon, { color: currentColors.text }]}
+                        />
+                    </Pressable>
+                    <Pressable
+                        style={styles.navigatorButton}
+                        onPress={() =>
+                            navigation.navigate('Profile', {
+                                screen: 'SettingScreen'
+                            })
+                        }
+                    >
+                        <Ionicons
+                            name="menu-outline"
+                            size={wp(8)}
+                            style={[styles.icon, { color: currentColors.text }]}
+                        />
+                    </Pressable>
+                </View>
+                {user ? <ProfileInfo user={user} /> : null}
                 <Pressable
-                    style={styles.navigatorButton}
-                    onPress={() =>
-                        navigation.navigate('Profile', {
-                            screen: 'SettingScreen'
-                        })
-                    }
-                >
-                    <Ionicons
-                        name="menu-outline"
-                        size={wp(8)}
-                        style={[styles.icon, { color: currentColors.text }]}
-                    />
-                </Pressable>
-            </View>
-            <ProfileInfo user={user} />
-            <Pressable
-                style={[styles.editButton, { borderColor: currentColors.gray }]}
-            >
-                <Text
                     style={[
-                        styles.editButtonText,
-                        { color: currentColors.text }
+                        styles.editButton,
+                        { borderColor: currentColors.gray }
                     ]}
                 >
-                    {t('profile.editProfile')}
-                </Text>
-            </Pressable>
-        </View>
-    )
+                    <Text
+                        style={[
+                            styles.editButtonText,
+                            { color: currentColors.text }
+                        ]}
+                    >
+                        {t('profile.editProfile')}
+                    </Text>
+                </Pressable>
+            </View>
+        )
 
     const renderTab = () => (
         <View
@@ -290,6 +290,93 @@ const ProfileScreen = ({ navigation }) => {
         </View>
     )
 
+    const loadMoreThreads = tab => {
+        if (tab === 'thread' && hasThreadMore && !loadThread) {
+            setThreadPage(prevPage => prevPage + 1)
+            fetchThread()
+        } else if (tab === 'reposts' && hasRepostMore && !loadRepost) {
+            setRepostPage(prevPage => prevPage + 1)
+            fetchRepost()
+        }
+    }
+
+    const renderList = (data, tab) => {
+        if (tab === 'thread' && !data.length && loadThread == false) {
+            return (
+                <Text
+                    style={{
+                        textAlign: 'center',
+                        color: currentColors.text,
+                        padding: wp(4)
+                    }}
+                >
+                    {t('profile.noData')}
+                </Text>
+            )
+        }
+
+        if (tab === 'reposts' && !data.length && loadRepost == false) {
+            return (
+                <Text
+                    style={{
+                        textAlign: 'center',
+                        color: currentColors.text,
+                        padding: wp(4)
+                    }}
+                >
+                    {t('profile.noData')}
+                </Text>
+            )
+        }
+
+        return (
+            <FlatList
+                data={data}
+                // keyExtractor={item => `${tab}-${item.id.toString()}`}
+                keyExtractor={(item, index) => `${tab}-${item.id}-${index}`}
+                renderItem={({ item }) => <Thread thread={item} />}
+                showsVerticalScrollIndicator={false}
+                onEndReached={() => loadMoreThreads(selectedTab)}
+                onEndReachedThreshold={0.5}
+                ListFooterComponent={renderFooter}
+            />
+        )
+    }
+
+    const renderContent = () => {
+        return selectedTab === 'thread'
+            ? renderList(threads, 'threads')
+            : renderList(reposts, 'reposts')
+    }
+
+    const renderFooter = () => {
+        if (
+            (selectedTab === 'thread' && loadThread) ||
+            (selectedTab === 'reposts' && loadRepost)
+        ) {
+            return <ThreadLoader />
+        }
+        if (!hasThreadMore && selectedTab == 'thread') {
+            return (
+                <Text
+                    style={[styles.noMoreText, { color: currentColors.text }]}
+                >
+                    {t('profile.noMoreThread')}
+                </Text>
+            )
+        }
+        if (!hasRepostMore && selectedTab == 'reposts') {
+            return (
+                <Text
+                    style={[styles.noMoreText, { color: currentColors.text }]}
+                >
+                    {t('profile.noMoreReposts')}
+                </Text>
+            )
+        }
+        return null
+    }
+
     return (
         <FlatList
             style={{
@@ -311,6 +398,8 @@ const ProfileScreen = ({ navigation }) => {
                         return null
                 }
             }}
+            onRefresh={handleRefresh}
+            refreshing={refreshing}
         />
     )
 }

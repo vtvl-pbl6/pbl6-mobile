@@ -5,14 +5,16 @@ const theme = {
             text: '#000000',
             lightGray: '#B8B8B8',
             gray: '#939393',
-            extraLightGray: '#F1F1F1'
+            extraLightGray: '#F1F1F1',
+            overlay: 'rgba(255, 255, 255, 0.5)'
         },
         darkMode: {
             background: '#0A0A0A',
             text: '#FFFFFF',
             lightGray: '#333333',
             gray: '#666666',
-            extraLightGray: '#1A1A1A'
+            extraLightGray: '#1A1A1A',
+            overlay: 'rgba(0, 0, 0, 0.6)'
         },
         rose: '#EF4444',
         green: '#209d5c'

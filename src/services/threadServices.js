@@ -2,7 +2,7 @@ import apiClient from './apiClient'
 
 const threadService = {
     getFollowingUserThreads: async page => {
-        return await apiClient.get(`/thread?page=${page}&limit=6`)
+        return await apiClient.get(`/thread?page=${page}&limit=10`)
     },
     createThread: async threadData => {
         return await apiClient.post('/thread', threadData)

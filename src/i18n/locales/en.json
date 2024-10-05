@@ -24,7 +24,7 @@
         "setting": "Setting"
     },
     "status": {
-        "creating": "In progress..."
+        "creating": "In progress"
     },
     "welcome": {
         "title": "LinkUp!",
@@ -71,6 +71,8 @@
             "private": "Only me can see"
         },
         "submit": "Post",
+        "posting": "Posting...",
+        "creating": "Creating...",
         "errorLoadImg": "Image upload failed",
         "noAccessToLibrary": "You need to enable permissions to access the image library",
         "cameraPermission": "You need permission to use the camera",

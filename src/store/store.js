@@ -4,6 +4,7 @@ import languageReducer from './slices/languageSlice'
 import loadingReducer from './slices/loadingSlice'
 import themeReducer from './slices/themeSlice'
 import toastReducer from './slices/toastSlice'
+import updateReducer from './slices/updateSlice'
 import userReducer from './slices/userSlice'
 
 const store = configureStore({
@@ -13,7 +14,8 @@ const store = configureStore({
         theme: themeReducer,
         language: languageReducer,
         toast: toastReducer,
-        loading: loadingReducer
+        loading: loadingReducer,
+        update: updateReducer
     }
 })
 

@@ -5,8 +5,10 @@ const authService = {
         return await apiClient.post('/auth/login', credentials)
     },
     register: async user => {
-        console.log('USER: ', user)
         return await apiClient.post('/auth/register', user)
+    },
+    logout: async () => {
+        return await apiClient.post('/auth/revoke-token')
     }
 }
 

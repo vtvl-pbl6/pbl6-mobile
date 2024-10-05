@@ -1,12 +1,20 @@
+import LottieView from 'lottie-react-native'
 import React, { useEffect, useState } from 'react'
 import { Facebook } from 'react-content-loader/native'
-import { ActivityIndicator, FlatList, StyleSheet, Text } from 'react-native'
+import {
+    ActivityIndicator,
+    FlatList,
+    StyleSheet,
+    Text,
+    View
+} from 'react-native'
 import { useDispatch } from 'react-redux'
 import { ScreenWapper, Thread } from '../../components'
 import { useLanguage, useTheme } from '../../contexts'
 import threadService from '../../services/threadServices'
-import { showToast } from '../../store/slices/toastSlice'
-import { wp } from '../../utils'
+import userService from '../../services/userServices'
+import { setUser, showToast } from '../../store/slices'
+import { hp, wp } from '../../utils'
 
 const HomeScreen = () => {
     const dispatch = useDispatch()
@@ -15,6 +23,7 @@ const HomeScreen = () => {
 
     const [threads, setThreads] = useState([])
     const [loading, setLoading] = useState(false)
+    const [refreshing, setRefreshing] = useState(false)
     const [page, setPage] = useState(1)
     const [hasMore, setHasMore] = useState(true)
 
@@ -48,9 +57,18 @@ const HomeScreen = () => {
         }
     }
 
+    const getCurrentUser = async () => {
+        const userResponse = await userService.getUserInfo()
+        dispatch(setUser(userResponse.data))
+    }
+
+    useEffect(() => {
+        getCurrentUser()
+    }, [refreshing])
+
     useEffect(() => {
         fetchThreads()
-    }, [page])
+    }, [page, refreshing])
 
     const loadMoreThreads = () => {
         if (hasMore && !loading) {
@@ -58,17 +76,49 @@ const HomeScreen = () => {
         }
     }
 
+    const handleRefresh = async () => {
+        setRefreshing(true)
+        setThreads([])
+        setPage(1)
+        setHasMore(true)
+        await fetchThreads()
+        setRefreshing(false)
+    }
+
     const renderFooter = () => {
         if (loading) {
-            return <ActivityIndicator size="small" color={currentColors.text} />
+            return (
+                <ActivityIndicator
+                    size="small"
+                    color={currentColors.text}
+                    style={{ paddingVertical: 30 }}
+                />
+            )
         }
         if (!hasMore) {
+            const animationSource =
+                currentColors.background === '#FFFFFF'
+                    ? require('../../../assets/animations/notFoundLight.json')
+                    : require('../../../assets/animations/notFoundDark.json')
+
             return (
-                <Text
-                    style={[styles.noMoreText, { color: currentColors.text }]}
-                >
-                    {t('home.noMoreThread')}
-                </Text>
+                <View style={{ flex: 1 }}>
+                    <LottieView
+                        source={animationSource}
+                        autoPlay
+                        loop
+                        enableMergePathsAndroidForKitKatAndAbove={true}
+                        style={[styles.animation]}
+                    />
+                    <Text
+                        style={[
+                            styles.noMoreText,
+                            { color: currentColors.text }
+                        ]}
+                    >
+                        {t('home.noMoreThread')}
+                    </Text>
+                </View>
             )
         }
         return null
@@ -89,6 +139,7 @@ const HomeScreen = () => {
                     data={[...Array(10)]}
                     renderItem={({ index }) => <Facebook key={index} />}
                     keyExtractor={(item, index) => index.toString()}
+                    showsVerticalScrollIndicator={false}
                 />
             </ScreenWapper>
         )
@@ -106,6 +157,8 @@ const HomeScreen = () => {
                 onEndReached={loadMoreThreads}
                 onEndReachedThreshold={0.5}
                 ListFooterComponent={renderFooter}
+                onRefresh={handleRefresh}
+                refreshing={refreshing}
             />
         </ScreenWapper>
     )
@@ -121,5 +174,10 @@ const styles = StyleSheet.create({
     noMoreText: {
         textAlign: 'center',
         padding: 16
+    },
+    animation: {
+        width: wp(100),
+        height: hp(20),
+        alignSelf: 'center'
     }
 })

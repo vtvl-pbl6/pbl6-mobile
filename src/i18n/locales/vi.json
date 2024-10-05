@@ -25,7 +25,7 @@
         "setting": "Cài đặt"
     },
     "status": {
-        "creating": "Đang xử lí..."
+        "creating": "Đang xử lí"
     },
     "welcome": {
         "title": "Kết nối!",
@@ -72,6 +72,8 @@
             "private": "Chỉ bạn có thể xem"
         },
         "submit": "Đăng",
+        "posting": "Đang tạo...",
+        "creating": "Đang tạo bài đăng...",
         "errorLoadImg": "Tải ảnh không thành công",
         "noAccessToLibrary": "Bạn cần cấp quyền truy cập thư viện ảnh",
         "cameraPermission": "Bạn cần cấp quyền sử dụng camera",

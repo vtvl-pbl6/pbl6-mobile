@@ -20,7 +20,7 @@ import { ImagePreview } from '../../components'
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
 import threadServices from '../../services/threadServices'
-import { showToast } from '../../store/slices'
+import { setLoading, setUpdate, showToast } from '../../store/slices'
 import { hp, wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
 
@@ -32,6 +32,8 @@ const ComposeScreen = ({ navigation }) => {
     const insets = useSafeAreaInsets()
 
     const loading = useSelector(state => state.loading)
+    const user = useSelector(state => state.user.user)
+    const update = useSelector(state => state.update)
 
     const [selectedScope, setSelectedScope] = useState('PUBLIC')
     const [isDropdownVisible, setDropdownVisible] = useState(false)
@@ -140,7 +142,14 @@ const ComposeScreen = ({ navigation }) => {
         }
 
         try {
+            dispatch(
+                showToast({ message: t('compose.creating'), type: 'info' })
+            )
+
+            dispatch(setLoading(true))
+
             await threadServices.createThread(formData)
+
             dispatch(
                 showToast({ message: t('compose.success'), type: 'success' })
             )
@@ -150,9 +159,14 @@ const ComposeScreen = ({ navigation }) => {
             if (inputRef.current) {
                 inputRef.current.clear()
             }
+
+            dispatch(setUpdate(true))
         } catch (error) {
             handleError(error)
             console.error('Error creating thread:', error)
+        } finally {
+            dispatch(setLoading(false))
+            dispatch(setUpdate(false))
         }
     }
 
@@ -193,13 +207,21 @@ const ComposeScreen = ({ navigation }) => {
                     <View style={{ flexDirection: 'row' }}>
                         {/* Left */}
                         <View style={styles.left}>
-                            <Image
-                                source={{
-                                    uri: 'https://assets.teenvogue.com/photos/655e58e6acbb2eb839ac2f09/16:9/w_2560%2Cc_limit/AVTR_101_Unit_01655.jpg'
-                                }}
-                                style={styles.image}
-                                resizeMode="cover"
-                            />
+                            {user?.avatar_file ? (
+                                <Image
+                                    source={{
+                                        uri: user.avatar_file.url
+                                    }}
+                                    style={styles.image}
+                                    resizeMode="cover"
+                                />
+                            ) : (
+                                <Ionicons
+                                    name="person-circle-outline"
+                                    size={wp(10)}
+                                    color={currentColors.lightGray}
+                                />
+                            )}
                             <View style={styles.lineContainer}>
                                 <View
                                     style={[
@@ -221,7 +243,7 @@ const ComposeScreen = ({ navigation }) => {
                                     { color: currentColors.text }
                                 ]}
                             >
-                                03.nmt
+                                {user?.display_name}
                             </Text>
                             {/* Content input */}
                             <TextInput
@@ -273,13 +295,21 @@ const ComposeScreen = ({ navigation }) => {
 
                 <View style={styles.addThead}>
                     <View style={styles.left}>
-                        <Image
-                            source={{
-                                uri: 'https://assets.teenvogue.com/photos/655e58e6acbb2eb839ac2f09/16:9/w_2560%2Cc_limit/AVTR_101_Unit_01655.jpg'
-                            }}
-                            style={styles.imageThread}
-                            resizeMode="cover"
-                        />
+                        {user?.avatar_file ? (
+                            <Image
+                                source={{
+                                    uri: user.avatar_file.url
+                                }}
+                                style={styles.imageThread}
+                                resizeMode="cover"
+                            />
+                        ) : (
+                            <Ionicons
+                                name="person-circle-outline"
+                                size={wp(10)}
+                                color={currentColors.lightGray}
+                            />
+                        )}
                     </View>
                 </View>
             </ScrollView>
@@ -338,9 +368,14 @@ const ComposeScreen = ({ navigation }) => {
                 <TouchableOpacity
                     style={[
                         styles.createButton,
-                        { backgroundColor: currentColors.text }
+                        {
+                            backgroundColor: loading
+                                ? currentColors.lightGray
+                                : currentColors.text
+                        }
                     ]}
                     onPress={handleSubmit}
+                    disabled={loading}
                 >
                     <Text
                         style={[
@@ -348,7 +383,7 @@ const ComposeScreen = ({ navigation }) => {
                             { color: currentColors.background }
                         ]}
                     >
-                        {t('compose.submit')}
+                        {loading ? t('compose.posting') : t('compose.submit')}
                     </Text>
                 </TouchableOpacity>
             </View>

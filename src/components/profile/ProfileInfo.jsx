@@ -27,13 +27,13 @@ const ProfileInfo = ({ user }) => {
             <View style={styles.userContainer}>
                 <View style={styles.displayName}>
                     <Text style={[styles.name, { color: currentColors.text }]}>
-                        {user.first_name + ' ' + user.last_name}
+                        @{user.display_name}
                     </Text>
-                    <Text
+                    {/* <Text
                         style={[styles.username, { color: currentColors.text }]}
                     >
                         {user.display_name}
-                    </Text>
+                    </Text> */}
                 </View>
                 {user.avatar_file ? (
                     <Image
@@ -44,7 +44,7 @@ const ProfileInfo = ({ user }) => {
                 ) : (
                     <Ionicons
                         name="person-circle-outline"
-                        size={wp(20)}
+                        size={wp(18)}
                         color={currentColors.lightGray}
                     />
                 )}

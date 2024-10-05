@@ -20,3 +20,7 @@ export { default as ProfileInfo } from './profile/ProfileInfo'
 // toast
 export { default as Toast } from './toast/Toast'
 export { default as ToastManager } from './toast/ToastManager'
+
+// Skeleton
+export { default as ProfileInfoLoader } from './load/ProfileInfoLoader'
+export { default as ThreadLoader } from './load/ThreadLoader'

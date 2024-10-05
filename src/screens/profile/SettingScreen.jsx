@@ -4,8 +4,10 @@ import { Divider } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
+import authService from '../../services/authServices'
 import { logout } from '../../store/slices'
 import { wp } from '../../utils'
+import useHandleError from '../../utils/handlers/errorHandler'
 
 const SettingScreen = () => {
     const dispatch = useDispatch()
@@ -14,9 +16,12 @@ const SettingScreen = () => {
 
     const handleLogout = async () => {
         try {
-            dispatch(logout())
+            const response = await authService.logout()
+            if (response.is_success) {
+                dispatch(logout())
+            }
         } catch (error) {
-            console.error('Error clearing tokens', error)
+            useHandleError(error)
         }
     }
 
