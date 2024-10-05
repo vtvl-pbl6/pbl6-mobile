@@ -9,45 +9,30 @@ import {
     Text,
     View
 } from 'react-native'
-import { useDispatch } from 'react-redux'
-import { BackButton, BaseButton, BaseInput } from '../../components'
+import { useDispatch, useSelector } from 'react-redux'
+import { BackButton, BaseButton, BaseInput, Loading } from '../../components'
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
-import { showToast } from '../../store/slices'
+import authService from '../../services/authServices'
+import { setLoading, showToast } from '../../store/slices'
 import { getSafeAreaTop, hp, validateRegisterForm, wp } from '../../utils'
+import useHandleError from '../../utils/handlers/errorHandler'
 
 const RegisterScreen = ({ navigation }) => {
     const dispatch = useDispatch()
     const { currentColors } = useTheme()
     const { t } = useLanguage()
+    const loading = useSelector(state => state.loading)
+    const handleError = useHandleError(navigation)
 
     const [formValues, setFormValues] = useState({
         email: '',
         username: '',
         password: '',
-        confirmPassword: ''
+        confirm_password: ''
     })
 
     const [errors, setErrors] = useState({})
-
-    const onSubmit = () => {
-        const validationErrors = validateRegisterForm(formValues, t)
-        setErrors(validationErrors)
-
-        if (Object.keys(validationErrors).length === 0) {
-            dispatch(
-                showToast({
-                    message: t('register.registrationComplete'),
-                    type: 'success'
-                })
-            )
-            // navigation.navigate('Login') chuyển đến trang login
-        } else {
-            dispatch(
-                showToast({ message: t('register.fixErrors'), type: 'error' })
-            )
-        }
-    }
 
     const handleInputChange = (field, value) => {
         setFormValues({
@@ -56,11 +41,37 @@ const RegisterScreen = ({ navigation }) => {
         })
     }
 
+    const onSubmit = async () => {
+        const validationErrors = validateRegisterForm(formValues, t)
+        setErrors(validationErrors)
+
+        if (Object.keys(validationErrors).length === 0) {
+            dispatch(setLoading(true))
+            try {
+                const response = await authService.register(formValues)
+                dispatch(
+                    showToast({
+                        message: t('register.registrationComplete'),
+                        type: 'success'
+                    })
+                )
+                navigation.navigate('Login')
+            } catch (error) {
+                handleError(error)
+            } finally {
+                dispatch(setLoading(false))
+            }
+        } else {
+            dispatch(
+                showToast({ message: t('register.fixErrors'), type: 'error' })
+            )
+        }
+    }
+
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            // keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : 0}
         >
             <ScrollView
                 style={{
@@ -183,22 +194,27 @@ const RegisterScreen = ({ navigation }) => {
                                 )}
                                 secureTextEntry
                                 onChangeText={value =>
-                                    handleInputChange('confirmPassword', value)
+                                    handleInputChange('confirm_password', value)
                                 }
-                                value={formValues.confirmPassword}
+                                value={formValues.confirm_password}
                             />
-                            {errors.confirmPassword && (
+                            {errors.confirm_password && (
                                 <Text style={{ color: theme.colors.rose }}>
-                                    {errors.confirmPassword}
+                                    {errors.confirm_password}
                                 </Text>
                             )}
                         </View>
 
                         {/* button */}
-                        <BaseButton
-                            title={t('register.signUp')}
-                            onPress={onSubmit}
-                        />
+                        {loading ? (
+                            <Loading />
+                        ) : (
+                            <BaseButton
+                                title={t('register.signUp')}
+                                loading={loading}
+                                onPress={onSubmit}
+                            />
+                        )}
                     </View>
 
                     {/* footer */}

@@ -13,7 +13,8 @@
         "passwordRequired": "Mật khẩu là bắt buộc",
         "passwordMinLength": "Mật khẩu phải có ít nhất 6 ký tự",
         "confirmPasswordRequired": "Xác nhận mật khẩu là bắt buộc",
-        "passwordMismatch": "Mật khẩu không khớp"
+        "passwordMismatch": "Mật khẩu không khớp",
+        "passwordCriteria": "Mật khẩu phải chứa ít nhất một chữ cái viết hoa, một chữ cái thường, một chữ số, không có khoảng trắng và có độ dài từ 8 đến 32 ký tự"
     },
     "error": {
         "default": "Có lỗi xảy ra!",

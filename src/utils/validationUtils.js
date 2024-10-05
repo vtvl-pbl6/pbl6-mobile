@@ -15,14 +15,18 @@ export const validateRegisterForm = (values, t) => {
 
     if (!values.password) {
         errors.password = t('validation.passwordRequired')
-    } else if (values.password.length < 6) {
-        errors.password = t('validation.passwordMinLength')
+    } else if (
+        !/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,32}$/.test(
+            values.password
+        )
+    ) {
+        errors.password = t('validation.passwordCriteria')
     }
 
-    if (!values.confirmPassword) {
-        errors.confirmPassword = t('validation.confirmPasswordRequired')
-    } else if (values.confirmPassword !== values.password) {
-        errors.confirmPassword = t('validation.passwordMismatch')
+    if (!values.confirm_password) {
+        errors.confirm_password = t('validation.confirmPasswordRequired')
+    } else if (values.confirm_password !== values.password) {
+        errors.confirm_password = t('validation.passwordMismatch')
     }
 
     return errors
