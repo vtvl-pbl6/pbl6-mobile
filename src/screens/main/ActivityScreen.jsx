@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Button, StyleSheet, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import BaseModal from '../../components/base/BaseModal'
-import ScreenWapper from '../../components/ScreenWapper'
-import theme from '../../constants/theme'
-import { showToast } from '../../store/slices/toastSlice'
+import { BaseModal, ScreenWapper } from '../../components'
+import { useLanguage, useTheme } from '../../contexts'
+import { showToast } from '../../store/slices'
 
-const ActivityScreen = () => {
+const ActivityScreen = ({ navigation }) => {
     const dispatch = useDispatch()
-    const { t, i18n } = useTranslation()
+    const { currentColors } = useTheme()
+    const { t } = useLanguage()
+
     const [isConfirmVisible, setConfirmVisible] = useState(false)
 
     const handleShowToast = () => {
@@ -17,11 +17,7 @@ const ActivityScreen = () => {
         dispatch(showToast({ message, type: 'info' }))
     }
 
-    const isDarkMode = useSelector(state => state.theme.isDarkMode)
     const language = useSelector(state => state.language.language)
-    const currentColors = isDarkMode
-        ? theme.colors.darkMode
-        : theme.colors.lightMode
 
     return (
         <ScreenWapper styles={{ backgroundColor: currentColors.background }}>
@@ -36,6 +32,14 @@ const ActivityScreen = () => {
                 <Button
                     title="Show Confirm"
                     onPress={() => setConfirmVisible(true)}
+                />
+                <Button
+                    title="Edit profile"
+                    onPress={() =>
+                        navigation.navigate('Profile', {
+                            screen: 'EditProfile'
+                        })
+                    }
                 />
             </View>
             <BaseModal

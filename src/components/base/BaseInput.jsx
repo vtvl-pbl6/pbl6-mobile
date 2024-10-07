@@ -29,6 +29,7 @@ const BaseInput = props => {
                 }}
                 placeholderTextColor={currentColors.gray}
                 ref={props.inputRef && props.inputRef}
+                autoCapitalize="none"
                 {...props}
             />
         </View>

@@ -7,7 +7,7 @@ import {
 
 const apiClient = axios.create({
     baseURL: API_URL,
-    timeout: 10000,
+    timeout: 60000,
     headers: {
         'Content-Type': 'application/json',
         [API_HEADER_NAME]: API_HEADER_VALUE
@@ -17,10 +17,18 @@ const apiClient = axios.create({
 // Attach token to each request
 apiClient.interceptors.request.use(
     async config => {
-        const { accessToken } = await getTokensFromStorage()
-        if (accessToken) {
-            config.headers.Authorization = `Bearer ${accessToken}`
+        if (config.url !== '/auth/login' && config.url !== '/auth/register') {
+            const { accessToken } = await getTokensFromStorage()
+            if (accessToken) {
+                config.headers.Authorization = `Bearer ${accessToken}`
+            }
         }
+
+        // Adjust headers if data is FormData
+        if (config.data instanceof FormData) {
+            config.headers['Content-Type'] = 'multipart/form-data'
+        }
+
         return config
     },
     error => {

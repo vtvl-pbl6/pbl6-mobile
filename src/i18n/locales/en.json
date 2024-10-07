@@ -1,9 +1,97 @@
 {
-    "welcome": "Welcome to the app!",
     "changeLanguage": "Change Language",
-    "textLogin": "Login",
     "modal": {
         "confirm": "Confirm",
         "cancel": "Cancel"
+    },
+    "validation": {
+        "usernameRequired": "Username is required",
+        "usernameMinLength": "Username must be more than 5 characters",
+        "emailRequired": "Email is required",
+        "invalidEmail": "Invalid email address",
+        "passwordRequired": "Password is required",
+        "passwordMinLength": "Password must be at least 6 characters",
+        "confirmPasswordRequired": "Confirm password is required",
+        "passwordMismatch": "Passwords do not match",
+        "passwordCriteria": "Password must contain at least one uppercase letter, one lowercase letter, one digit, no spaces, and be 8 to 32 characters long."
+    },
+    "error": {
+        "default": "Something went wrong!",
+        "fetchFailed": "Failed to fetch threads!"
+    },
+    "headerShown": {
+        "back": "Back",
+        "setting": "Setting"
+    },
+    "status": {
+        "creating": "In progress"
+    },
+    "welcome": {
+        "title": "LinkUp!",
+        "punchline": "We clean up the information – just like your mom cleans your room!",
+        "buttonTitle": "Getting Started",
+        "loginTitle": "Already have an account!",
+        "login": "Login"
+    },
+    "register": {
+        "titleTop": "Let's",
+        "titleBottom": "Get Started",
+        "prompt": "Please fill the details to create an account",
+        "usernamePlaceholder": "Enter your username",
+        "emailPlaceholder": "Enter your email",
+        "passwordPlaceholder": "Enter password",
+        "confirmPasswordPlaceholder": "Enter confirm password",
+        "signUp": "Sign up",
+        "loginTitle": "Already have an account!",
+        "login": "Login",
+        "success": "Success",
+        "registrationComplete": "Registration completed successfully!",
+        "error": "Error",
+        "fixErrors": "Please fix the errors before submitting"
+    },
+    "login": {
+        "welcomeBack": "Hey, Welcome Back",
+        "loginPrompt": "Please login to continue",
+        "emailPlaceholder": "Enter your email",
+        "passwordPlaceholder": "Enter your password",
+        "forgotPassword": "Forgot Password?",
+        "loginButton": "Login",
+        "noAccount": "Don't have an account?",
+        "signUp": "Sign up",
+        "success": "Login successful!",
+        "fixErrors": "Please fix the errors."
+    },
+    "compose": {
+        "cancel": "Cancel",
+        "newThread": "New thread",
+        "addThread": "Start a thread...",
+        "scope": {
+            "everybody": "Anyone can reply & quote",
+            "friend": "Only friend can reply & quote",
+            "private": "Only me can see"
+        },
+        "submit": "Post",
+        "posting": "Posting...",
+        "creating": "Creating...",
+        "errorLoadImg": "Image upload failed",
+        "noAccessToLibrary": "You need to enable permissions to access the image library",
+        "cameraPermission": "You need permission to use the camera",
+        "noContent": "Please enter text or select image",
+        "success": "Thread has been submitted successfully!"
+    },
+    "profile": {
+        "followers": "followers",
+        "editProfile": "Edit profile",
+        "thread": "Threads",
+        "reposts": "Reposts",
+        "noData": "You don't have any threads yet",
+        "noMoreThread": "No more threads available",
+        "noMoreReposts": "No more reposts available"
+    },
+    "setting": {
+        "logout": "Log out"
+    },
+    "home": {
+        "noMoreThread": "No more threads available"
     }
 }

@@ -6,27 +6,41 @@ import {
 import React, { useEffect } from 'react'
 import { StatusBar } from 'react-native'
 import { ToastProvider } from 'react-native-toast-notifications'
-import { Provider, useDispatch, useSelector } from 'react-redux'
+import { Provider, useDispatch } from 'react-redux'
 import Toast from './src/components/toast/Toast'
 import ToastManager from './src/components/toast/ToastManager'
+import LanguageProvider from './src/contexts/LanguageProvider'
+import ThemeProvider, { useTheme } from './src/contexts/ThemeProvider'
 import './src/i18n'
 import AppNavigator from './src/navigation/AppNavigator'
+import { checkAuthentication } from './src/store/slices/authSlice'
 import { initializeLanguage } from './src/store/slices/languageSlice'
 import { initializeTheme } from './src/store/slices/themeSlice'
+
 import store from './src/store/store'
 
 const App = () => {
     const dispatch = useDispatch()
 
-    const isDarkMode = useSelector(state => state.theme.isDarkMode)
-    const language = useSelector(state => state.language.language)
-
-    const theme = isDarkMode ? DarkTheme : DefaultTheme
-
     useEffect(() => {
         dispatch(initializeTheme())
         dispatch(initializeLanguage())
+        dispatch(checkAuthentication())
     }, [dispatch])
+
+    return (
+        <ThemeProvider>
+            <LanguageProvider>
+                <AppContent />
+            </LanguageProvider>
+        </ThemeProvider>
+    )
+}
+
+const AppContent = () => {
+    const { isDarkMode } = useTheme()
+
+    const theme = isDarkMode ? DarkTheme : DefaultTheme
 
     return (
         <>

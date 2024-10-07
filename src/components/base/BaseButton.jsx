@@ -45,6 +45,6 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: hp(2.4),
-        fontWeight: theme.fonts.bold
+        fontWeight: theme.fonts.semibold
     }
 })

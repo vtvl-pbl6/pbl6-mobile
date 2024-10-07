@@ -1,18 +1,13 @@
 import { Ionicons } from '@expo/vector-icons'
 import React, { useRef } from 'react'
 import { StyleSheet, Text } from 'react-native'
-import { useSelector } from 'react-redux'
-import ScreenWapper from '../../components/ScreenWapper'
-import BaseButton from '../../components/base/BaseButton'
-import BaseInput from '../../components/base/BaseInput'
-import theme from '../../constants/theme'
-import { hp, wp } from '../../utils/dimensionUtils'
+import { BaseButton, BaseInput, ScreenWapper } from '../../components'
+import { useLanguage, useTheme } from '../../contexts'
+import { hp, wp } from '../../utils'
 
 const SearchScreen = () => {
-    const isDarkMode = useSelector(state => state.theme.isDarkMode)
-    const currentColors = isDarkMode
-        ? theme.colors.darkMode
-        : theme.colors.lightMode
+    const { currentColors } = useTheme()
+    const { t } = useLanguage()
 
     const usernameRef = useRef('')
 

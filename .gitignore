@@ -40,3 +40,7 @@ yarn-error.*
 
 # ide
 .vscode
+.idea
+*.iws
+*.iml
+*.ipr

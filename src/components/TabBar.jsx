@@ -17,7 +17,7 @@ const TabBar = ({ state, navigation }) => {
     const tabs = [
         { name: 'Home', icon: 'home-outline', activeIcon: 'home' },
         { name: 'Search', icon: 'search-outline', activeIcon: 'search' },
-        { name: 'ComposeModal', icon: 'add-outline', isCompose: true },
+        { name: 'Compose', icon: 'add-outline', isCompose: true },
         { name: 'Activity', icon: 'heart-outline', activeIcon: 'heart' },
         { name: 'Profile', icon: 'person-outline', activeIcon: 'person' }
     ]
@@ -47,7 +47,16 @@ const TabBar = ({ state, navigation }) => {
                         ]}
                         onPress={() => handlePress(index, tab.name)}
                     >
-                        <Ionicons name={tab.icon} size={32} color="gray" />
+                        <Ionicons
+                            name={tab.icon}
+                            size={wp(8)}
+                            style={{
+                                color:
+                                    selectedIndex === index
+                                        ? currentColors.text
+                                        : currentColors.gray
+                            }}
+                        />
                     </Pressable>
                 ) : (
                     <Pressable
@@ -61,7 +70,7 @@ const TabBar = ({ state, navigation }) => {
                                     ? tab.activeIcon
                                     : tab.icon
                             }
-                            size={24}
+                            size={wp(6)}
                             color={
                                 selectedIndex === index
                                     ? currentColors.text
