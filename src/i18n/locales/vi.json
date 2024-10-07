@@ -94,5 +94,13 @@
     },
     "home": {
         "noMoreThread": "Không còn thread nào cũ hơn"
+    },
+    "search": {
+        "searchText": "Tìm kiếm",
+        "cancel": "Huỷ",
+        "followers": "người theo dõi",
+        "follow": "Theo dõi",
+        "unfollow": "Bỏ theo dõi",
+        "confirmUnfollow": "Bạn có chắc chắn muốn bỏ theo dõi người dùng này không?"
     }
 }

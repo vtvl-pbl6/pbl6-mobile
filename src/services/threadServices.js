@@ -9,7 +9,7 @@ const threadService = {
     },
     getThreadsByAuthor: async (page, author_id) => {
         return await apiClient.get(
-            `/thread?page=${page}&limit=6&author_id=${author_id}`
+            `/thread?page=${page}&limit=10&author_id=${author_id}`
         )
     }
 }

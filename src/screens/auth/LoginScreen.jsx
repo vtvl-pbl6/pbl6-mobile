@@ -92,7 +92,7 @@ const LoginScreen = ({ navigation }) => {
                 {/* form */}
                 <View style={styles.form}>
                     <Text
-                        style={{ fontSize: hp(1.5), color: currentColors.text }}
+                        style={{ fontSize: wp(4), color: currentColors.text }}
                     >
                         {t('login.loginPrompt')}
                     </Text>
@@ -141,7 +141,7 @@ const LoginScreen = ({ navigation }) => {
                     <Text
                         style={[
                             styles.forgotPassword,
-                            { color: currentColors.text }
+                            { color: currentColors.text, fontSize: wp(4) }
                         ]}
                         onPress={() => navigation.navigate('ForgotPassword')}
                     >
@@ -219,6 +219,6 @@ const styles = StyleSheet.create({
     },
     footerText: {
         textAlign: 'center',
-        fontSize: hp(1.6)
+        fontSize: wp(4)
     }
 })

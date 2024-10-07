@@ -168,7 +168,7 @@ const ProfileScreen = ({ navigation }) => {
 
         await getUserInfo()
 
-        await Promise.all([fetchThread(), fetchRepost()])
+        // await Promise.all([fetchThread(), fetchRepost()])
         setRefreshing(false)
     }
 

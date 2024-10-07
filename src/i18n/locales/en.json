@@ -93,5 +93,13 @@
     },
     "home": {
         "noMoreThread": "No more threads available"
+    },
+    "search": {
+        "searchText": "Search",
+        "cancel": "Cancel",
+        "followers": "followers",
+        "follow": "Follow",
+        "unfollow": "Unfollow",
+        "confirmUnfollow": "Are you sure you want to unfollow this user?"
     }
 }

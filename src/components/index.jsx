@@ -21,6 +21,10 @@ export { default as ProfileInfo } from './profile/ProfileInfo'
 export { default as Toast } from './toast/Toast'
 export { default as ToastManager } from './toast/ToastManager'
 
-// Skeleton
+// skeleton
 export { default as ProfileInfoLoader } from './load/ProfileInfoLoader'
+export { default as ProfileSearchLoader } from './load/ProfileSearchLoader'
 export { default as ThreadLoader } from './load/ThreadLoader'
+
+// card
+export { default as UserInfoCard } from './card/UserInfoCard'

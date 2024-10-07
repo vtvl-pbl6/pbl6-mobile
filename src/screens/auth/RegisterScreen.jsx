@@ -107,7 +107,7 @@ const RegisterScreen = ({ navigation }) => {
                     <View style={styles.form}>
                         <Text
                             style={{
-                                fontSize: hp(1.5),
+                                fontSize: wp(4),
                                 color: currentColors.text
                             }}
                         >
@@ -277,6 +277,6 @@ const styles = StyleSheet.create({
     },
     footerText: {
         textAlign: 'center',
-        fontSize: hp(1.6)
+        fontSize: wp(4)
     }
 })
