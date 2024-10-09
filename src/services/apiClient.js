@@ -17,7 +17,11 @@ const apiClient = axios.create({
 // Attach token to each request
 apiClient.interceptors.request.use(
     async config => {
-        if (config.url !== '/auth/login' && config.url !== '/auth/register') {
+        if (
+            config.url !== '/auth/login' &&
+            config.url !== '/auth/register' &&
+            config.url !== '/auth/refresh-token'
+        ) {
             const { accessToken } = await getTokensFromStorage()
             if (accessToken) {
                 config.headers.Authorization = `Bearer ${accessToken}`
@@ -44,17 +48,27 @@ const refreshToken = async () => {
             throw new Error('No refresh token found')
         }
 
-        const response = await axios.post(`${API_URL}/auth/refresh-token`, {
-            refreshToken
-        })
-        const { accessToken, newRefreshToken } = response.data
+        const response = await axios.post(
+            `${API_URL}/auth/refresh-token`,
+            {
+                refresh_token: refreshToken
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    [API_HEADER_NAME]: API_HEADER_VALUE
+                }
+            }
+        )
+
+        const { access_token, refresh_token } = response.data.data
 
         saveTokensToStorage({
-            accessToken,
-            refreshToken: newRefreshToken || refreshToken
+            accessToken: access_token,
+            refreshToken: refresh_token || refreshToken
         })
 
-        return accessToken
+        return access_token
     } catch (error) {
         throw error
     }
