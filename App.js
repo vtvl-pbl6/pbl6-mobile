@@ -3,6 +3,7 @@ import {
     DefaultTheme,
     NavigationContainer
 } from '@react-navigation/native'
+import 'fast-text-encoding'
 import React, { useEffect } from 'react'
 import { StatusBar } from 'react-native'
 import { ToastProvider } from 'react-native-toast-notifications'
