@@ -10,7 +10,6 @@ const ScreenWapper = ({ children, styles }) => {
             style={[
                 {
                     flex: 1,
-                    backgroundColor: '#fff',
                     paddingTop: insets.top,
                     paddingBottom: insets.bottom
                 },

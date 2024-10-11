@@ -70,7 +70,7 @@ const Thread = memo(({ thread }) => {
         <View
             style={[styles.container, { borderColor: currentColors.lightGray }]}
         >
-            <View style={{ paddingTop: wp(2), paddingHorizontal: wp(2) }}>
+            <View>
                 {/* Loader */}
                 {loading && <Facebook />}
 
@@ -86,7 +86,12 @@ const Thread = memo(({ thread }) => {
                             />
                         )}
                         {/* Header */}
-                        <View style={styles.header}>
+                        <View
+                            style={[
+                                styles.header,
+                                { paddingTop: wp(2), paddingHorizontal: wp(2) }
+                            ]}
+                        >
                             <View style={styles.user}>
                                 {thread.author.avatar_file ? (
                                     <Image
@@ -156,7 +161,12 @@ const Thread = memo(({ thread }) => {
                         </View>
 
                         {/* Content */}
-                        <View style={styles.content}>
+                        <View
+                            style={[
+                                styles.content,
+                                { paddingHorizontal: wp(2) }
+                            ]}
+                        >
                             <Text
                                 style={[
                                     styles.text,

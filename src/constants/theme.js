@@ -9,7 +9,7 @@ const theme = {
             overlay: 'rgba(255, 255, 255, 0.5)'
         },
         darkMode: {
-            background: '#0A0A0A',
+            background: '#101010',
             text: '#FFFFFF',
             lightGray: '#333333',
             gray: '#666666',

@@ -20,10 +20,6 @@
         "default": "Có lỗi xảy ra!",
         "fetchFailed": "Tải thất bại!"
     },
-    "headerShown": {
-        "back": "Quay lại",
-        "setting": "Cài đặt"
-    },
     "status": {
         "creating": "Đang xử lí"
     },
@@ -90,7 +86,17 @@
         "noMoreReposts": "Không còn bài đăng lại nào cũ hơn"
     },
     "setting": {
-        "logout": "Đăng xuất"
+        "header": "Cài đặt",
+        "logout": "Đăng xuất",
+        "changeLanguage": "Thay đổi ngôn ngữ",
+        "changeMode": "Giao diện",
+        "aboutUs": "Giới thiệu về chúng tôi",
+        "language": {
+            "title": "Hãy chọn ngôn ngữ của bạn!",
+            "english": "Tiếng Anh",
+            "vietnamese": "Tiếng Việt"
+        },
+        "selectMode": "Hãy chọn chế độ hiển thị"
     },
     "home": {
         "noMoreThread": "Không còn thread nào cũ hơn"

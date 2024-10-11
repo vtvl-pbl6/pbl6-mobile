@@ -28,3 +28,7 @@ export { default as ThreadLoader } from './load/ThreadLoader'
 
 // card
 export { default as UserInfoCard } from './card/UserInfoCard'
+
+// setting
+export { default as LanguageToggle } from './setting/LanguageToggle'
+export { default as ModeToggle } from './setting/ModeToggle'
