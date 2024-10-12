@@ -11,6 +11,9 @@ const threadService = {
         return await apiClient.get(
             `/thread?page=${page}&limit=10&author_id=${author_id}`
         )
+    },
+    getThreadById: async threadId => {
+        return await apiClient.get('/thread/' + threadId)
     }
 }
 

@@ -1,5 +1,4 @@
 {
-    "changeLanguage": "Change Language",
     "modal": {
         "confirm": "Confirm",
         "cancel": "Cancel"
@@ -107,5 +106,10 @@
         "follow": "Follow",
         "unfollow": "Unfollow",
         "confirmUnfollow": "Are you sure you want to unfollow this user?"
+    },
+    "threadDetail": {
+        "header": "Thead",
+        "replies": "Replies",
+        "replyUser": "Reply"
     }
 }

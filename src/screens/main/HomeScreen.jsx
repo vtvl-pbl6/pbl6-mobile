@@ -4,6 +4,7 @@ import { Facebook } from 'react-content-loader/native'
 import {
     ActivityIndicator,
     FlatList,
+    Pressable,
     StyleSheet,
     Text,
     View
@@ -16,7 +17,7 @@ import userService from '../../services/userServices'
 import { setUser, showToast } from '../../store/slices'
 import { hp, wp } from '../../utils'
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
     const dispatch = useDispatch()
     const { currentColors } = useTheme()
     const { t } = useLanguage()
@@ -74,6 +75,10 @@ const HomeScreen = () => {
         if (hasMore && !loading) {
             setPage(prevPage => prevPage + 1)
         }
+    }
+
+    const handleThreadPress = thread => {
+        navigation.navigate('ThreadDetail', { thread: thread })
     }
 
     const handleRefresh = async () => {
@@ -151,7 +156,9 @@ const HomeScreen = () => {
                 data={threads}
                 keyExtractor={item => item.id.toString()}
                 renderItem={({ item }) => (
-                    <Thread thread={item} loading={loading} />
+                    <Pressable onPress={() => handleThreadPress(item)}>
+                        <Thread thread={item} loading={loading} />
+                    </Pressable>
                 )}
                 showsVerticalScrollIndicator={false}
                 onEndReached={loadMoreThreads}

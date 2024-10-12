@@ -2,7 +2,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, StyleSheet, Text } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { ScreenWapper } from '../../components'
+import { BaseHeader, ScreenWapper } from '../../components'
 import theme from '../../constants/theme'
 import { logout, setLanguage, toggleDarkMode } from '../../store/slices'
 
@@ -31,6 +31,10 @@ const EditProfileScreen = ({ navigation }) => {
 
     return (
         <ScreenWapper styles={{ backgroundColor: currentColors.background }}>
+            <BaseHeader
+                title={t('setting.header')}
+                onBackPress={() => navigation.goBack()}
+            />
             <Text style={{ color: currentColors.text }}>{t('welcome')}</Text>
             <Button
                 title={t('changeLanguage')}

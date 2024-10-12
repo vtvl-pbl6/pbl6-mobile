@@ -5,8 +5,12 @@ import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { Divider } from 'react-native-paper'
 import RBSheet from 'react-native-raw-bottom-sheet'
 import { useDispatch } from 'react-redux'
-import { LanguageToggle, ModeToggle, ScreenWapper } from '../../components'
-import BaseHeader from '../../components/base/BaseHeader'
+import {
+    BaseHeader,
+    LanguageToggle,
+    ModeToggle,
+    ScreenWapper
+} from '../../components'
 import theme from '../../constants/theme'
 import { useTheme } from '../../contexts'
 import authService from '../../services/authServices'

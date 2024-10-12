@@ -1,7 +1,7 @@
 // [ TEST CODE ]
 
 import React from 'react'
-import { Button, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScreenWapper } from '../../components'
 import ChatRoom from '../../components/testSocket/ChatRoom'
@@ -22,16 +22,7 @@ const ActivityScreen = ({ navigation }) => {
                     justifyContent: 'center',
                     alignItems: 'center'
                 }}
-            >
-                <Button
-                    title="Edit profile"
-                    onPress={() =>
-                        navigation.navigate('Profile', {
-                            screen: 'EditProfile'
-                        })
-                    }
-                />
-            </View>
+            ></View>
             <ChatRoom />
         </ScreenWapper>
     )

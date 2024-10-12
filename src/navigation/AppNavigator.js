@@ -12,11 +12,13 @@ const AppNavigator = () => {
     return (
         <RootStack.Navigator>
             {isAuthenticated ? (
-                <RootStack.Screen
-                    name="MainTabs"
-                    component={TabNavigator}
-                    options={{ headerShown: false }}
-                />
+                <>
+                    <RootStack.Screen
+                        name="MainTabs"
+                        component={TabNavigator}
+                        options={{ headerShown: false }}
+                    />
+                </>
             ) : (
                 <RootStack.Screen
                     name="Auth"

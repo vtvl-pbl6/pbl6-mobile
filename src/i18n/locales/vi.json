@@ -1,6 +1,4 @@
 {
-    "changeLanguage": "Thay đổi ngôn ngữ",
-    "textLogin": "Đăng nhập",
     "modal": {
         "confirm": "Xác nhận",
         "cancel": "Huỷ"
@@ -108,5 +106,10 @@
         "follow": "Theo dõi",
         "unfollow": "Bỏ theo dõi",
         "confirmUnfollow": "Bạn có chắc chắn muốn bỏ theo dõi người dùng này không?"
+    },
+    "threadDetail": {
+        "header": "Thead",
+        "replies": "Thread trả lời",
+        "replyUser": "Trả lời"
     }
 }

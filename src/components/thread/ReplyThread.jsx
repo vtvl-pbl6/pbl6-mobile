@@ -9,7 +9,7 @@ import { useLanguage, useTheme } from '../../contexts'
 import { daysUntilToday, wp } from '../../utils'
 import ImageThread from './ImageThread'
 
-const Thread = memo(({ thread }) => {
+const ReplyThread = memo(({ thread, action = true }) => {
     const dispatch = useDispatch()
     const { currentColors } = useTheme()
     const { t } = useLanguage()
@@ -130,31 +130,7 @@ const Thread = memo(({ thread }) => {
                                 </Text>
                             </View>
                             <Pressable style={styles.more}>
-                                {isCreating ? (
-                                    <View style={styles.creating}>
-                                        <Text
-                                            style={[
-                                                styles.text,
-                                                {
-                                                    color: currentColors.text,
-                                                    fontWeight:
-                                                        theme.fonts.semibold
-                                                }
-                                            ]}
-                                        >
-                                            {t('status.creating')}
-                                        </Text>
-                                        <View style={{ width: wp(5) }}>
-                                            <Text
-                                                style={{
-                                                    color: currentColors.text
-                                                }}
-                                            >
-                                                {dots}
-                                            </Text>
-                                        </View>
-                                    </View>
-                                ) : (
+                                {action && (
                                     <Ionicons
                                         name="ellipsis-horizontal"
                                         size={24}
@@ -168,7 +144,7 @@ const Thread = memo(({ thread }) => {
                         <View
                             style={[
                                 styles.content,
-                                { paddingHorizontal: wp(2) }
+                                { paddingRight: wp(2), paddingLeft: wp(14) }
                             ]}
                         >
                             <Text
@@ -189,7 +165,12 @@ const Thread = memo(({ thread }) => {
                         </View>
 
                         {/* Actions */}
-                        <View style={[styles.actions, { paddingLeft: wp(2) }]}>
+                        <View
+                            style={[
+                                styles.actions,
+                                { paddingRight: wp(2), paddingLeft: wp(14) }
+                            ]}
+                        >
                             <Pressable
                                 style={styles.actionButton}
                                 onPress={toggleLike}
@@ -253,7 +234,7 @@ const Thread = memo(({ thread }) => {
     )
 })
 
-export default Thread
+export default ReplyThread
 
 const styles = StyleSheet.create({
     container: {
@@ -268,7 +249,7 @@ const styles = StyleSheet.create({
         zIndex: 1
     },
     text: {
-        fontSize: wp(4)
+        fontSize: wp(3.8)
     },
     header: {
         flexDirection: 'row',
@@ -301,7 +282,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     content: {
-        paddingVertical: wp(3)
+        paddingBottom: wp(2)
     },
     actions: {
         flexDirection: 'row',
