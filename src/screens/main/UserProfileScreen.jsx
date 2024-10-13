@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons'
+import { useFocusEffect, useRoute } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
 import {
     FlatList,
@@ -10,8 +10,10 @@ import {
 } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+    BaseHeader,
     ProfileInfo,
     ProfileInfoLoader,
+    ScreenWapper,
     Thread,
     ThreadLoader
 } from '../../components'
@@ -21,16 +23,18 @@ import repostService from '../../services/repostService'
 import threadService from '../../services/threadServices'
 import userService from '../../services/userServices'
 import { showToast } from '../../store/slices'
-import { getSafeAreaTop, hp, wp } from '../../utils'
+import { hp, wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
 
-const ProfileScreen = ({ navigation }) => {
+const UserProfileScreen = ({ navigation }) => {
     const dispatch = useDispatch()
     const { currentColors } = useTheme()
     const { t } = useLanguage()
     const handleError = useHandleError(navigation)
     const loading = useSelector(state => state.loading)
-    const update = useSelector(state => state.update)
+
+    const route = useRoute()
+    const { userId } = route.params
 
     const [selectedTab, setSelectedTab] = useState('thread')
     const [threads, setThreads] = useState([])
@@ -44,16 +48,15 @@ const ProfileScreen = ({ navigation }) => {
     const [loadUserInfo, setLoadUserInfo] = useState(false)
     const [loadThread, setLoadThread] = useState(false)
     const [loadRepost, setLoadRepost] = useState(false)
-    const currentUser = useSelector(state => state.user.user)
-    const [isStateReset, setIsStateReset] = useState(false)
     const [isRefreshStateReset, setIsRefreshStateReset] = useState(false)
+    const [isResetDone, setIsResetDone] = useState(false)
 
     const getUserInfo = async () => {
         if (loadUserInfo) return
         setLoadUserInfo(true)
 
         try {
-            const response = await userService.getUserInfo()
+            const response = await userService.getUserById(userId)
             const { data, is_success } = response
 
             if (is_success) {
@@ -67,13 +70,13 @@ const ProfileScreen = ({ navigation }) => {
     }
 
     const fetchThread = async () => {
-        if (!currentUser || loadThread) return
+        if (!userId || loadThread) return
         setLoadThread(true)
 
         try {
             const response = await threadService.getThreadsByAuthor(
                 threadPage,
-                currentUser.id
+                userId
             )
 
             const { data, is_success, metadata } = response
@@ -102,12 +105,14 @@ const ProfileScreen = ({ navigation }) => {
     }
 
     const fetchRepost = async () => {
-        if (loadRepost) return
+        if (!userId || loadRepost) return
         setLoadRepost(true)
 
         try {
-            const response =
-                await repostService.getRepostByCurrentUser(repostPage)
+            const response = await repostService.getRepostByUserId(
+                userId,
+                repostPage
+            )
 
             const { data, is_success, metadata } = response
 
@@ -134,37 +139,29 @@ const ProfileScreen = ({ navigation }) => {
         }
     }
 
-    const reloadAPIs = async () => {
-        setRefreshing(true)
+    useFocusEffect(
+        React.useCallback(() => {
+            setIsResetDone(false)
 
-        setThreads([])
-        setReposts([])
-        setThreadPage(1)
-        setRepostPage(1)
-        setThreadHasMore(true)
-        setRepostHasMore(true)
+            setSelectedTab('thread')
+            setThreads([])
+            setReposts([])
+            setThreadPage(1)
+            setRepostPage(1)
+            setThreadHasMore(true)
+            setRepostHasMore(true)
 
-        setIsStateReset(true)
-    }
-
-    useEffect(() => {
-        if (isStateReset) {
-            const fetchData = async () => {
-                await getUserInfo()
-                await Promise.all([fetchThread(), fetchRepost()])
-                setRefreshing(false)
-                setIsStateReset(false)
-            }
-
-            fetchData()
-        }
-    }, [isStateReset])
+            setIsResetDone(true)
+        }, [])
+    )
 
     useEffect(() => {
-        if (update) {
-            reloadAPIs()
+        if (isResetDone) {
+            getUserInfo()
+            fetchThread()
+            fetchRepost()
         }
-    }, [update])
+    }, [isResetDone])
 
     const handleRefresh = async () => {
         setRefreshing(true)
@@ -203,7 +200,7 @@ const ProfileScreen = ({ navigation }) => {
         getUserInfo()
         fetchThread()
         fetchRepost()
-    }, [])
+    }, [userId])
 
     const handleChangeTab = tab => {
         if (tab !== selectedTab) {
@@ -216,43 +213,20 @@ const ProfileScreen = ({ navigation }) => {
             <ProfileInfoLoader />
         ) : (
             <View style={styles.top}>
-                <View style={styles.navigator}>
-                    <Pressable style={styles.navigatorButton}>
-                        <Ionicons
-                            name="globe-outline"
-                            size={wp(6.2)}
-                            style={[styles.icon, { color: currentColors.text }]}
-                        />
-                    </Pressable>
-                    <Pressable
-                        style={styles.navigatorButton}
-                        onPress={() =>
-                            navigation.navigate('Profile', {
-                                screen: 'SettingScreen'
-                            })
-                        }
-                    >
-                        <Ionicons
-                            name="menu-outline"
-                            size={wp(8)}
-                            style={[styles.icon, { color: currentColors.text }]}
-                        />
-                    </Pressable>
-                </View>
                 {user ? <ProfileInfo user={user} /> : null}
                 <Pressable
                     style={[
-                        styles.editButton,
-                        { borderColor: currentColors.gray }
+                        styles.followButton,
+                        { backgroundColor: currentColors.text }
                     ]}
                 >
                     <Text
                         style={[
-                            styles.editButtonText,
-                            { color: currentColors.text }
+                            styles.followButtonText,
+                            { color: currentColors.background }
                         ]}
                     >
-                        {t('profile.editProfile')}
+                        {t('profile.follow')}
                     </Text>
                 </Pressable>
             </View>
@@ -405,33 +379,39 @@ const ProfileScreen = ({ navigation }) => {
     }
 
     return (
-        <FlatList
-            style={{
-                backgroundColor: currentColors.background,
-                marginTop: getSafeAreaTop()
-            }}
-            data={[{ key: 'header' }, { key: 'tabs' }, { key: 'content' }]}
-            stickyHeaderIndices={[1]}
-            showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => {
-                switch (item.key) {
-                    case 'header':
-                        return renderHeader()
-                    case 'tabs':
-                        return renderTab()
-                    case 'content':
-                        return renderContent()
-                    default:
-                        return null
-                }
-            }}
-            onRefresh={handleRefresh}
-            refreshing={refreshing}
-        />
+        <ScreenWapper>
+            <BaseHeader
+                title={t('profile.title')}
+                border={false}
+                onBackPress={() => navigation.goBack()}
+            />
+            <FlatList
+                style={{
+                    backgroundColor: currentColors.background
+                }}
+                data={[{ key: 'header' }, { key: 'tabs' }, { key: 'content' }]}
+                stickyHeaderIndices={[1]}
+                showsVerticalScrollIndicator={false}
+                renderItem={({ item }) => {
+                    switch (item.key) {
+                        case 'header':
+                            return renderHeader()
+                        case 'tabs':
+                            return renderTab()
+                        case 'content':
+                            return renderContent()
+                        default:
+                            return null
+                    }
+                }}
+                onRefresh={handleRefresh}
+                refreshing={refreshing}
+            />
+        </ScreenWapper>
     )
 }
 
-export default ProfileScreen
+export default UserProfileScreen
 
 const styles = StyleSheet.create({
     navigator: {
@@ -443,16 +423,15 @@ const styles = StyleSheet.create({
     top: {
         paddingVertical: wp(2)
     },
-    editButton: {
+    followButton: {
         marginHorizontal: wp(2),
         justifyContent: 'center',
         alignItems: 'center',
-        borderWidth: 0.6,
         borderRadius: theme.radius.sm,
         paddingVertical: hp(1.2),
         marginTop: hp(1)
     },
-    editButtonText: {
+    followButtonText: {
         fontSize: wp(4),
         fontWeight: theme.fonts.semibold
     },

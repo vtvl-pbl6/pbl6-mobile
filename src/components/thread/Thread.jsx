@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native'
 import React, { memo, useEffect, useState } from 'react'
 import { Facebook } from 'react-content-loader/native'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
@@ -9,10 +10,11 @@ import { useLanguage, useTheme } from '../../contexts'
 import { daysUntilToday, wp } from '../../utils'
 import ImageThread from './ImageThread'
 
-const Thread = memo(({ thread }) => {
+const Thread = memo(({ thread, onGoToProfile }) => {
     const dispatch = useDispatch()
     const { currentColors } = useTheme()
     const { t } = useLanguage()
+    const navigation = useNavigation()
 
     const [liked, setLiked] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -60,6 +62,12 @@ const Thread = memo(({ thread }) => {
         }
     }, [thread.status])
 
+    const handleGoToProfile = () => {
+        if (typeof onGoToProfile === 'function') {
+            onGoToProfile(thread.author.id)
+        }
+    }
+
     if (!thread || !thread.author) {
         return null
     }
@@ -96,7 +104,10 @@ const Thread = memo(({ thread }) => {
                                 { paddingTop: wp(2), paddingHorizontal: wp(2) }
                             ]}
                         >
-                            <View style={styles.user}>
+                            <Pressable
+                                style={styles.user}
+                                onPress={handleGoToProfile}
+                            >
                                 {thread.author.avatar_file ? (
                                     <Image
                                         source={{
@@ -128,7 +139,7 @@ const Thread = memo(({ thread }) => {
                                 >
                                     {daysUntilToday(thread.created_at)}
                                 </Text>
-                            </View>
+                            </Pressable>
                             <Pressable style={styles.more}>
                                 {isCreating ? (
                                     <View style={styles.creating}>
@@ -177,7 +188,9 @@ const Thread = memo(({ thread }) => {
                                     { color: currentColors.text }
                                 ]}
                             >
-                                {thread.content}
+                                {thread.content == 'undefined'
+                                    ? null
+                                    : thread.content}
                             </Text>
                             {Array.isArray(thread.files) &&
                             thread.files.length > 0 ? (

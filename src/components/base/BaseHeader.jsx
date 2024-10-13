@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { useLanguage, useTheme } from '../../contexts'
 import { hp, wp } from '../../utils'
 
-const BaseHeader = ({ title, onBackPress }) => {
+const BaseHeader = ({ title, onBackPress, border = true }) => {
     const { currentColors } = useTheme()
     const { t } = useLanguage()
 
@@ -12,7 +12,11 @@ const BaseHeader = ({ title, onBackPress }) => {
         <View
             style={[
                 styles.headerContainer,
-                { backgroundColor: currentColors.background }
+                { backgroundColor: currentColors.background },
+                border && {
+                    borderBottomWidth: 0.5,
+                    borderBottomColor: 'lightgray'
+                }
             ]}
         >
             <Pressable onPress={onBackPress} style={styles.backButton}>
@@ -35,8 +39,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 10,
-        borderBottomWidth: 0.5,
-        borderBottomColor: 'lightgray',
         justifyContent: 'center',
         alignItems: 'center',
         position: 'relative'

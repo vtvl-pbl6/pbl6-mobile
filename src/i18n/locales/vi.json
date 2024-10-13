@@ -75,7 +75,9 @@
         "success": "Thread được thành công!"
     },
     "profile": {
+        "title": "Trang cá nhân",
         "followers": "người theo dõi",
+        "follow": "Theo dõi",
         "editProfile": "Chỉnh sửa trang cá nhân",
         "thread": "Thread",
         "reposts": "Bài đăng lại",

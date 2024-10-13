@@ -75,7 +75,9 @@
         "success": "Thread has been submitted successfully!"
     },
     "profile": {
+        "title": "Profile",
         "followers": "followers",
+        "follow": "Follow",
         "editProfile": "Edit profile",
         "thread": "Threads",
         "reposts": "Reposts",

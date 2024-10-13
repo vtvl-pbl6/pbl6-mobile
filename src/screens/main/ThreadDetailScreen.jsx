@@ -8,7 +8,7 @@ import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
 import { wp } from '../../utils'
 
-const ThreadDetail = ({ navigation }) => {
+const ThreadDetailScreen = ({ navigation }) => {
     const dispatch = useDispatch()
     const { currentColors } = useTheme()
     const { t } = useLanguage()
@@ -76,6 +76,6 @@ const ThreadDetail = ({ navigation }) => {
     )
 }
 
-export default ThreadDetail
+export default ThreadDetailScreen
 
 const styles = StyleSheet.create({})

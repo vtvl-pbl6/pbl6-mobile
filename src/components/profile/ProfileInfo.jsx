@@ -29,11 +29,6 @@ const ProfileInfo = ({ user }) => {
                     <Text style={[styles.name, { color: currentColors.text }]}>
                         @{user.display_name}
                     </Text>
-                    {/* <Text
-                        style={[styles.username, { color: currentColors.text }]}
-                    >
-                        {user.display_name}
-                    </Text> */}
                 </View>
                 {user.avatar_file ? (
                     <Image

@@ -81,6 +81,10 @@ const HomeScreen = ({ navigation }) => {
         navigation.navigate('ThreadDetail', { thread: thread })
     }
 
+    const handleProfileNavigation = userId => {
+        navigation.navigate('UserProfile', { userId: userId })
+    }
+
     const handleRefresh = async () => {
         setRefreshing(true)
         setThreads([])
@@ -157,7 +161,11 @@ const HomeScreen = ({ navigation }) => {
                 keyExtractor={item => item.id.toString()}
                 renderItem={({ item }) => (
                     <Pressable onPress={() => handleThreadPress(item)}>
-                        <Thread thread={item} loading={loading} />
+                        <Thread
+                            thread={item}
+                            loading={loading}
+                            onGoToProfile={handleProfileNavigation}
+                        />
                     </Pressable>
                 )}
                 showsVerticalScrollIndicator={false}
