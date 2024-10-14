@@ -74,6 +74,19 @@
         "noContent": "Please enter text or select image",
         "success": "Thread has been submitted successfully!"
     },
+    "editThread": {
+        "scope": {
+            "everybody": "Anyone can reply & quote",
+            "friend": "Only friend can reply & quote",
+            "private": "Only me can see"
+        },
+        "noContent": "Please enter text or select image",
+        "updating": "Updating...",
+        "success": "Thread has been updated successfully!",
+        "editThread": "Update thread",
+        "addThread": "Start a thread...",
+        "submit": "Update"
+    },
     "profile": {
         "title": "Profile",
         "followers": "followers",
@@ -113,5 +126,10 @@
         "header": "Thead",
         "replies": "Replies",
         "replyUser": "Reply"
+    },
+    "action": {
+        "delete": "Delete",
+        "edit": "Edit thread",
+        "pin": "Pin to profile"
     }
 }

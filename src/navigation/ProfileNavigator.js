@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
 import { useLanguage, useTheme } from '../contexts'
 import EditProfileScreen from '../screens/profile/EditProfileScreen'
+import EditThreadScreen from '../screens/profile/EditThreadScreen'
 import PrivacyScreen from '../screens/profile/PrivacyScreen'
 import ProfileScreen from '../screens/profile/ProfileScreen'
 import SettingScreen from '../screens/profile/SettingScreen'
@@ -23,6 +24,7 @@ const ProfileNavigator = () => {
             <Stack.Screen name="Privacy" component={PrivacyScreen} />
             <Stack.Screen name="SettingScreen" component={SettingScreen} />
             <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+            <Stack.Screen name="EditThread" component={EditThreadScreen} />
         </Stack.Navigator>
     )
 }

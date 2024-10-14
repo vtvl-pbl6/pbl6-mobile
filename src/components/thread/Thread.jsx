@@ -1,25 +1,30 @@
 import { useNavigation } from '@react-navigation/native'
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import { Facebook } from 'react-content-loader/native'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import ImageSize from 'react-native-image-size'
+import RBSheet from 'react-native-raw-bottom-sheet'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
-import { daysUntilToday, wp } from '../../utils'
+import { daysUntilToday, hp, wp } from '../../utils'
+import ActionButton from '../button/ActionButton'
 import ImageThread from './ImageThread'
 
-const Thread = memo(({ thread, onGoToProfile }) => {
+const Thread = memo(({ thread, onGoToProfile, onEdit, onDelete, onPin }) => {
     const dispatch = useDispatch()
     const { currentColors } = useTheme()
     const { t } = useLanguage()
     const navigation = useNavigation()
+    const currentUser = useSelector(state => state.user.user)
 
     const [liked, setLiked] = useState(false)
     const [loading, setLoading] = useState(false)
     const [imageDimensions, setImageDimensions] = useState([])
     const [dots, setDots] = useState('')
+    const refOwnThreadAction = useRef()
+    const refThreadAction = useRef()
 
     const toggleLike = () => {
         setLiked(!liked)
@@ -68,6 +73,33 @@ const Thread = memo(({ thread, onGoToProfile }) => {
         }
     }
 
+    const handleShowActionSheet = isOwnThread => {
+        if (isOwnThread) {
+            refOwnThreadAction.current.open()
+        } else {
+            refThreadAction.current.open()
+        }
+    }
+
+    const handleDelete = () => {
+        if (typeof onDelete === 'function') {
+            onDelete(thread.id)
+        }
+    }
+
+    const handleEdit = () => {
+        if (typeof onEdit === 'function') {
+            onEdit(thread)
+            refOwnThreadAction.current.close()
+        }
+    }
+
+    const handlePin = () => {
+        if (typeof onPin === 'function') {
+            onEdit(thread.id)
+        }
+    }
+
     if (!thread || !thread.author) {
         return null
     }
@@ -89,14 +121,14 @@ const Thread = memo(({ thread, onGoToProfile }) => {
                 {/* Conditional rendering based on loading state */}
                 {!loading && (
                     <View>
-                        {isCreating && (
+                        {/* {isCreating && (
                             <View
                                 style={[
                                     styles.overlay,
                                     { backgroundColor: currentColors.overlay }
                                 ]}
                             />
-                        )}
+                        )} */}
                         {/* Header */}
                         <View
                             style={[
@@ -140,8 +172,15 @@ const Thread = memo(({ thread, onGoToProfile }) => {
                                     {daysUntilToday(thread.created_at)}
                                 </Text>
                             </Pressable>
-                            <Pressable style={styles.more}>
-                                {isCreating ? (
+                            <Pressable
+                                style={styles.more}
+                                onPress={() =>
+                                    handleShowActionSheet(
+                                        thread.author.id === currentUser.id
+                                    )
+                                }
+                            >
+                                {/* {isCreating ? (
                                     <View style={styles.creating}>
                                         <Text
                                             style={[
@@ -171,7 +210,12 @@ const Thread = memo(({ thread, onGoToProfile }) => {
                                         size={24}
                                         color={currentColors.gray}
                                     />
-                                )}
+                                )} */}
+                                <Ionicons
+                                    name="ellipsis-horizontal"
+                                    size={24}
+                                    color={currentColors.gray}
+                                />
                             </Pressable>
                         </View>
 
@@ -262,6 +306,90 @@ const Thread = memo(({ thread, onGoToProfile }) => {
                     </View>
                 )}
             </View>
+
+            {/* Bottom Sheet Own Thread Action */}
+            <RBSheet
+                customStyles={{
+                    container: [
+                        styles.bottomSheetContainer,
+                        { backgroundColor: currentColors.extraLightGray }
+                    ],
+                    draggableIcon: {
+                        backgroundColor: currentColors.gray,
+                        width: wp(10)
+                    }
+                }}
+                height={hp(35)}
+                openDuration={250}
+                ref={refOwnThreadAction}
+                draggable={true}
+            >
+                <View
+                    style={[
+                        styles.contentBottomSheetContainer,
+                        { backgroundColor: currentColors.extraLightGray }
+                    ]}
+                >
+                    <ActionButton
+                        iconName="settings-outline"
+                        label={t('action.edit')}
+                        onPress={handleEdit}
+                        buttonStyle={{
+                            borderTopLeftRadius: theme.radius.xxl,
+                            borderTopRightRadius: theme.radius.xxl,
+                            borderBottomWidth: 0.6,
+                            borderColor: currentColors.extraLightGray
+                        }}
+                    />
+                    <ActionButton
+                        iconName="document-attach-outline"
+                        label={t('action.pin')}
+                        onPress={handlePin}
+                        buttonStyle={{
+                            borderBottomLeftRadius: theme.radius.xxl,
+                            borderBottomRightRadius: theme.radius.xxl
+                        }}
+                    />
+
+                    <ActionButton
+                        iconName="trash-outline"
+                        label={t('action.delete')}
+                        onPress={handleDelete}
+                        buttonStyle={{
+                            borderRadius: theme.radius.xxl,
+                            marginTop: wp(4)
+                        }}
+                        color={theme.colors.rose}
+                    />
+                </View>
+            </RBSheet>
+
+            {/* Bottom Sheet Thread Action */}
+            <RBSheet
+                customStyles={{
+                    container: [
+                        styles.bottomSheetContainer,
+                        { backgroundColor: currentColors.background }
+                    ],
+                    draggableIcon: {
+                        backgroundColor: currentColors.gray,
+                        width: wp(10)
+                    }
+                }}
+                height={hp(30)}
+                openDuration={250}
+                ref={refThreadAction}
+                draggable={true}
+            >
+                <View
+                    style={[
+                        styles.contentBottomSheetContainer,
+                        { backgroundColor: currentColors.background }
+                    ]}
+                >
+                    <Text>Hi</Text>
+                </View>
+            </RBSheet>
         </View>
     )
 })
@@ -328,5 +456,14 @@ const styles = StyleSheet.create({
     numberAction: {
         fontSize: wp(3.6),
         marginLeft: wp(1)
+    },
+    bottomSheetContainer: {
+        borderTopLeftRadius: theme.radius.xxl,
+        borderTopRightRadius: theme.radius.xxl
+    },
+    contentBottomSheetContainer: {
+        flex: 1,
+        alignItems: 'center',
+        padding: wp(4)
     }
 })

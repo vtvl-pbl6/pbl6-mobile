@@ -74,6 +74,19 @@
         "noContent": "Vui lòng nhập nội dung hoặc chọn ảnh",
         "success": "Thread được thành công!"
     },
+    "editThread": {
+        "scope": {
+            "everybody": "Bất kì ai cũng có thể xem",
+            "friend": "Chỉ có bạn bè mới có thể xem",
+            "private": "Chỉ bạn có thể xem"
+        },
+        "noContent": "Vui lòng nhập nội dung hoặc chọn ảnh",
+        "updating": "Đang chỉnh sửa...",
+        "success": "Thread được chỉnh sửa thành công!",
+        "editThread": "Chỉnh sửa thread",
+        "addThread": "Thêm vào thread...",
+        "submit": "Sửa"
+    },
     "profile": {
         "title": "Trang cá nhân",
         "followers": "người theo dõi",
@@ -113,5 +126,10 @@
         "header": "Thead",
         "replies": "Thread trả lời",
         "replyUser": "Trả lời"
+    },
+    "action": {
+        "delete": "Xoá",
+        "edit": "Chỉnh sửa thread",
+        "pin": "Ghim vào trang cá nhân"
     }
 }

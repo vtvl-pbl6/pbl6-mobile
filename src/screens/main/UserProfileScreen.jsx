@@ -1,13 +1,6 @@
 import { useFocusEffect, useRoute } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
-import {
-    FlatList,
-    Pressable,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
-} from 'react-native'
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import {
     BaseHeader,
@@ -17,6 +10,7 @@ import {
     Thread,
     ThreadLoader
 } from '../../components'
+import ProfileTabs from '../../components/profile/ProfileTabs'
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
 import repostService from '../../services/repostService'
@@ -182,12 +176,10 @@ const UserProfileScreen = ({ navigation }) => {
         if (isRefreshStateReset) {
             const fetchData = async () => {
                 if (selectedTab === 'thread') {
-                    await fetchThread()
+                    await Promise.all([getUserInfo(), fetchThread()])
                 } else if (selectedTab === 'reposts') {
-                    await fetchRepost()
+                    await Promise.all([getUserInfo(), fetchRepost()])
                 }
-
-                await getUserInfo()
                 setRefreshing(false)
                 setIsRefreshStateReset(false)
             }
@@ -231,65 +223,6 @@ const UserProfileScreen = ({ navigation }) => {
                 </Pressable>
             </View>
         )
-
-    const renderTab = () => (
-        <View
-            style={[
-                styles.tabContainer,
-                {
-                    borderBottomColor: currentColors.lightGray,
-                    backgroundColor: currentColors.background
-                }
-            ]}
-        >
-            <TouchableOpacity
-                style={[
-                    styles.tabButton,
-                    { marginLeft: wp(2) },
-                    selectedTab === 'thread' && [
-                        styles.activeTab,
-                        { borderBottomColor: currentColors.text }
-                    ]
-                ]}
-                onPress={() => handleChangeTab('thread')}
-            >
-                <Text
-                    style={[
-                        styles.tabText,
-                        { color: currentColors.gray },
-                        selectedTab === 'thread' && {
-                            color: currentColors.text
-                        }
-                    ]}
-                >
-                    {t('profile.thread')}
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={[
-                    styles.tabButton,
-                    { marginRight: wp(2) },
-                    selectedTab === 'reposts' && [
-                        styles.activeTab,
-                        { borderBottomColor: currentColors.text }
-                    ]
-                ]}
-                onPress={() => handleChangeTab('reposts')}
-            >
-                <Text
-                    style={[
-                        styles.tabText,
-                        { color: currentColors.gray },
-                        selectedTab === 'reposts' && {
-                            color: currentColors.text
-                        }
-                    ]}
-                >
-                    {t('profile.reposts')}
-                </Text>
-            </TouchableOpacity>
-        </View>
-    )
 
     const loadMoreThreads = tab => {
         if (tab === 'thread' && hasThreadMore && !loadThread) {
@@ -397,7 +330,12 @@ const UserProfileScreen = ({ navigation }) => {
                         case 'header':
                             return renderHeader()
                         case 'tabs':
-                            return renderTab()
+                            return (
+                                <ProfileTabs
+                                    selectedTab={selectedTab}
+                                    handleChangeTab={setSelectedTab}
+                                />
+                            )
                         case 'content':
                             return renderContent()
                         default:
@@ -434,24 +372,6 @@ const styles = StyleSheet.create({
     followButtonText: {
         fontSize: wp(4),
         fontWeight: theme.fonts.semibold
-    },
-    tabContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        borderBottomWidth: 0.5
-    },
-    tabButton: {
-        paddingVertical: hp(1),
-        width: wp(48),
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    tabText: {
-        fontSize: wp(4),
-        fontWeight: 'bold'
-    },
-    activeTab: {
-        borderBottomWidth: 1
     },
     noMoreText: {
         textAlign: 'center',

@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native'
 import React from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 import { useSelector } from 'react-redux'
-import theme from '../constants/theme'
+import theme from '../../constants/theme'
 
 const BackButton = ({ size = 26 }) => {
     const navigation = useNavigation()

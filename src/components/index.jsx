@@ -1,4 +1,3 @@
-export { default as BackButton } from './BackButton'
 export { default as Loading } from './Loading'
 export { default as ScreenWapper } from './ScreenWapper'
 export { default as TabBar } from './TabBar'
@@ -15,7 +14,7 @@ export { default as ImageThread } from './thread/ImageThread'
 export { default as ReplyThread } from './thread/ReplyThread'
 export { default as Thread } from './thread/Thread'
 
-// profile
+// user
 export { default as ProfileInfo } from './profile/ProfileInfo'
 
 // toast
@@ -33,3 +32,6 @@ export { default as UserInfoCard } from './card/UserInfoCard'
 // setting
 export { default as LanguageToggle } from './setting/LanguageToggle'
 export { default as ModeToggle } from './setting/ModeToggle'
+
+// button
+export { default as BackButton } from './button/BackButton'

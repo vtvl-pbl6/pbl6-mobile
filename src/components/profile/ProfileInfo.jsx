@@ -50,7 +50,7 @@ const ProfileInfo = ({ user }) => {
             <Text
                 style={[styles.followersNumber, { color: currentColors.gray }]}
             >
-                {user.followers ? user.followers.length : 0}{' '}
+                {user.follower_num ? user.follower_num : 0}{' '}
                 {t('profile.followers')}
             </Text>
         </View>
