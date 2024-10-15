@@ -6,6 +6,11 @@ const userService = {
     },
     getUserById: async id => {
         return await apiClient.get(`/user?id=${id}`)
+    },
+    searchUser: async (username, page) => {
+        return await apiClient.get(
+            `/user/search?limit=10&page=${page}&display_name=${username}`
+        )
     }
 }
 

@@ -120,7 +120,8 @@
         "followers": "followers",
         "follow": "Follow",
         "unfollow": "Unfollow",
-        "confirmUnfollow": "Are you sure you want to unfollow this user?"
+        "confirmUnfollow": "Are you sure you want to unfollow this user?",
+        "loadMore": "Load more..."
     },
     "threadDetail": {
         "header": "Thead",

@@ -15,7 +15,7 @@ const UserInfoCard = ({ user, onFollow, onUnfollow }) => {
         display_name,
         follower_num,
         avatar_file,
-        is_following
+        is_followed_by_current_user
     } = user
 
     return (
@@ -31,10 +31,10 @@ const UserInfoCard = ({ user, onFollow, onUnfollow }) => {
                     {first_name} {last_name}
                 </Text>
                 <Text style={styles.followers}>
-                    {follower_num} {t('search.followers')}
+                    {follower_num ?? 0} {t('search.followers')}
                 </Text>
             </View>
-            {is_following ? (
+            {is_followed_by_current_user ? (
                 <Pressable
                     style={[
                         styles.followButton,

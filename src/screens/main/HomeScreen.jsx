@@ -37,7 +37,12 @@ const HomeScreen = ({ navigation }) => {
             const { data, is_success, metadata } = response
 
             if (is_success) {
-                setThreads(prevThreads => [...prevThreads, ...data])
+                setThreads(prev => {
+                    const newThreads = data.filter(
+                        thread => !prev.some(t => t.id === thread.id)
+                    )
+                    return [...prev, ...newThreads]
+                })
 
                 if (metadata.current_page >= metadata.total_page) {
                     setHasMore(false)

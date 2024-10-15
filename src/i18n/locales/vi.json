@@ -120,7 +120,8 @@
         "followers": "người theo dõi",
         "follow": "Theo dõi",
         "unfollow": "Bỏ theo dõi",
-        "confirmUnfollow": "Bạn có chắc chắn muốn bỏ theo dõi người dùng này không?"
+        "confirmUnfollow": "Bạn có chắc chắn muốn bỏ theo dõi người dùng này không?",
+        "loadMore": "Xem thêm..."
     },
     "threadDetail": {
         "header": "Thead",

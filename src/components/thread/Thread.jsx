@@ -121,14 +121,14 @@ const Thread = memo(({ thread, onGoToProfile, onEdit, onDelete, onPin }) => {
                 {/* Conditional rendering based on loading state */}
                 {!loading && (
                     <View>
-                        {/* {isCreating && (
+                        {isCreating && (
                             <View
                                 style={[
                                     styles.overlay,
                                     { backgroundColor: currentColors.overlay }
                                 ]}
                             />
-                        )} */}
+                        )}
                         {/* Header */}
                         <View
                             style={[
@@ -180,7 +180,7 @@ const Thread = memo(({ thread, onGoToProfile, onEdit, onDelete, onPin }) => {
                                     )
                                 }
                             >
-                                {/* {isCreating ? (
+                                {isCreating ? (
                                     <View style={styles.creating}>
                                         <Text
                                             style={[
@@ -210,12 +210,7 @@ const Thread = memo(({ thread, onGoToProfile, onEdit, onDelete, onPin }) => {
                                         size={24}
                                         color={currentColors.gray}
                                     />
-                                )} */}
-                                <Ionicons
-                                    name="ellipsis-horizontal"
-                                    size={24}
-                                    color={currentColors.gray}
-                                />
+                                )}
                             </Pressable>
                         </View>
 

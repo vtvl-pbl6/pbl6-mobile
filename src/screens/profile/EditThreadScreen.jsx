@@ -51,7 +51,9 @@ const EditThreadScreen = ({ navigation }) => {
 
     useEffect(() => {
         if (thread) {
-            setSelectedImages(thread.files.map(file => file.url))
+            if (thread.files?.length > 0) {
+                setSelectedImages(thread.files.map(file => file.url))
+            }
             setContent(thread.content || '')
             setSelectedScope(thread.visibility)
         }
