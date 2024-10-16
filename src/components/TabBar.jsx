@@ -1,13 +1,18 @@
 import React, { useState } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import theme from '../constants/theme'
+import { setUnreadNotification } from '../store/slices'
 import { hp, wp } from '../utils/dimensionUtils'
 import { getSafeAreaBottom } from '../utils/safeAreaUtils'
 
 const TabBar = ({ state, navigation }) => {
+    const dispatch = useDispatch()
     const isDarkMode = useSelector(state => state.theme.isDarkMode)
+    const unreadNotifications = useSelector(
+        state => state.notification.unreadNotifications
+    )
     const currentColors = isDarkMode
         ? theme.colors.darkMode
         : theme.colors.lightMode
@@ -24,6 +29,11 @@ const TabBar = ({ state, navigation }) => {
 
     const handlePress = (index, route) => {
         setSelectedIndex(index)
+
+        if (route === 'Activity') {
+            dispatch(setUnreadNotification(false))
+        }
+
         navigation.navigate(route)
     }
 
@@ -77,6 +87,9 @@ const TabBar = ({ state, navigation }) => {
                                     : currentColors.gray
                             }
                         />
+                        {tab.name === 'Activity' && unreadNotifications && (
+                            <View style={styles.notificationBadge} />
+                        )}
                     </Pressable>
                 )
             )}
@@ -105,6 +118,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: theme.radius.sm
+    },
+    notificationBadge: {
+        backgroundColor: theme.colors.rose,
+        borderRadius: 50,
+        width: wp(1.2),
+        height: wp(1.2),
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 })
 

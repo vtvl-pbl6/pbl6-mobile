@@ -91,6 +91,7 @@
         "title": "Trang cá nhân",
         "followers": "người theo dõi",
         "follow": "Theo dõi",
+        "followed": "Đang theo dõi",
         "editProfile": "Chỉnh sửa trang cá nhân",
         "thread": "Thread",
         "reposts": "Bài đăng lại",
@@ -132,5 +133,10 @@
         "delete": "Xoá",
         "edit": "Chỉnh sửa thread",
         "pin": "Ghim vào trang cá nhân"
+    },
+    "activity": {
+        "followed": "đã theo dõi bạn",
+        "title": "Hoạt động",
+        "empty": "Bạn chưa có thông báo nào."
     }
 }

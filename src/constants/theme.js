@@ -10,7 +10,7 @@ const theme = {
         },
         darkMode: {
             background: '#101010',
-            text: '#FFFFFF',
+            text: '#F2F5F7',
             lightGray: '#333333',
             gray: '#666666',
             extraLightGray: '#1A1A1A',

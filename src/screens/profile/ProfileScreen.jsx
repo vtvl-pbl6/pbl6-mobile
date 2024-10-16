@@ -8,7 +8,7 @@ import { useLanguage, useTheme } from '../../contexts'
 import repostService from '../../services/repostService'
 import threadService from '../../services/threadServices'
 import userService from '../../services/userServices'
-import { showToast } from '../../store/slices'
+import { setNotificationStatus, showToast } from '../../store/slices'
 import { getSafeAreaTop, wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
 
@@ -17,8 +17,15 @@ const ProfileScreen = ({ navigation }) => {
     const { currentColors } = useTheme()
     const { t } = useLanguage()
     const handleError = useHandleError(navigation)
+
     const loading = useSelector(state => state.loading)
     const update = useSelector(state => state.update)
+    const notificationFollow = useSelector(
+        state => state.notification.notificationStatus.FOLLOW
+    )
+    const notificationUnfollow = useSelector(
+        state => state.notification.notificationStatus.UNFOLLOW
+    )
 
     const [selectedTab, setSelectedTab] = useState('thread')
     const [threads, setThreads] = useState([])
@@ -46,6 +53,12 @@ const ProfileScreen = ({ navigation }) => {
 
             if (is_success) {
                 setUser(data)
+                dispatch(
+                    setNotificationStatus({ type: 'FOLLOW', status: false })
+                )
+                dispatch(
+                    setNotificationStatus({ type: 'UNFOLLOW', status: false })
+                )
             }
         } catch (error) {
             handleError(error)
@@ -53,6 +66,10 @@ const ProfileScreen = ({ navigation }) => {
             setLoadUserInfo(false)
         }
     }
+
+    useEffect(() => {
+        getUserInfo()
+    }, [notificationFollow, notificationUnfollow])
 
     const fetchThread = async () => {
         if (!currentUser || loadThread) return

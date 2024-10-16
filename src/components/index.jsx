@@ -22,6 +22,7 @@ export { default as Toast } from './toast/Toast'
 export { default as ToastManager } from './toast/ToastManager'
 
 // skeleton
+export { default as NotificationLoader } from './load/NotificationLoader'
 export { default as ProfileInfoLoader } from './load/ProfileInfoLoader'
 export { default as ProfileSearchLoader } from './load/ProfileSearchLoader'
 export { default as ThreadLoader } from './load/ThreadLoader'
@@ -35,3 +36,6 @@ export { default as ModeToggle } from './setting/ModeToggle'
 
 // button
 export { default as BackButton } from './button/BackButton'
+
+// notification
+export { default as FollowNotification } from './notification/FollowNotification'

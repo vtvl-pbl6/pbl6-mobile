@@ -14,6 +14,12 @@ const threadService = {
     },
     getThreadById: async threadId => {
         return await apiClient.get('/thread/' + threadId)
+    },
+    likeThread: async threadId => {
+        return await apiClient.patch(`/thread/${threadId}/like`)
+    },
+    unlikeThread: async threadId => {
+        return await apiClient.patch(`/thread/${threadId}/unlike`)
     }
 }
 

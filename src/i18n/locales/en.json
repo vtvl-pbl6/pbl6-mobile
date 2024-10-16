@@ -91,6 +91,7 @@
         "title": "Profile",
         "followers": "followers",
         "follow": "Follow",
+        "followed": "Following",
         "editProfile": "Edit profile",
         "thread": "Threads",
         "reposts": "Reposts",
@@ -132,5 +133,10 @@
         "delete": "Delete",
         "edit": "Edit thread",
         "pin": "Pin to profile"
+    },
+    "activity": {
+        "followed": "followed you",
+        "title": "Activity",
+        "empty": "No notifications available."
     }
 }

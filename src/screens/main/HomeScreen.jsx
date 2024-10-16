@@ -70,7 +70,7 @@ const HomeScreen = ({ navigation }) => {
 
     useEffect(() => {
         getCurrentUser()
-    }, [refreshing])
+    }, [])
 
     useEffect(() => {
         fetchThreads()
@@ -175,7 +175,7 @@ const HomeScreen = ({ navigation }) => {
                 )}
                 showsVerticalScrollIndicator={false}
                 onEndReached={loadMoreThreads}
-                onEndReachedThreshold={0.5}
+                onEndReachedThreshold={1}
                 ListFooterComponent={renderFooter}
                 onRefresh={handleRefresh}
                 refreshing={refreshing}

@@ -1,5 +1,3 @@
-// [ TEST CODE ]
-
 import { API_WS_URL } from '@env'
 import { Client } from '@stomp/stompjs'
 import { Alert } from 'react-native'
@@ -34,28 +32,28 @@ const connectSocket = async (onConnected, onError) => {
         }
     })
 
-    stompClient.activate() // Kích hoạt WebSocket
+    stompClient.activate()
 }
 
-const subscribeToChat = onMessageReceived => {
+const subscribeToTopic = (topic, onMessageReceived) => {
     if (stompClient) {
-        stompClient.subscribe('/public', onMessageReceived) // Đăng ký nhận tin nhắn chat
-    }
-}
-
-const subscribeToNotifications = onNotificationReceived => {
-    if (stompClient) {
-        stompClient.subscribe('/notifications', onNotificationReceived) // Đăng ký nhận thông báo
-    }
-}
-
-const sendMessage = messageData => {
-    if (stompClient && messageData) {
-        stompClient.publish({
-            destination: '/app/message',
-            body: JSON.stringify(messageData) // Gửi tin nhắn tới server
+        stompClient.subscribe(topic, message => {
+            const data = JSON.parse(message.body)
+            onMessageReceived(data)
         })
     }
+}
+
+const subscribeToNotifications = (email, onNotificationReceived) => {
+    const notificationPath = `/private/${email}/user/notification`
+    console.log('Subscribing to notifications:', notificationPath)
+    subscribeToTopic(notificationPath, onNotificationReceived)
+}
+
+const subscribeThreadChannel = (email, onNotification) => {
+    const path = '/public/user'
+    console.log('Subscribing to thread:', path)
+    subscribeToTopic(path, onNotification)
 }
 
 const disconnectSocket = () => {
@@ -67,7 +65,6 @@ const disconnectSocket = () => {
 export {
     connectSocket,
     disconnectSocket,
-    sendMessage,
-    subscribeToChat,
+    subscribeThreadChannel,
     subscribeToNotifications
 }
