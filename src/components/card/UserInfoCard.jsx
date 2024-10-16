@@ -1,14 +1,23 @@
-import React from 'react'
+import { useNavigation } from '@react-navigation/native'
+import React, { useState } from 'react'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
+import userService from '../../services/userServices'
 import { wp } from '../../utils'
+import useHandleError from '../../utils/handlers/errorHandler'
+import Loading from '../Loading'
 
-const UserInfoCard = ({ user, onFollow, onUnfollow }) => {
+const UserInfoCard = ({ user, onUnfollow, onGoToProfile }) => {
+    const dispatch = useDispatch()
     const { currentColors } = useTheme()
     const { t } = useLanguage()
+    const navigation = useNavigation()
+    const handleError = useHandleError(navigation)
 
     const {
+        id,
         email,
         first_name,
         last_name,
@@ -18,8 +27,42 @@ const UserInfoCard = ({ user, onFollow, onUnfollow }) => {
         is_followed_by_current_user
     } = user
 
+    const update = useSelector(state => state.update)
+    const [loading, setLoading] = useState(false)
+    const [isFollowed, setIsFollowed] = useState(is_followed_by_current_user)
+    const [followerNum, setFollowerNum] = useState(follower_num)
+
+    const handleGotoProfile = () => {
+        if (typeof onGoToProfile === 'function') {
+            onGoToProfile(id)
+        }
+    }
+
+    const handleFollow = async () => {
+        if (loading) return
+        setLoading(true)
+
+        try {
+            const response = await userService.followUser(id)
+
+            if (response.is_success) {
+                setIsFollowed(response.is_success)
+                const prev = followerNum
+                setFollowerNum(prev + 1)
+            }
+        } catch (error) {
+            console.log(error)
+            handleError(error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
     return (
-        <View style={[styles.card, { borderColor: currentColors.lightGray }]}>
+        <Pressable
+            style={[styles.card, { borderColor: currentColors.lightGray }]}
+            onPress={handleGotoProfile}
+        >
             {avatar_file ? (
                 <Image source={{ uri: avatar_file }} style={styles.avatar} />
             ) : (
@@ -31,16 +74,20 @@ const UserInfoCard = ({ user, onFollow, onUnfollow }) => {
                     {first_name} {last_name}
                 </Text>
                 <Text style={styles.followers}>
-                    {follower_num ?? 0} {t('search.followers')}
+                    {followerNum ?? 0} {t('search.followers')}
                 </Text>
             </View>
-            {is_followed_by_current_user ? (
+            {loading ? (
+                <View style={styles.followButton}>
+                    <Loading size="small" />
+                </View>
+            ) : isFollowed ? (
                 <Pressable
                     style={[
                         styles.followButton,
                         { borderColor: currentColors.lightGray }
                     ]}
-                    onPress={() => onUnfollow(user.id)} // Call the parent unfollow handler
+                    onPress={() => onUnFollow(user.id)} // Call the parent unfollow handler
                 >
                     <Text
                         style={[
@@ -57,7 +104,7 @@ const UserInfoCard = ({ user, onFollow, onUnfollow }) => {
                         styles.followButton,
                         { borderColor: currentColors.lightGray }
                     ]}
-                    onPress={() => onFollow(user.id)} // Call the parent follow handler
+                    onPress={handleFollow} // Call the parent follow handler
                 >
                     <Text
                         style={[
@@ -69,7 +116,7 @@ const UserInfoCard = ({ user, onFollow, onUnfollow }) => {
                     </Text>
                 </Pressable>
             )}
-        </View>
+        </Pressable>
     )
 }
 

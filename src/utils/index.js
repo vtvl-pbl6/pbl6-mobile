@@ -12,4 +12,5 @@ export {
     saveThemeToStorage,
     saveTokensToStorage
 } from './storageUtils'
+export { debounce } from './timeUtils'
 export { validateRegisterForm } from './validationUtils'

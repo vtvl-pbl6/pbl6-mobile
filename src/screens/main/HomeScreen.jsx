@@ -70,7 +70,7 @@ const HomeScreen = ({ navigation }) => {
 
     useEffect(() => {
         getCurrentUser()
-    }, [refreshing])
+    }, [])
 
     useEffect(() => {
         fetchThreads()

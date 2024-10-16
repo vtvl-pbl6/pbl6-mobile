@@ -4,6 +4,7 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import {
     BaseHeader,
+    Loading,
     ProfileInfo,
     ProfileInfoLoader,
     ScreenWapper,
@@ -16,7 +17,7 @@ import { useLanguage, useTheme } from '../../contexts'
 import repostService from '../../services/repostService'
 import threadService from '../../services/threadServices'
 import userService from '../../services/userServices'
-import { showToast } from '../../store/slices'
+import { setUpdate, showToast } from '../../store/slices'
 import { hp, wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
 
@@ -25,7 +26,7 @@ const UserProfileScreen = ({ navigation }) => {
     const { currentColors } = useTheme()
     const { t } = useLanguage()
     const handleError = useHandleError(navigation)
-    const loading = useSelector(state => state.loading)
+    const update = useSelector(state => state.update)
 
     const route = useRoute()
     const { userId } = route.params
@@ -44,6 +45,9 @@ const UserProfileScreen = ({ navigation }) => {
     const [loadRepost, setLoadRepost] = useState(false)
     const [isRefreshStateReset, setIsRefreshStateReset] = useState(false)
     const [isResetDone, setIsResetDone] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [isFollowed, setIsFollowed] = useState(false)
+    const [isStateReset, setIsStateReset] = useState(false)
 
     const getUserInfo = async () => {
         if (loadUserInfo) return
@@ -55,6 +59,7 @@ const UserProfileScreen = ({ navigation }) => {
 
             if (is_success) {
                 setUser(data)
+                setIsFollowed(data.is_followed_by_current_user ?? false)
             }
         } catch (error) {
             handleError(error)
@@ -194,10 +199,51 @@ const UserProfileScreen = ({ navigation }) => {
         fetchRepost()
     }, [userId])
 
-    const handleChangeTab = tab => {
-        if (tab !== selectedTab) {
-            setSelectedTab(tab)
+    const reloadAPIs = async () => {
+        setRefreshing(true)
+        setIsStateReset(true)
+    }
+
+    useEffect(() => {
+        if (isStateReset) {
+            const fetchData = async () => {
+                await getUserInfo()
+                setRefreshing(false)
+                setIsStateReset(false)
+            }
+
+            fetchData()
         }
+    }, [isStateReset])
+
+    useEffect(() => {
+        if (update) {
+            reloadAPIs()
+        }
+    }, [update])
+
+    const handleFollow = async () => {
+        if (loading) return
+        setLoading(true)
+
+        try {
+            const response = await userService.followUser(userId)
+
+            if (response.is_success) {
+                setIsFollowed(response.is_success)
+            }
+
+            dispatch(setUpdate(true))
+        } catch (error) {
+            handleError(error)
+        } finally {
+            setLoading(false)
+            dispatch(setUpdate(false))
+        }
+    }
+
+    const handleUnfollow = () => {
+        console.log('HANDLE UNFOLLOW: ', userId)
     }
 
     const renderHeader = () =>
@@ -206,21 +252,47 @@ const UserProfileScreen = ({ navigation }) => {
         ) : (
             <View style={styles.top}>
                 {user ? <ProfileInfo user={user} /> : null}
-                <Pressable
-                    style={[
-                        styles.followButton,
-                        { backgroundColor: currentColors.text }
-                    ]}
-                >
-                    <Text
+                {loading ? (
+                    <Loading size="small" />
+                ) : isFollowed ? (
+                    <Pressable
                         style={[
-                            styles.followButtonText,
-                            { color: currentColors.background }
+                            styles.followButton,
+                            {
+                                backgroundColor: currentColors.background,
+                                borderColor: currentColors.lightGray,
+                                borderWidth: 0.5
+                            }
                         ]}
+                        onPress={handleUnfollow}
                     >
-                        {t('profile.follow')}
-                    </Text>
-                </Pressable>
+                        <Text
+                            style={[
+                                styles.followButtonText,
+                                { color: currentColors.text }
+                            ]}
+                        >
+                            {t('profile.followed')}
+                        </Text>
+                    </Pressable>
+                ) : (
+                    <Pressable
+                        style={[
+                            styles.followButton,
+                            { backgroundColor: currentColors.text }
+                        ]}
+                        onPress={handleFollow}
+                    >
+                        <Text
+                            style={[
+                                styles.followButtonText,
+                                { color: currentColors.background }
+                            ]}
+                        >
+                            {t('profile.follow')}
+                        </Text>
+                    </Pressable>
+                )}
             </View>
         )
 

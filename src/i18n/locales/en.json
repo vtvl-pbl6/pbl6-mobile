@@ -91,6 +91,7 @@
         "title": "Profile",
         "followers": "followers",
         "follow": "Follow",
+        "followed": "Following",
         "editProfile": "Edit profile",
         "thread": "Threads",
         "reposts": "Reposts",

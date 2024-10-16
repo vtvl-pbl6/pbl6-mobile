@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
     FlatList,
     Pressable,
@@ -8,7 +8,7 @@ import {
     TextInput,
     View
 } from 'react-native'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
     BaseModal,
     ProfileSearchLoader,
@@ -18,7 +18,7 @@ import {
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
 import userService from '../../services/userServices'
-import { hp, wp } from '../../utils'
+import { debounce, hp, wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
 
 const SearchScreen = ({ navigation }) => {
@@ -26,6 +26,7 @@ const SearchScreen = ({ navigation }) => {
     const { currentColors } = useTheme()
     const { t } = useLanguage()
     const handleError = useHandleError(navigation)
+    const update = useSelector(state => state.update)
 
     const [isFocused, setIsFocused] = useState(false)
     const [searchResults, setSearchResults] = useState([])
@@ -33,6 +34,7 @@ const SearchScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false)
     const [page, setPage] = useState(1)
     const [hasMore, setHasMore] = useState(true)
+    const [isStateReset, setIsStateReset] = useState(false)
 
     // Modal states
     const [modalVisible, setModalVisible] = useState(false)
@@ -87,11 +89,44 @@ const SearchScreen = ({ navigation }) => {
         }
     }
 
+    const debouncedSearch = useCallback(
+        debounce(text => {
+            if (text.trim()) {
+                handleSearch(true)
+            } else {
+                setSearchResults([])
+            }
+        }, 300),
+        []
+    )
+
     useEffect(() => {
-        if (searchInput.trim()) {
-            handleSearch(true)
+        debouncedSearch(searchInput)
+    }, [searchInput, debouncedSearch])
+
+    const reloadAPIs = async () => {
+        setSearchResults([])
+        setPage(1)
+        setHasMore(false)
+
+        setIsStateReset(true)
+    }
+
+    useEffect(() => {
+        if (isStateReset) {
+            const fetchData = async () => {
+                await handleSearch()
+                setIsStateReset(false)
+            }
+            fetchData()
         }
-    }, [searchInput])
+    }, [isStateReset])
+
+    useEffect(() => {
+        if (update) {
+            reloadAPIs()
+        }
+    }, [update])
 
     const loadMoreUsers = () => {
         if (hasMore && !loading) {
@@ -105,8 +140,8 @@ const SearchScreen = ({ navigation }) => {
         }
     }, [page])
 
-    const handleFollow = userId => {
-        console.log(`Following user with ID: ${userId}`)
+    const handleProfileNavigation = userId => {
+        navigation.navigate('UserProfile', { userId: userId })
     }
 
     const handleUnfollow = userId => {
@@ -187,8 +222,8 @@ const SearchScreen = ({ navigation }) => {
                     renderItem={({ item }) => (
                         <UserInfoCard
                             user={item}
-                            onFollow={handleFollow}
                             onUnfollow={handleUnfollow}
+                            onGoToProfile={handleProfileNavigation}
                         />
                     )}
                     keyExtractor={item => item.id.toString()}

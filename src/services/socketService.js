@@ -43,9 +43,24 @@ const subscribeToChat = onMessageReceived => {
     }
 }
 
-const subscribeToNotifications = onNotificationReceived => {
+// const subscribeToNotifications = (email, onNotificationReceived) => {
+//     if (stompClient) {
+//         console.log("EMAIL: ", email)
+//         const notificationPath = `/private/${email}/user/notification`
+//         console.log('Subscribing to:', notificationPath)
+//         stompClient.subscribe(notificationPath, onNotificationReceived) // Đăng ký nhận thông báo
+//     }
+// }
+
+const subscribeToNotifications = (email, onNotificationReceived) => {
     if (stompClient) {
-        stompClient.subscribe('/notifications', onNotificationReceived) // Đăng ký nhận thông báo
+        const notificationPath = `/private/${email}/user/notification`
+        console.log('Subscribing to notifications:', notificationPath)
+        stompClient.subscribe(notificationPath, message => {
+            const notification = JSON.parse(message.body)
+            console.log('Notification data:', notification)
+            onNotificationReceived(notification)
+        })
     }
 }
 

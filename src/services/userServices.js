@@ -11,6 +11,9 @@ const userService = {
         return await apiClient.get(
             `/user/search?limit=10&page=${page}&display_name=${username}`
         )
+    },
+    followUser: async id => {
+        return await apiClient.post(`/user/${id}/follow`)
     }
 }
 
