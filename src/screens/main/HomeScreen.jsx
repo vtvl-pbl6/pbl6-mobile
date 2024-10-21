@@ -9,12 +9,13 @@ import {
     Text,
     View
 } from 'react-native'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { ScreenWapper, Thread } from '../../components'
 import { useLanguage, useTheme } from '../../contexts'
 import threadService from '../../services/threadServices'
 import userService from '../../services/userServices'
 import { setUser, showToast } from '../../store/slices'
+import { clearThreads, setThreads } from '../../store/slices/threadSlice'
 import { hp, wp } from '../../utils'
 
 const HomeScreen = ({ navigation }) => {
@@ -22,11 +23,12 @@ const HomeScreen = ({ navigation }) => {
     const { currentColors } = useTheme()
     const { t } = useLanguage()
 
-    const [threads, setThreads] = useState([])
+    const threads = useSelector(state => state.threads.threads)
+    const hasMore = useSelector(state => state.threads.hasMore)
+
     const [loading, setLoading] = useState(false)
     const [refreshing, setRefreshing] = useState(false)
     const [page, setPage] = useState(1)
-    const [hasMore, setHasMore] = useState(true)
 
     const fetchThreads = async () => {
         if (loading || !hasMore) return
@@ -37,18 +39,15 @@ const HomeScreen = ({ navigation }) => {
             const { data, is_success, metadata } = response
 
             if (is_success) {
-                setThreads(prev => {
-                    const newThreads = data.filter(
-                        thread => !prev.some(t => t.id === thread.id)
-                    )
-                    return [...prev, ...newThreads]
-                })
-
-                if (metadata.current_page >= metadata.total_page) {
-                    setHasMore(false)
-                }
+                dispatch(
+                    setThreads({
+                        threads: data.filter(
+                            thread => !threads.some(t => t.id === thread.id)
+                        ),
+                        hasMore: metadata.current_page < metadata.total_page
+                    })
+                )
             } else {
-                setHasMore(false)
                 dispatch(
                     showToast({
                         message: t('error.fetchFailed'),
@@ -61,6 +60,14 @@ const HomeScreen = ({ navigation }) => {
         } finally {
             setLoading(false)
         }
+    }
+
+    const handleRefresh = async () => {
+        setRefreshing(true)
+        dispatch(clearThreads())
+        setPage(1)
+        await fetchThreads()
+        setRefreshing(false)
     }
 
     const getCurrentUser = async () => {
@@ -88,15 +95,6 @@ const HomeScreen = ({ navigation }) => {
 
     const handleProfileNavigation = userId => {
         navigation.navigate('UserProfile', { userId: userId })
-    }
-
-    const handleRefresh = async () => {
-        setRefreshing(true)
-        setThreads([])
-        setPage(1)
-        setHasMore(true)
-        await fetchThreads()
-        setRefreshing(false)
     }
 
     const renderFooter = () => {
@@ -175,7 +173,7 @@ const HomeScreen = ({ navigation }) => {
                 )}
                 showsVerticalScrollIndicator={false}
                 onEndReached={loadMoreThreads}
-                onEndReachedThreshold={1}
+                onEndReachedThreshold={0.5}
                 ListFooterComponent={renderFooter}
                 onRefresh={handleRefresh}
                 refreshing={refreshing}

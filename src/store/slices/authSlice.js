@@ -16,7 +16,8 @@ const authSlice = createSlice({
             state.isAuthenticated = true
         },
         logout(state) {
-            ;(state.isAuthenticated = false), clearTokensFromStorage()
+            state.isAuthenticated = false
+            clearTokensFromStorage()
         },
         setAuthentication(state, action) {
             state.isAuthenticated = action.payload

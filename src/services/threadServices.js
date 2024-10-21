@@ -20,6 +20,12 @@ const threadService = {
     },
     unlikeThread: async threadId => {
         return await apiClient.patch(`/thread/${threadId}/unlike`)
+    },
+    shareThread: async threadId => {
+        return await apiClient.post(`/thread/${threadId}/share`)
+    },
+    unsharedThread: async threadId => {
+        return await apiClient.post(`/thread/${threadId}/unshared`)
     }
 }
 

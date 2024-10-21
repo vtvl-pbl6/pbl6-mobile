@@ -8,6 +8,7 @@ import userService from '../../services/userServices'
 import { wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
 import Loading from '../Loading'
+import BaseModal from '../base/BaseModal'
 
 const UserInfoCard = ({ user, onGoToProfile }) => {
     const dispatch = useDispatch()
@@ -31,6 +32,16 @@ const UserInfoCard = ({ user, onGoToProfile }) => {
     const [loading, setLoading] = useState(false)
     const [isFollowed, setIsFollowed] = useState(is_followed_by_current_user)
     const [followerNum, setFollowerNum] = useState(follower_num)
+    const [isModalVisible, setIsModalVisible] = useState(false)
+
+    const handleConfirm = () => {
+        setIsModalVisible(false)
+        handleUnFollow()
+    }
+
+    const handleCancel = () => {
+        setIsModalVisible(false)
+    }
 
     const handleGotoProfile = () => {
         if (typeof onGoToProfile === 'function') {
@@ -76,6 +87,10 @@ const UserInfoCard = ({ user, onGoToProfile }) => {
         }
     }
 
+    const showModal = () => {
+        setIsModalVisible(true)
+    }
+
     return (
         <Pressable
             style={[styles.card, { borderColor: currentColors.lightGray }]}
@@ -109,7 +124,7 @@ const UserInfoCard = ({ user, onGoToProfile }) => {
                         styles.followButton,
                         { borderColor: currentColors.lightGray }
                     ]}
-                    onPress={handleUnFollow} // Call the parent unfollow handler
+                    onPress={showModal}
                 >
                     <Text
                         style={[
@@ -126,7 +141,7 @@ const UserInfoCard = ({ user, onGoToProfile }) => {
                         styles.followButton,
                         { borderColor: currentColors.lightGray }
                     ]}
-                    onPress={handleFollow} // Call the parent follow handler
+                    onPress={handleFollow}
                 >
                     <Text
                         style={[
@@ -138,6 +153,13 @@ const UserInfoCard = ({ user, onGoToProfile }) => {
                     </Text>
                 </Pressable>
             )}
+            <BaseModal
+                visible={isModalVisible}
+                title={t('search.unfollow') + ' ' + user.display_name}
+                message={t('search.confirmUnfollow')}
+                onConfirm={handleConfirm}
+                onCancel={handleCancel}
+            />
         </Pressable>
     )
 }

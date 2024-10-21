@@ -9,6 +9,12 @@ import repostService from '../../services/repostService'
 import threadService from '../../services/threadServices'
 import userService from '../../services/userServices'
 import { setNotificationStatus, showToast } from '../../store/slices'
+import {
+    clearMyThreads,
+    clearReposts,
+    setMyThreads,
+    setReposts
+} from '../../store/slices/threadSlice'
 import { getSafeAreaTop, wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
 
@@ -20,6 +26,11 @@ const ProfileScreen = ({ navigation }) => {
 
     const loading = useSelector(state => state.loading)
     const update = useSelector(state => state.update)
+    const currentUser = useSelector(state => state.user.user)
+    const threads = useSelector(state => state.threads.myThreads)
+    const hasThreadMore = useSelector(state => state.threads.hasMoreMyThread)
+    const reposts = useSelector(state => state.threads.reposts)
+    const hasRepostMore = useSelector(state => state.threads.hasMoreRepost)
     const notificationFollow = useSelector(
         state => state.notification.notificationStatus.FOLLOW
     )
@@ -28,18 +39,13 @@ const ProfileScreen = ({ navigation }) => {
     )
 
     const [selectedTab, setSelectedTab] = useState('thread')
-    const [threads, setThreads] = useState([])
-    const [reposts, setReposts] = useState([])
     const [user, setUser] = useState(null)
     const [threadPage, setThreadPage] = useState(1)
     const [repostPage, setRepostPage] = useState(1)
-    const [hasThreadMore, setThreadHasMore] = useState(true)
-    const [hasRepostMore, setRepostHasMore] = useState(true)
     const [refreshing, setRefreshing] = useState(false)
     const [loadUserInfo, setLoadUserInfo] = useState(false)
     const [loadThread, setLoadThread] = useState(false)
     const [loadRepost, setLoadRepost] = useState(false)
-    const currentUser = useSelector(state => state.user.user)
     const [isStateReset, setIsStateReset] = useState(false)
     const [isRefreshStateReset, setIsRefreshStateReset] = useState(false)
 
@@ -84,13 +90,15 @@ const ProfileScreen = ({ navigation }) => {
             const { data, is_success, metadata } = response
 
             if (is_success) {
-                setThreads(prev => {
-                    const newThreads = data.filter(
-                        thread => !prev.some(t => t.id === thread.id)
-                    )
-                    return [...prev, ...newThreads]
-                })
-                setThreadHasMore(metadata.current_page < metadata.total_page)
+                dispatch(
+                    setMyThreads({
+                        myThreads: data.filter(
+                            thread => !threads.some(t => t.id === thread.id)
+                        ),
+                        hasMoreMyThread:
+                            metadata.current_page < metadata.total_page
+                    })
+                )
             } else {
                 dispatch(
                     showToast({
@@ -117,13 +125,15 @@ const ProfileScreen = ({ navigation }) => {
             const { data, is_success, metadata } = response
 
             if (is_success) {
-                setReposts(prev => {
-                    const newRepost = data.filter(
-                        thread => !prev.some(t => t.id === thread.id)
-                    )
-                    return [...prev, ...newRepost]
-                })
-                setRepostHasMore(metadata.current_page < metadata.total_page)
+                dispatch(
+                    setReposts({
+                        reposts: data.filter(
+                            repost => !reposts.some(t => t.id === repost.id)
+                        ),
+                        hasMoreRepost:
+                            metadata.current_page < metadata.total_page
+                    })
+                )
             } else {
                 dispatch(
                     showToast({
@@ -141,14 +151,10 @@ const ProfileScreen = ({ navigation }) => {
 
     const reloadAPIs = async () => {
         setRefreshing(true)
-
-        setThreads([])
-        setReposts([])
+        dispatch(clearMyThreads())
+        dispatch(clearReposts())
         setThreadPage(1)
         setRepostPage(1)
-        setThreadHasMore(true)
-        setRepostHasMore(true)
-
         setIsStateReset(true)
     }
 
@@ -174,13 +180,11 @@ const ProfileScreen = ({ navigation }) => {
     const handleRefresh = async () => {
         setRefreshing(true)
         if (selectedTab === 'thread') {
-            setThreads([])
+            dispatch(clearMyThreads())
             setThreadPage(1)
-            setThreadHasMore(true)
         } else if (selectedTab === 'reposts') {
-            setReposts([])
+            dispatch(clearReposts())
             setRepostPage(1)
-            setRepostHasMore(true)
         }
 
         setIsRefreshStateReset(true)
@@ -207,12 +211,6 @@ const ProfileScreen = ({ navigation }) => {
         fetchThread()
         fetchRepost()
     }, [])
-
-    const handleChangeTab = tab => {
-        if (tab !== selectedTab) {
-            setSelectedTab(tab)
-        }
-    }
 
     const handleEditThread = thread => {
         navigation.navigate('EditThread', { thread: thread })

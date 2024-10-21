@@ -15,6 +15,7 @@ import {
     setUnreadNotification,
     showToast
 } from '../store/slices'
+import { updateInteraction } from '../store/slices/threadSlice'
 import AuthNavigator from './AuthNavigator'
 import TabNavigator from './TabNavigator'
 
@@ -47,6 +48,17 @@ const AppNavigator = () => {
                     })
                     subscribeThreadChannel(user.email, thread => {
                         console.log('Thread received:', thread)
+                        const { read, object_id, type } = thread
+
+                        dispatch(
+                            setNotificationStatus({ type: type, status: true })
+                        )
+
+                        if (type == 'UNSHARED' || type == 'SHARE') {
+                            dispatch(
+                                updateInteraction({ id: object_id, type: type })
+                            )
+                        }
                     })
                 },
                 error => console.error('WebSocket error:', error)

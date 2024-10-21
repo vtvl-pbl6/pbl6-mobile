@@ -132,7 +132,10 @@
     "action": {
         "delete": "Delete",
         "edit": "Edit thread",
-        "pin": "Pin to profile"
+        "pin": "Pin to profile",
+        "shareSuccess": "Repost successfully!",
+        "unshareConfirmTitle": "Unrepost",
+        "unshareConfirmMessage": "Are you sure you want to remove this repost?"
     },
     "activity": {
         "followed": "followed you",

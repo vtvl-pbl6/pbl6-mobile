@@ -9,7 +9,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
 import threadService from '../../services/threadServices'
+import { showToast } from '../../store/slices'
 import { daysUntilToday, hp, wp } from '../../utils'
+import useHandleError from '../../utils/handlers/errorHandler'
+import BaseModal from '../base/BaseModal'
 import ActionButton from '../button/ActionButton'
 import ImageThread from './ImageThread'
 
@@ -21,12 +24,24 @@ const Thread = memo(
         const navigation = useNavigation()
         const currentUser = useSelector(state => state.user.user)
 
-        const [liked, setLiked] = useState(false)
         const [loading, setLoading] = useState(false)
         const [imageDimensions, setImageDimensions] = useState([])
         const [dots, setDots] = useState('')
         const refOwnThreadAction = useRef()
         const refThreadAction = useRef()
+
+        const [liked, setLiked] = useState(false)
+        const [isShared, setIsShared] = useState(false)
+        const [isUnsharedModalVisible, setIsUnsharedModalVisible] =
+            useState(false)
+
+        useEffect(() => {
+            if (thread?.sharers && currentUser) {
+                setIsShared(
+                    thread.sharers.some(user => user.id === currentUser.id)
+                )
+            }
+        }, [thread.sharers, currentUser])
 
         const toggleLike = async () => {
             try {
@@ -113,6 +128,48 @@ const Thread = memo(
             if (typeof onPin === 'function') {
                 onEdit(thread.id)
             }
+        }
+
+        const handleShareUnshared = () => {
+            if (isShared) {
+                setIsUnsharedModalVisible(true)
+            } else {
+                performShareUnshare()
+            }
+        }
+
+        const performShareUnshare = async () => {
+            try {
+                let response
+                if (isShared) {
+                    response = await threadService.unsharedThread(thread.id)
+                    if (response.is_success) {
+                        setIsShared(false)
+                    }
+                } else {
+                    response = await threadService.shareThread(thread.id)
+                    if (response.is_success) {
+                        setIsShared(true)
+                        dispatch(
+                            showToast({
+                                message: t('action.shareSuccess'),
+                                type: 'success'
+                            })
+                        )
+                    }
+                }
+            } catch (error) {
+                useHandleError(error)
+            }
+        }
+
+        const handleUnsharedConfirm = () => {
+            setIsUnsharedModalVisible(false)
+            performShareUnshare()
+        }
+
+        const handleUnsharedCancel = () => {
+            setIsUnsharedModalVisible(false)
         }
 
         if (!thread || !thread.author) {
@@ -269,6 +326,7 @@ const Thread = memo(
                             <View
                                 style={[styles.actions, { paddingLeft: wp(2) }]}
                             >
+                                {/* Like */}
                                 <Pressable
                                     style={styles.actionButton}
                                     onPress={toggleLike}
@@ -291,6 +349,8 @@ const Thread = memo(
                                         {thread.reaction_num}
                                     </Text>
                                 </Pressable>
+
+                                {/* Comment */}
                                 <Pressable style={styles.actionButton}>
                                     <Ionicons
                                         name="chatbubble-outline"
@@ -309,16 +369,29 @@ const Thread = memo(
                                             : 0}
                                     </Text>
                                 </Pressable>
-                                <Pressable style={styles.actionButton}>
+
+                                {/* Share */}
+                                <Pressable
+                                    style={styles.actionButton}
+                                    onPress={handleShareUnshared}
+                                >
                                     <Ionicons
                                         name="sync-outline"
                                         size={wp(6)}
-                                        color={currentColors.gray}
+                                        color={
+                                            isShared
+                                                ? theme.colors.green
+                                                : currentColors.gray
+                                        }
                                     />
                                     <Text
                                         style={[
                                             styles.numberAction,
-                                            { color: currentColors.gray }
+                                            {
+                                                color: isShared
+                                                    ? theme.colors.green
+                                                    : currentColors.gray
+                                            }
                                         ]}
                                     >
                                         {thread.shared_num}
@@ -412,8 +485,20 @@ const Thread = memo(
                         <Text>Hi</Text>
                     </View>
                 </RBSheet>
+
+                {/* Modal confirm unshared */}
+                <BaseModal
+                    visible={isUnsharedModalVisible}
+                    title={t('action.unshareConfirmTitle')}
+                    message={t('action.unshareConfirmMessage')}
+                    onConfirm={handleUnsharedConfirm}
+                    onCancel={handleUnsharedCancel}
+                />
             </View>
         )
+    },
+    (prevProps, nextProps) => {
+        return prevProps.thread === nextProps.thread
     }
 )
 

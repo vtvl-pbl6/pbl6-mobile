@@ -15,6 +15,7 @@ import theme from '../../constants/theme'
 import { useTheme } from '../../contexts'
 import authService from '../../services/authServices'
 import { logout } from '../../store/slices'
+import { clearAllThreads } from '../../store/slices/threadSlice'
 import { hp, wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
 
@@ -32,6 +33,7 @@ const SettingScreen = ({ navigation }) => {
             const response = await authService.logout()
             if (response.is_success) {
                 dispatch(logout())
+                dispatch(clearAllThreads())
             }
         } catch (error) {
             useHandleError(error)

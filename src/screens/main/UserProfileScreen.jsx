@@ -4,6 +4,7 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import {
     BaseHeader,
+    BaseModal,
     Loading,
     ProfileInfo,
     ProfileInfoLoader,
@@ -48,6 +49,16 @@ const UserProfileScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false)
     const [isFollowed, setIsFollowed] = useState(false)
     const [isStateReset, setIsStateReset] = useState(false)
+    const [isModalVisible, setIsModalVisible] = useState(false)
+
+    const handleConfirm = () => {
+        setIsModalVisible(false)
+        handleUnFollow()
+    }
+
+    const handleCancel = () => {
+        setIsModalVisible(false)
+    }
 
     const getUserInfo = async () => {
         if (loadUserInfo) return
@@ -242,8 +253,29 @@ const UserProfileScreen = ({ navigation }) => {
         }
     }
 
-    const handleUnfollow = () => {
-        console.log('HANDLE UNFOLLOW: ', userId)
+    const handleUnFollow = async () => {
+        if (loading) return
+        setLoading(true)
+
+        try {
+            const response = await userService.unfollowUser(userId)
+
+            if (response.is_success) {
+                setIsFollowed(!response.is_success)
+            }
+
+            dispatch(setUpdate(true))
+        } catch (error) {
+            console.error(error)
+            handleError(error)
+        } finally {
+            setLoading(false)
+            dispatch(setUpdate(false))
+        }
+    }
+
+    const showModal = () => {
+        setIsModalVisible(true)
     }
 
     const renderHeader = () =>
@@ -264,7 +296,7 @@ const UserProfileScreen = ({ navigation }) => {
                                 borderWidth: 0.5
                             }
                         ]}
-                        onPress={handleUnfollow}
+                        onPress={showModal}
                     >
                         <Text
                             style={[
@@ -338,7 +370,6 @@ const UserProfileScreen = ({ navigation }) => {
         return (
             <FlatList
                 data={data}
-                // keyExtractor={item => `${tab}-${item.id.toString()}`}
                 keyExtractor={(item, index) => `${tab}-${item.id}-${index}`}
                 renderItem={({ item }) => <Thread thread={item} />}
                 showsVerticalScrollIndicator={false}
@@ -416,6 +447,15 @@ const UserProfileScreen = ({ navigation }) => {
                 }}
                 onRefresh={handleRefresh}
                 refreshing={refreshing}
+            />
+            <BaseModal
+                visible={isModalVisible}
+                title={
+                    user ? `${t('search.unfollow')} ${user.display_name}` : ''
+                }
+                message={t('search.confirmUnfollow')}
+                onConfirm={handleConfirm}
+                onCancel={handleCancel}
             />
         </ScreenWapper>
     )

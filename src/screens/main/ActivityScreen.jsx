@@ -168,6 +168,7 @@ const ActivityScreen = ({ navigation }) => {
                 onEndReached={loadMoreNotification}
                 onRefresh={handleRefresh}
                 refreshing={refreshing}
+                showsVerticalScrollIndicator={false}
             />
         </ScreenWapper>
     )
