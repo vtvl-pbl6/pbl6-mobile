@@ -140,6 +140,6 @@
     "activity": {
         "followed": "đã theo dõi bạn",
         "title": "Hoạt động",
-        "empty": "Bạn chưa có thông báo nào."
+        "empty": "Không còn thông báo nào cũ hơn"
     }
 }

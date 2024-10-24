@@ -1,12 +1,7 @@
-import LottieView from 'lottie-react-native'
 import React, { useEffect, useState } from 'react'
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { FlatList, StyleSheet, Text } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-    FollowNotification,
-    NotificationLoader,
-    ScreenWapper
-} from '../../components'
+import { FollowNotification, Footer, ScreenWapper } from '../../components'
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
 import notificationService from '../../services/notificationService'
@@ -69,7 +64,7 @@ const ActivityScreen = ({ navigation }) => {
 
     useEffect(() => {
         fetchNotification()
-    })
+    }, [])
 
     useEffect(() => {
         setNotifications(prev => {
@@ -111,42 +106,6 @@ const ActivityScreen = ({ navigation }) => {
         fetchNotification()
     }, [page, refreshing])
 
-    const renderFooter = () => {
-        {
-            loading && (
-                <FlatList
-                    data={[...Array(6)]}
-                    renderItem={({ index }) => (
-                        <NotificationLoader key={index} />
-                    )}
-                    keyExtractor={(item, index) => index.toString()}
-                    showsVerticalScrollIndicator={false}
-                />
-            )
-        }
-        const animationSource =
-            currentColors.background === '#FFFFFF'
-                ? require('../../../assets/animations/notFoundLight.json')
-                : require('../../../assets/animations/notFoundDark.json')
-
-        return (
-            <View style={{ flex: 1 }}>
-                <LottieView
-                    source={animationSource}
-                    autoPlay
-                    loop
-                    enableMergePathsAndroidForKitKatAndAbove={true}
-                    style={[styles.animation]}
-                />
-                <Text
-                    style={[styles.noMoreText, { color: currentColors.text }]}
-                >
-                    {t('activity.empty')}
-                </Text>
-            </View>
-        )
-    }
-
     return (
         <ScreenWapper
             styles={[
@@ -162,7 +121,13 @@ const ActivityScreen = ({ navigation }) => {
                 data={notifications}
                 renderItem={renderNotification}
                 keyExtractor={(item, index) => index.toString()}
-                ListFooterComponent={renderFooter}
+                ListFooterComponent={
+                    <Footer
+                        loading={loading}
+                        hasMore={hasMore}
+                        label={t('activity.empty')}
+                    />
+                }
                 onEndReachedThreshold={0.5}
                 style={styles.notification}
                 onEndReached={loadMoreNotification}

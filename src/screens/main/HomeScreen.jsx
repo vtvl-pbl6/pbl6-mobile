@@ -1,22 +1,14 @@
-import LottieView from 'lottie-react-native'
 import React, { useEffect, useState } from 'react'
 import { Facebook } from 'react-content-loader/native'
-import {
-    ActivityIndicator,
-    FlatList,
-    Pressable,
-    StyleSheet,
-    Text,
-    View
-} from 'react-native'
+import { FlatList, Pressable, StyleSheet } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { ScreenWapper, Thread } from '../../components'
+import { Footer, ScreenWapper, Thread } from '../../components'
 import { useLanguage, useTheme } from '../../contexts'
 import threadService from '../../services/threadServices'
 import userService from '../../services/userServices'
 import { setUser, showToast } from '../../store/slices'
 import { clearThreads, setThreads } from '../../store/slices/threadSlice'
-import { hp, wp } from '../../utils'
+import { wp } from '../../utils'
 
 const HomeScreen = ({ navigation }) => {
     const dispatch = useDispatch()
@@ -70,12 +62,11 @@ const HomeScreen = ({ navigation }) => {
         setRefreshing(false)
     }
 
-    const getCurrentUser = async () => {
-        const userResponse = await userService.getUserInfo()
-        dispatch(setUser(userResponse.data))
-    }
-
     useEffect(() => {
+        const getCurrentUser = async () => {
+            const userResponse = await userService.getUserInfo()
+            dispatch(setUser(userResponse.data))
+        }
         getCurrentUser()
     }, [])
 
@@ -95,45 +86,6 @@ const HomeScreen = ({ navigation }) => {
 
     const handleProfileNavigation = userId => {
         navigation.navigate('UserProfile', { userId: userId })
-    }
-
-    const renderFooter = () => {
-        if (loading) {
-            return (
-                <ActivityIndicator
-                    size="small"
-                    color={currentColors.text}
-                    style={{ paddingVertical: 30 }}
-                />
-            )
-        }
-        if (!hasMore) {
-            const animationSource =
-                currentColors.background === '#FFFFFF'
-                    ? require('../../../assets/animations/notFoundLight.json')
-                    : require('../../../assets/animations/notFoundDark.json')
-
-            return (
-                <View style={{ flex: 1 }}>
-                    <LottieView
-                        source={animationSource}
-                        autoPlay
-                        loop
-                        enableMergePathsAndroidForKitKatAndAbove={true}
-                        style={[styles.animation]}
-                    />
-                    <Text
-                        style={[
-                            styles.noMoreText,
-                            { color: currentColors.text }
-                        ]}
-                    >
-                        {t('home.noMoreThread')}
-                    </Text>
-                </View>
-            )
-        }
-        return null
     }
 
     if (loading && threads.length === 0) {
@@ -174,7 +126,13 @@ const HomeScreen = ({ navigation }) => {
                 showsVerticalScrollIndicator={false}
                 onEndReached={loadMoreThreads}
                 onEndReachedThreshold={0.5}
-                ListFooterComponent={renderFooter}
+                ListFooterComponent={
+                    <Footer
+                        loading={loading}
+                        hasMore={hasMore}
+                        label={t('home.noMoreThread')}
+                    />
+                }
                 onRefresh={handleRefresh}
                 refreshing={refreshing}
             />
@@ -188,14 +146,5 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: wp(2)
-    },
-    noMoreText: {
-        textAlign: 'center',
-        padding: 16
-    },
-    animation: {
-        width: wp(100),
-        height: hp(20),
-        alignSelf: 'center'
     }
 })
