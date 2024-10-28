@@ -17,7 +17,7 @@ import ActionButton from '../button/ActionButton'
 import ImageThread from './ImageThread'
 
 const Thread = memo(
-    ({ thread, onGoToProfile, onEdit, onDelete, onPin, onLike }) => {
+    ({ thread, onGoToProfile, onEdit, onDelete, onPin }) => {
         const dispatch = useDispatch()
         const { currentColors } = useTheme()
         const { t } = useLanguage()
@@ -34,6 +34,7 @@ const Thread = memo(
         const [isShared, setIsShared] = useState(false)
         const [isUnsharedModalVisible, setIsUnsharedModalVisible] =
             useState(false)
+        const [isLiking, setIsLiking] = useState(false)
 
         useEffect(() => {
             if (thread?.sharers && currentUser) {
@@ -43,19 +44,13 @@ const Thread = memo(
             }
         }, [thread.sharers, currentUser])
 
-        const toggleLike = async () => {
-            try {
-                // onLike(liked)
-                const response = await threadService.likeThread(thread.id)
-
-                const { is_success } = response
-                if (is_success) {
-                    setLiked(is_success)
-                }
-            } catch (error) {
-                console.log(error)
+        useEffect(() => {
+            if (thread?.react_users && currentUser) {
+                setLiked(
+                    thread.react_users.some(user => user.id === currentUser.id)
+                )
             }
-        }
+        }, [thread.react_users, currentUser])
 
         const fetchImageDimensions = async files => {
             setLoading(true)
@@ -170,6 +165,30 @@ const Thread = memo(
 
         const handleUnsharedCancel = () => {
             setIsUnsharedModalVisible(false)
+        }
+
+        const toggleLike = async () => {
+            if (isLiking) return
+            try {
+                let response
+                if (liked) {
+                    response = await threadService.unlikeThread(thread.id)
+                    if (response.is_success) {
+                        setLiked(false)
+                    }
+                } else {
+                    response = await threadService.likeThread(thread.id)
+                    if (response.is_success) {
+                        setLiked(true)
+                    }
+                }
+            } catch (error) {
+                console.log('LIKE ERROR: ', error)
+            } finally {
+                setTimeout(() => {
+                    setIsLiking(false)
+                }, 300)
+            }
         }
 
         if (!thread || !thread.author) {

@@ -54,7 +54,12 @@ const AppNavigator = () => {
                             setNotificationStatus({ type: type, status: true })
                         )
 
-                        if (type == 'UNSHARED' || type == 'SHARE') {
+                        if (
+                            type == 'UNSHARED' ||
+                            type == 'SHARE' ||
+                            type == 'LIKE' ||
+                            type == 'UNLIKE'
+                        ) {
                             dispatch(
                                 updateInteraction({ id: object_id, type: type })
                             )

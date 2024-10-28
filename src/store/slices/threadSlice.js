@@ -17,6 +17,11 @@ const updateProperty = (item, type) => {
         case 'UNSHARED':
             item.shared_num -= 1
             break
+        case 'LIKE':
+            item.reaction_num += 1
+            break
+        case 'UNLIKE':
+            item.reaction_num -= 1
         default:
             break
     }
