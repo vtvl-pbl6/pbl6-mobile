@@ -135,7 +135,10 @@
         "pin": "Ghim vào trang cá nhân",
         "shareSuccess": "Đăng lại thành công!",
         "unshareConfirmTitle": "Bỏ đăng lại",
-        "unshareConfirmMessage": "Bạn có chắc chắn muốn bỏ đăng lại bài viết này?"
+        "unshareConfirmMessage": "Bạn có chắc chắn muốn bỏ đăng lại bài viết này?",
+        "deleteThreadTitle": "Xoá thread",
+        "deleteThreadMessage": "Bạn có chắc chắn muốn xoá thread này?",
+        "deleteSuccess": "Xoá thành công!"
     },
     "activity": {
         "followed": "đã theo dõi bạn",

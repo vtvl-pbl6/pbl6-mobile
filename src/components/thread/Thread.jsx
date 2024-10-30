@@ -17,12 +17,13 @@ import ActionButton from '../button/ActionButton'
 import ImageThread from './ImageThread'
 
 const Thread = memo(
-    ({ thread, onGoToProfile, onEdit, onDelete, onPin }) => {
+    ({ thread, onGoToProfile, onEdit, onPin, onDelete }) => {
         const dispatch = useDispatch()
         const { currentColors } = useTheme()
         const { t } = useLanguage()
         const navigation = useNavigation()
         const currentUser = useSelector(state => state.user.user)
+        const handleError = useHandleError(navigation)
 
         const [loading, setLoading] = useState(false)
         const [imageDimensions, setImageDimensions] = useState([])
@@ -34,6 +35,7 @@ const Thread = memo(
         const [isShared, setIsShared] = useState(false)
         const [isUnsharedModalVisible, setIsUnsharedModalVisible] =
             useState(false)
+        const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
         const [isLiking, setIsLiking] = useState(false)
 
         useEffect(() => {
@@ -106,12 +108,6 @@ const Thread = memo(
             }
         }
 
-        const handleDelete = () => {
-            if (typeof onDelete === 'function') {
-                onDelete(thread.id)
-            }
-        }
-
         const handleEdit = () => {
             if (typeof onEdit === 'function') {
                 onEdit(thread)
@@ -125,7 +121,34 @@ const Thread = memo(
             }
         }
 
+        const handleDelete = async () => {
+            refOwnThreadAction.current.close()
+            setTimeout(() => {
+                setIsDeleteModalVisible(true)
+            }, 300)
+        }
+
+        const handleDeleteConfirm = async () => {
+            if (thread.author.id != currentUser.id) return
+            try {
+                const response = await threadService.deleteThread(thread.id)
+                if (response.is_success) {
+                    dispatch(
+                        showToast({
+                            message: t('action.deleteSuccess'),
+                            type: 'success'
+                        })
+                    )
+                }
+            } catch (error) {
+                handleError(error)
+            } finally {
+                setIsDeleteModalVisible(false)
+            }
+        }
+
         const handleShareUnshared = () => {
+            if (thread.author.id == currentUser.id) return
             if (isShared) {
                 setIsUnsharedModalVisible(true)
             } else {
@@ -154,17 +177,13 @@ const Thread = memo(
                     }
                 }
             } catch (error) {
-                useHandleError(error)
+                handleError(error)
             }
         }
 
         const handleUnsharedConfirm = () => {
             setIsUnsharedModalVisible(false)
             performShareUnshare()
-        }
-
-        const handleUnsharedCancel = () => {
-            setIsUnsharedModalVisible(false)
         }
 
         const toggleLike = async () => {
@@ -511,7 +530,20 @@ const Thread = memo(
                     title={t('action.unshareConfirmTitle')}
                     message={t('action.unshareConfirmMessage')}
                     onConfirm={handleUnsharedConfirm}
-                    onCancel={handleUnsharedCancel}
+                    onCancel={() => {
+                        setIsUnsharedModalVisible(false)
+                    }}
+                />
+
+                {/* Modal confirm delete */}
+                <BaseModal
+                    visible={isDeleteModalVisible}
+                    title={t('action.deleteThreadTitle')}
+                    message={t('action.deleteThreadMessage')}
+                    onConfirm={handleDeleteConfirm}
+                    onCancel={() => {
+                        setIsDeleteModalVisible(false)
+                    }}
                 />
             </View>
         )

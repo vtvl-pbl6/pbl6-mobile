@@ -135,7 +135,10 @@
         "pin": "Pin to profile",
         "shareSuccess": "Repost successfully!",
         "unshareConfirmTitle": "Unrepost",
-        "unshareConfirmMessage": "Are you sure you want to remove this repost?"
+        "unshareConfirmMessage": "Are you sure you want to remove this repost?",
+        "deleteThreadTitle": "Delete thread",
+        "deleteThreadMessage": "Are you sure you want to remove this thread?",
+        "deleteSuccess": "Delete successfully!"
     },
     "activity": {
         "followed": "followed you",
