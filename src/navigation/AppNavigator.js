@@ -58,7 +58,8 @@ const AppNavigator = () => {
                             type == 'UNSHARED' ||
                             type == 'SHARE' ||
                             type == 'LIKE' ||
-                            type == 'UNLIKE'
+                            type == 'UNLIKE' ||
+                            type == 'EDIT_THREAD'
                         ) {
                             dispatch(
                                 updateInteraction({ id: object_id, type: type })

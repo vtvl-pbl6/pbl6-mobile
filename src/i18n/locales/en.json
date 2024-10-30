@@ -85,7 +85,8 @@
         "success": "Thread has been updated successfully!",
         "editThread": "Update thread",
         "addThread": "Start a thread...",
-        "submit": "Update"
+        "submit": "Update",
+        "posting": "Updating..."
     },
     "profile": {
         "title": "Profile",

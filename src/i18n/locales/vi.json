@@ -85,7 +85,8 @@
         "success": "Thread được chỉnh sửa thành công!",
         "editThread": "Chỉnh sửa thread",
         "addThread": "Thêm vào thread...",
-        "submit": "Sửa"
+        "submit": "Sửa",
+        "posting": "Đang sửa..."
     },
     "profile": {
         "title": "Trang cá nhân",

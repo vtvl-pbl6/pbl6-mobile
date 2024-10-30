@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { BaseHeader, ImagePreview } from '../../components'
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
+import threadService from '../../services/threadServices'
 import { setLoading, setUpdate, showToast } from '../../store/slices'
 import { hp, wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
@@ -52,7 +53,9 @@ const EditThreadScreen = ({ navigation }) => {
     useEffect(() => {
         if (thread) {
             if (thread.files?.length > 0) {
-                setSelectedImages(thread.files.map(file => file.url))
+                setSelectedImages(
+                    thread.files.map(file => ({ id: file.id, url: file.url }))
+                )
             }
             setContent(thread.content || '')
             setSelectedScope(thread.visibility)
@@ -73,13 +76,22 @@ const EditThreadScreen = ({ navigation }) => {
             return
         }
 
-        const formData = new FormData()
+        const delete_file_ids =
+            thread.files && thread.files.length > 0
+                ? thread.files
+                      .filter(
+                          file =>
+                              !selectedImages.some(
+                                  selected => selected.id === file.id
+                              )
+                      )
+                      .map(file => file.id)
+                : []
 
-        formData.append('content', contentText)
-        formData.append('visibility', selectedScope)
-
-        for (const file of selectedImages) {
-            formData.append('files', file)
+        const data = {
+            content: content,
+            visibility: selectedScope,
+            delete_file_ids: delete_file_ids
         }
 
         try {
@@ -88,18 +100,22 @@ const EditThreadScreen = ({ navigation }) => {
             )
 
             dispatch(setLoading(true))
+            const response = await threadService.update(thread.id, data)
 
-            // await threadServices.updateThread(thread.id, formData)
+            if (response.is_success) {
+                navigation.navigate('ProfileMain')
+                dispatch(
+                    showToast({
+                        message: t('editThread.success'),
+                        type: 'success'
+                    })
+                )
+                // Clear input and images after submission
+                setSelectedImages([])
+                setContent('')
 
-            dispatch(
-                showToast({ message: t('editThread.success'), type: 'success' })
-            )
-
-            // Clear input and images after submission
-            setSelectedImages([])
-            setContent('')
-
-            dispatch(setUpdate(true))
+                dispatch(setUpdate(true))
+            }
         } catch (error) {
             handleError(error)
             console.error('Error updating thread:', error)
@@ -189,7 +205,7 @@ const EditThreadScreen = ({ navigation }) => {
                             />
                             {/* Display selected images */}
                             <ImagePreview
-                                images={selectedImages}
+                                images={selectedImages.map(image => image.url)}
                                 onRemove={handleRemoveImage}
                             />
                         </View>

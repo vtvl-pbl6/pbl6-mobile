@@ -22,15 +22,22 @@ const updateProperty = (item, type) => {
             break
         case 'UNLIKE':
             item.reaction_num -= 1
+            break
+        case 'EDIT_THREAD':
+            return true
         default:
             break
     }
+    return false
 }
 
 const updateItem = (items, id, type) => {
     const index = items.findIndex(item => item.id === id)
     if (index !== -1) {
-        updateProperty(items[index], type)
+        const shouldDelete = updateProperty(items[index], type)
+        if (shouldDelete) {
+            items.splice(index, 1)
+        }
     }
 }
 

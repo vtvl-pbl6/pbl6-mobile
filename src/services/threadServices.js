@@ -12,8 +12,8 @@ const threadService = {
             `/thread?page=${page}&limit=10&author_id=${author_id}`
         )
     },
-    getThreadById: async threadId => {
-        return await apiClient.get('/thread/' + threadId)
+    getById: async id => {
+        return await apiClient.get('/thread/' + id)
     },
     likeThread: async threadId => {
         return await apiClient.patch(`/thread/${threadId}/like`)
@@ -30,6 +30,9 @@ const threadService = {
     deleteThread: async threadId => {
         console.log('Thread Id: ', threadId)
         return await apiClient.delete(`/thread/${threadId}`)
+    },
+    update: async (id, data) => {
+        return await apiClient.put(`/thread/${id}`, data)
     }
 }
 
