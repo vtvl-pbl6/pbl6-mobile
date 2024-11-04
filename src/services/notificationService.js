@@ -1,7 +1,7 @@
 import apiClient from './apiClient'
 
 const notificationService = {
-    getNotifications: async page => {
+    getAll: async page => {
         return await apiClient.get(`/notification?page=${page}&limit=10`)
     }
 }

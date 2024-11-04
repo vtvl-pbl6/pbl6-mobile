@@ -27,7 +27,7 @@ const HomeScreen = ({ navigation }) => {
         setLoading(true)
 
         try {
-            const response = await threadService.getFollowingUserThreads(page)
+            const response = await threadService.getNewFeed(page)
             const { data, is_success, metadata } = response
 
             if (is_success) {
@@ -64,7 +64,7 @@ const HomeScreen = ({ navigation }) => {
 
     useEffect(() => {
         const getCurrentUser = async () => {
-            const userResponse = await userService.getUserInfo()
+            const userResponse = await userService.getInfo()
             dispatch(setUser(userResponse.data))
         }
         getCurrentUser()

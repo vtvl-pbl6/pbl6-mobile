@@ -135,7 +135,7 @@ const Thread = memo(
         const handleDeleteConfirm = async () => {
             if (thread.author.id != currentUser.id) return
             try {
-                const response = await threadService.deleteThread(thread.id)
+                const response = await threadService.delete(thread.id)
                 if (response.is_success) {
                     dispatch(
                         showToast({
@@ -164,12 +164,12 @@ const Thread = memo(
             try {
                 let response
                 if (isShared) {
-                    response = await threadService.unsharedThread(thread.id)
+                    response = await threadService.unshared(thread.id)
                     if (response.is_success) {
                         setIsShared(false)
                     }
                 } else {
-                    response = await threadService.shareThread(thread.id)
+                    response = await threadService.share(thread.id)
                     if (response.is_success) {
                         setIsShared(true)
                         dispatch(
@@ -195,12 +195,12 @@ const Thread = memo(
             try {
                 let response
                 if (liked) {
-                    response = await threadService.unlikeThread(thread.id)
+                    response = await threadService.unlike(thread.id)
                     if (response.is_success) {
                         setLiked(false)
                     }
                 } else {
-                    response = await threadService.likeThread(thread.id)
+                    response = await threadService.like(thread.id)
                     if (response.is_success) {
                         setLiked(true)
                     }

@@ -1,21 +1,21 @@
 import apiClient from './apiClient'
 
 const userService = {
-    getUserInfo: async () => {
+    getInfo: async () => {
         return await apiClient.get('/user')
     },
-    getUserById: async id => {
+    getById: async id => {
         return await apiClient.get(`/user?id=${id}`)
     },
-    searchUser: async (username, page) => {
+    search: async (username, page) => {
         return await apiClient.get(
             `/user/search?limit=10&page=${page}&display_name=${username}`
         )
     },
-    followUser: async id => {
+    follow: async id => {
         return await apiClient.post(`/user/${id}/follow`)
     },
-    unfollowUser: async id => {
+    unfollow: async id => {
         return await apiClient.post(`/user/${id}/unfollow`)
     }
 }

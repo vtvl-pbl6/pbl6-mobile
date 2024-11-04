@@ -54,7 +54,7 @@ const UserInfoCard = ({ user, onGoToProfile }) => {
         setLoading(true)
 
         try {
-            const response = await userService.followUser(id)
+            const response = await userService.follow(id)
 
             if (response.is_success) {
                 setIsFollowed(response.is_success)
@@ -73,7 +73,7 @@ const UserInfoCard = ({ user, onGoToProfile }) => {
         setLoading(true)
 
         try {
-            const response = await userService.unfollowUser(id)
+            const response = await userService.unfollow(id)
 
             if (response.is_success) {
                 setIsFollowed(!response.is_success)

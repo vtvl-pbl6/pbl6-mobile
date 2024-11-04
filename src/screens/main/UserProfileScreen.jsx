@@ -65,7 +65,7 @@ const UserProfileScreen = ({ navigation }) => {
         setLoadUserInfo(true)
 
         try {
-            const response = await userService.getUserById(userId)
+            const response = await userService.getById(userId)
             const { data, is_success } = response
 
             if (is_success) {
@@ -84,7 +84,7 @@ const UserProfileScreen = ({ navigation }) => {
         setLoadThread(true)
 
         try {
-            const response = await threadService.getThreadsByAuthor(
+            const response = await threadService.getByAuthorId(
                 threadPage,
                 userId
             )
@@ -119,10 +119,7 @@ const UserProfileScreen = ({ navigation }) => {
         setLoadRepost(true)
 
         try {
-            const response = await repostService.getRepostByUserId(
-                userId,
-                repostPage
-            )
+            const response = await repostService.getByUserId(userId, repostPage)
 
             const { data, is_success, metadata } = response
 
@@ -238,7 +235,7 @@ const UserProfileScreen = ({ navigation }) => {
         setLoading(true)
 
         try {
-            const response = await userService.followUser(userId)
+            const response = await userService.follow(userId)
 
             if (response.is_success) {
                 setIsFollowed(response.is_success)
@@ -258,7 +255,7 @@ const UserProfileScreen = ({ navigation }) => {
         setLoading(true)
 
         try {
-            const response = await userService.unfollowUser(userId)
+            const response = await userService.unfollow(userId)
 
             if (response.is_success) {
                 setIsFollowed(!response.is_success)

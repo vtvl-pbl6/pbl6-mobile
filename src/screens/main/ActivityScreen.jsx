@@ -33,7 +33,7 @@ const ActivityScreen = ({ navigation }) => {
         setLoading(true)
 
         try {
-            const response = await notificationService.getNotifications(page)
+            const response = await notificationService.getAll(page)
             const { data, is_success, metadata } = response
 
             if (is_success) {

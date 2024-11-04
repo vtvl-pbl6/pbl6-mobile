@@ -148,7 +148,7 @@ const ComposeScreen = ({ navigation }) => {
 
             dispatch(setLoading(true))
 
-            await threadServices.createThread(formData)
+            await threadServices.create(formData)
 
             dispatch(
                 showToast({ message: t('compose.success'), type: 'success' })

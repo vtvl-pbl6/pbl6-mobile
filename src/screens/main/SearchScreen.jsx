@@ -56,10 +56,7 @@ const SearchScreen = ({ navigation }) => {
 
         try {
             const currentPage = isNewSearch ? 1 : page
-            const response = await userService.searchUser(
-                searchInput,
-                currentPage
-            )
+            const response = await userService.search(searchInput, currentPage)
 
             const { data, is_success, metadata } = response
 

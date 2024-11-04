@@ -55,7 +55,7 @@ const ProfileScreen = ({ navigation }) => {
         setLoadUserInfo(true)
 
         try {
-            const response = await userService.getUserInfo()
+            const response = await userService.getInfo()
             const { data, is_success } = response
 
             if (is_success) {
@@ -83,7 +83,7 @@ const ProfileScreen = ({ navigation }) => {
         setLoadThread(true)
 
         try {
-            const response = await threadService.getThreadsByAuthor(
+            const response = await threadService.getByAuthorId(
                 threadPage,
                 currentUser.id
             )
@@ -120,8 +120,7 @@ const ProfileScreen = ({ navigation }) => {
         setLoadRepost(true)
 
         try {
-            const response =
-                await repostService.getRepostByCurrentUser(repostPage)
+            const response = await repostService.getByCurrentUser(repostPage)
 
             const { data, is_success, metadata } = response
 
