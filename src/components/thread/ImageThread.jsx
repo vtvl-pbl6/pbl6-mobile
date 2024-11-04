@@ -1,3 +1,4 @@
+import { BlurView } from 'expo-blur'
 import React, { useState } from 'react'
 import {
     ActivityIndicator,
@@ -25,6 +26,7 @@ const ImageThread = React.memo(({ files, imageDimensions = [] }) => {
                                 file={item}
                                 width={calculatedWidth}
                                 height={200}
+                                isNSFW={item.nsfwResult !== null}
                             />
                         )
                     }}
@@ -40,7 +42,7 @@ const ImageThread = React.memo(({ files, imageDimensions = [] }) => {
     )
 })
 
-const ImageWithPlaceholder = ({ file, width, height }) => {
+const ImageWithPlaceholder = ({ file, width, height, isNSFW }) => {
     const [loading, setLoading] = useState(true)
 
     return (
@@ -59,6 +61,13 @@ const ImageWithPlaceholder = ({ file, width, height }) => {
                 resizeMode="cover"
                 onLoadEnd={() => setLoading(false)}
             />
+            {isNSFW && (
+                <BlurView
+                    intensity={40}
+                    style={[styles.overlay, { width, height }]}
+                    blurType="light"
+                />
+            )}
         </View>
     )
 }
@@ -80,6 +89,11 @@ const styles = StyleSheet.create({
     },
     image: {
         borderRadius: theme.radius.xxs
+    },
+    overlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0
     },
     emptyContainer: {
         height: 0
