@@ -25,7 +25,7 @@ import { setLoading, setUpdate, showToast } from '../../store/slices'
 import { hp, wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
 
-const NewThread = ({ navigation }) => {
+const NewThread = ({ navigation, threadId, onClose }) => {
     const dispatch = useDispatch()
     const { currentColors } = useTheme()
     const { t } = useLanguage()
@@ -43,9 +43,7 @@ const NewThread = ({ navigation }) => {
     const handleError = useHandleError(navigation)
 
     const scopeOptions = [
-        { label: t('compose.scope.everybody'), value: 'PUBLIC' },
-        { label: t('compose.scope.friend'), value: 'FRIEND_ONLY' },
-        { label: t('compose.scope.private'), value: 'PRIVATE' }
+        { label: t('compose.scope.everybody'), value: 'PUBLIC' }
     ]
 
     const inputRef = useRef(null)
@@ -149,6 +147,7 @@ const NewThread = ({ navigation }) => {
 
         formData.append('content', contentText)
         formData.append('visibility', selectedScope)
+        formData.append('parent_id', threadId)
 
         for (const file of selectedImages) {
             const fileInfo = await FileSystem.getInfoAsync(file)
@@ -192,6 +191,7 @@ const NewThread = ({ navigation }) => {
         } finally {
             dispatch(setLoading(false))
             dispatch(setUpdate(false))
+            onClose()
         }
     }
 

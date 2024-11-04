@@ -144,6 +144,7 @@
     "activity": {
         "followed": "đã theo dõi bạn",
         "title": "Hoạt động",
-        "empty": "Không còn thông báo nào cũ hơn"
+        "empty": "Không còn thông báo nào cũ hơn",
+        "comment": "đã trả lời bài viết của bạn"
     }
 }

@@ -4,6 +4,8 @@ const initialState = {
     threads: [],
     myThreads: [],
     reposts: [],
+    comments: [],
+    threadDetail: null,
     hasMore: true,
     hasMoreMyThread: true,
     hasMoreRepost: true
@@ -22,6 +24,9 @@ const updateProperty = (item, type) => {
             break
         case 'UNLIKE':
             item.reaction_num -= 1
+            break
+        case 'COMMENT':
+            item.comment_num += 1
             break
         case 'EDIT_THREAD':
             return true
@@ -69,16 +74,49 @@ const threadsSlice = createSlice({
             state.reposts = []
             state.hasMoreRepost = true
         },
+        setThreadDetail(state, action) {
+            state.threadDetail = action.payload
+        },
+        clearThreadDetail(state) {
+            state.threadDetail = null
+        },
+        setComments(state, action) {
+            state.comments = action.payload
+        },
+        clearComments(state) {
+            state.comments = []
+        },
         updateInteraction(state, action) {
             const { id, type } = action.payload
+
             updateItem(state.threads, id, type)
             updateItem(state.myThreads, id, type)
             updateItem(state.reposts, id, type)
+
+            if (state.threadDetail && state.threadDetail.id === id) {
+                updateProperty(state.threadDetail, type)
+            }
+        },
+        updateInteractionAndListComment(state, action) {
+            const { id, type, comment } = action.payload
+
+            updateItem(state.threads, id, type)
+            updateItem(state.myThreads, id, type)
+            updateItem(state.reposts, id, type)
+
+            if (state.threadDetail && state.threadDetail.id === id) {
+                updateProperty(state.threadDetail, type)
+            }
+
+            if (comment) {
+                state.comments = [comment, ...state.comments]
+            }
         },
         clearAllThreads(state) {
             state.threads = []
             state.myThreads = []
             state.reposts = []
+            state.comments = []
             state.hasMore = true
             state.hasMoreMyThread = true
             state.hasMoreRepost = true
@@ -94,6 +132,11 @@ export const {
     setReposts,
     clearReposts,
     updateInteraction,
-    clearAllThreads
+    clearAllThreads,
+    setComments,
+    clearComments,
+    setThreadDetail,
+    clearThreadDetail,
+    updateInteractionAndListComment
 } = threadsSlice.actions
 export default threadsSlice.reducer

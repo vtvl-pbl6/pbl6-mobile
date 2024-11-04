@@ -144,6 +144,7 @@
     "activity": {
         "followed": "followed you",
         "title": "Activity",
-        "empty": "No notifications available."
+        "empty": "No notifications available.",
+        "comment": "commented on your thread"
     }
 }

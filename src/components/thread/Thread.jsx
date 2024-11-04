@@ -121,6 +121,10 @@ const Thread = memo(
             }
         }
 
+        const handleComment = () => {
+            navigation.navigate('ThreadDetail', { threadId: thread.id })
+        }
+
         const handleDelete = async () => {
             refOwnThreadAction.current.close()
             setTimeout(() => {
@@ -389,7 +393,10 @@ const Thread = memo(
                                 </Pressable>
 
                                 {/* Comment */}
-                                <Pressable style={styles.actionButton}>
+                                <Pressable
+                                    style={styles.actionButton}
+                                    onPress={handleComment}
+                                >
                                     <Ionicons
                                         name="chatbubble-outline"
                                         size={wp(5.8)}
@@ -402,9 +409,7 @@ const Thread = memo(
                                             { color: currentColors.gray }
                                         ]}
                                     >
-                                        {thread.comments
-                                            ? thread.comments.length
-                                            : 0}
+                                        {thread.comment_num}
                                     </Text>
                                 </Pressable>
 

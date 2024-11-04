@@ -28,7 +28,6 @@ const threadService = {
         return await apiClient.post(`/thread/${threadId}/unshared`)
     },
     deleteThread: async threadId => {
-        console.log('Thread Id: ', threadId)
         return await apiClient.delete(`/thread/${threadId}`)
     },
     update: async (id, data) => {

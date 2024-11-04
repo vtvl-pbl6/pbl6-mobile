@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { FollowNotification, Footer, ScreenWapper } from '../../components'
+import { FollowNotification, ScreenWapper } from '../../components'
+import NotificationLoader from '../../components/load/NotificationLoader'
+import CommentNotification from '../../components/notification/CommentNotification'
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
 import notificationService from '../../services/notificationService'
@@ -96,7 +98,7 @@ const ActivityScreen = ({ navigation }) => {
             case 'FOLLOW':
                 return <FollowNotification notification={item} />
             case 'COMMENT':
-                return <Text>{t('Comment')}</Text>
+                return <CommentNotification notification={item} />
             default:
                 return null
         }
@@ -105,6 +107,26 @@ const ActivityScreen = ({ navigation }) => {
     useEffect(() => {
         fetchNotification()
     }, [page, refreshing])
+
+    if (loading && notifications.length === 0) {
+        return (
+            <ScreenWapper
+                styles={[
+                    styles.container,
+                    { backgroundColor: currentColors.background }
+                ]}
+            >
+                <FlatList
+                    data={[...Array(10)]}
+                    renderItem={({ index }) => (
+                        <NotificationLoader key={index} />
+                    )}
+                    keyExtractor={(item, index) => index.toString()}
+                    showsVerticalScrollIndicator={false}
+                />
+            </ScreenWapper>
+        )
+    }
 
     return (
         <ScreenWapper
@@ -121,13 +143,7 @@ const ActivityScreen = ({ navigation }) => {
                 data={notifications}
                 renderItem={renderNotification}
                 keyExtractor={(item, index) => index.toString()}
-                ListFooterComponent={
-                    <Footer
-                        loading={loading}
-                        hasMore={hasMore}
-                        label={t('activity.empty')}
-                    />
-                }
+                ListFooterComponent={<NotificationLoader />}
                 onEndReachedThreshold={0.5}
                 style={styles.notification}
                 onEndReached={loadMoreNotification}

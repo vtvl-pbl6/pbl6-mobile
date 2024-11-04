@@ -39,7 +39,7 @@ const NewReplyThread = ({ thread }) => {
                 >
                     {t('threadDetail.replyUser') +
                         ' ' +
-                        thread.author.display_name +
+                        thread?.author.display_name +
                         '...'}
                 </Text>
             </Pressable>
@@ -68,7 +68,7 @@ const NewReplyThread = ({ thread }) => {
                     }
                 }}
             >
-                <NewThread />
+                <NewThread threadId={thread?.id} onClose={closeBottomSheet} />
             </RBSheet>
         </View>
     )

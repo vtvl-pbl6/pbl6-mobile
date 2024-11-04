@@ -56,6 +56,12 @@ const subscribeThreadChannel = (email, onNotification) => {
     subscribeToTopic(path, onNotification)
 }
 
+const subscribeThreadPrivateChannel = (email, onNotification) => {
+    const path = `/private/${email}/user/thread`
+    console.log('Subscribing to private thread:', path)
+    subscribeToTopic(path, onNotification)
+}
+
 const disconnectSocket = () => {
     if (stompClient) {
         stompClient.deactivate()
@@ -66,5 +72,6 @@ export {
     connectSocket,
     disconnectSocket,
     subscribeThreadChannel,
+    subscribeThreadPrivateChannel,
     subscribeToNotifications
 }

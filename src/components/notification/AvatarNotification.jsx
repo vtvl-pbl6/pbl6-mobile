@@ -27,6 +27,10 @@ const AvatarNotification = ({ user, type, currentColors }) => {
                 </View>
             ) : type === 'LIKE' ? (
                 <View></View>
+            ) : type === 'COMMENT' ? (
+                <View style={[styles.type, { backgroundColor: '#24C3FE' }]}>
+                    <Ionicons name="arrow-undo" size={wp(3)} color={'white'} />
+                </View>
             ) : null}
         </View>
     )

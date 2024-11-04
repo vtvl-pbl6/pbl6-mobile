@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Facebook } from 'react-content-loader/native'
-import { FlatList, Pressable, StyleSheet } from 'react-native'
+import { FlatList, StyleSheet } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { Footer, ScreenWapper, Thread } from '../../components'
 import { useLanguage, useTheme } from '../../contexts'
@@ -80,9 +80,9 @@ const HomeScreen = ({ navigation }) => {
         }
     }
 
-    const handleThreadPress = thread => {
-        navigation.navigate('ThreadDetail', { thread: thread })
-    }
+    // const handleThreadPress = thread => {
+    //     navigation.navigate('ThreadDetail', { threadId: thread.id })
+    // }
 
     const handleProfileNavigation = userId => {
         navigation.navigate('UserProfile', { userId: userId })
@@ -115,13 +115,11 @@ const HomeScreen = ({ navigation }) => {
                 data={threads}
                 keyExtractor={item => item.id.toString()}
                 renderItem={({ item }) => (
-                    <Pressable onPress={() => handleThreadPress(item)}>
-                        <Thread
-                            thread={item}
-                            loading={loading}
-                            onGoToProfile={handleProfileNavigation}
-                        />
-                    </Pressable>
+                    <Thread
+                        thread={item}
+                        loading={loading}
+                        onGoToProfile={handleProfileNavigation}
+                    />
                 )}
                 showsVerticalScrollIndicator={false}
                 onEndReached={loadMoreThreads}

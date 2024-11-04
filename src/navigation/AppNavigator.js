@@ -7,25 +7,33 @@ import {
     connectSocket,
     disconnectSocket,
     subscribeThreadChannel,
+    subscribeThreadPrivateChannel,
     subscribeToNotifications
 } from '../services/socketService'
+import threadService from '../services/threadServices'
 import {
     addNotification,
     setNotificationStatus,
     setUnreadNotification,
+    setUpdate,
     showToast
 } from '../store/slices'
-import { updateInteraction } from '../store/slices/threadSlice'
+import {
+    updateInteraction,
+    updateInteractionAndListComment
+} from '../store/slices/threadSlice'
+import useHandleError from '../utils/handlers/errorHandler'
 import AuthNavigator from './AuthNavigator'
 import TabNavigator from './TabNavigator'
 
 const RootStack = createNativeStackNavigator()
 
-const AppNavigator = () => {
+const AppNavigator = ({ navigation }) => {
     const dispatch = useDispatch()
     const { t } = useLanguage()
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
     const user = useSelector(state => state.user.user)
+    const handleError = useHandleError(navigation)
 
     useEffect(() => {
         if (isAuthenticated && user?.email) {
@@ -46,9 +54,16 @@ const AppNavigator = () => {
                             dispatch(addNotification(notification))
                         }
                     })
-                    subscribeThreadChannel(user.email, thread => {
+                    subscribeThreadPrivateChannel(user.email, notification => {
+                        console.log('Notification received:', notification)
+                        const { read, type, sender } = notification
+                        if (type == 'CREATE_THREAD_DONE') {
+                            dispatch(setUpdate(true))
+                        }
+                    })
+                    subscribeThreadChannel(user.email, async thread => {
                         console.log('Thread received:', thread)
-                        const { read, object_id, type } = thread
+                        const { read, object_id, type, content } = thread
 
                         dispatch(
                             setNotificationStatus({ type: type, status: true })
@@ -64,6 +79,26 @@ const AppNavigator = () => {
                             dispatch(
                                 updateInteraction({ id: object_id, type: type })
                             )
+                        }
+
+                        if (type == 'COMMENT') {
+                            try {
+                                const response =
+                                    await threadService.getById(object_id)
+                                const { data } = response
+                                dispatch(
+                                    updateInteractionAndListComment({
+                                        id: data.parent_thread.id,
+                                        type: type,
+                                        comment: data
+                                    })
+                                )
+
+                                dispatch(setUnreadNotification(true))
+                                dispatch(addNotification(thread))
+                            } catch (error) {
+                                dispatch(handleError(error))
+                            }
                         }
                     })
                 },
