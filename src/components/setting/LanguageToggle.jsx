@@ -1,22 +1,32 @@
+import { useNavigation } from '@react-navigation/native'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import theme from '../../constants/theme'
 import { useTheme } from '../../contexts'
+import userService from '../../services/userServices'
 import { setLanguage } from '../../store/slices'
 import { wp } from '../../utils'
+import useHandleError from '../../utils/handlers/errorHandler'
 
 const LanguageToggle = () => {
     const dispatch = useDispatch()
     const { currentColors } = useTheme()
     const { t, i18n } = useTranslation()
+    const navigation = useNavigation()
+    const handleError = useHandleError(navigation)
 
     const language = useSelector(state => state.language.language)
 
-    const handlePress = lng => {
+    const handlePress = async lng => {
         dispatch(setLanguage(lng))
         i18n.changeLanguage(lng)
+        try {
+            await userService.updateInfo({ language: lng })
+        } catch (error) {
+            handleError(error)
+        }
     }
 
     return (

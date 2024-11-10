@@ -1952,6 +1952,18 @@
     prompts "^2.4.2"
     semver "^7.5.2"
 
+"@react-native-community/datetimepicker@^8.2.0", "@react-native-community/datetimepicker@>=6.7.0":
+  version "8.2.0"
+  resolved "https://registry.npmjs.org/@react-native-community/datetimepicker/-/datetimepicker-8.2.0.tgz"
+  integrity sha512-qrUPhiBvKGuG9Y+vOqsc56RPFcHa1SU2qbAMT0hfGkoFIj3FodE0VuPVrEa8fgy7kcD5NQmkZIKgHOBLV0+hWg==
+  dependencies:
+    invariant "^2.2.4"
+
+"@react-native-picker/picker@^2.4.0":
+  version "2.9.0"
+  resolved "https://registry.npmjs.org/@react-native-picker/picker/-/picker-2.9.0.tgz"
+  integrity sha512-khEhIW/uhfMqq/+tvg4rEAiPGT8GX+Y6QydlP2TSMSmRHoSJK+ShXvXZXSr4Sii4imkj4BwvLunGywwtQDODqg==
+
 "@react-native-segmented-control/segmented-control@^2.5.4":
   version "2.5.4"
   resolved "https://registry.npmjs.org/@react-native-segmented-control/segmented-control/-/segmented-control-2.5.4.tgz"
@@ -4164,7 +4176,7 @@ expo-status-bar@~1.12.1:
   resolved "https://registry.npmjs.org/expo-status-bar/-/expo-status-bar-1.12.1.tgz"
   integrity sha512-/t3xdbS8KB0prj5KG5w7z+wZPFlPtkgs95BsmrP/E7Q0xHXTcDcQ6Cu2FkFuRM+PKTb17cJDnLkawyS5vDLxMA==
 
-expo@*, expo@~51.0.28:
+expo@*, expo@>=50.0.0, expo@~51.0.28:
   version "51.0.32"
   resolved "https://registry.npmjs.org/expo/-/expo-51.0.32.tgz"
   integrity sha512-6GEhYvHRnyS/6BytQagGkClsaqbuwAtlN3A6oDfnNMRKLmz6NE/r+Rjg9zbQgUO6zigqb60Yj5lAX32DmixRDw==
@@ -5639,6 +5651,16 @@ lodash.debounce@^4.0.8:
   resolved "https://registry.npmjs.org/lodash.debounce/-/lodash.debounce-4.0.8.tgz"
   integrity sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==
 
+lodash.isequal@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.npmjs.org/lodash.isequal/-/lodash.isequal-4.5.0.tgz"
+  integrity sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==
+
+lodash.isobject@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.npmjs.org/lodash.isobject/-/lodash.isobject-3.0.2.tgz"
+  integrity sha512-3/Qptq2vr7WeJbB4KHUSKlq8Pl7ASXi3UG6CMbBm8WRtXi8+GHm7mKaU3urfpSEzWe2wCIChs6/sdocUsTKJiA==
+
 lodash.merge@^4.6.2:
   version "4.6.2"
   resolved "https://registry.npmjs.org/lodash.merge/-/lodash.merge-4.6.2.tgz"
@@ -6960,6 +6982,13 @@ react-native-image-size@^1.1.6:
   resolved "https://registry.npmjs.org/react-native-image-size/-/react-native-image-size-1.1.6.tgz"
   integrity sha512-UlfyBqYvmf2TjHSV25mh4Se7xw6zTkodvt6DjSZJefqEfz4ZECk+petIadSDFVWgPOqULB+3LIrj6U6t/SlKQA==
 
+react-native-modal-datetime-picker@^18.0.0:
+  version "18.0.0"
+  resolved "https://registry.npmjs.org/react-native-modal-datetime-picker/-/react-native-modal-datetime-picker-18.0.0.tgz"
+  integrity sha512-0jdvhhraZQlRACwr7pM6vmZ2kxgzJ4CpnmV6J3TVA6MrXMXK6Zo/upRBKkRp0+fTOiKuNblzesA2U59rYo6SGA==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-native-paper@^5.12.5:
   version "5.12.5"
   resolved "https://registry.npmjs.org/react-native-paper/-/react-native-paper-5.12.5.tgz"
@@ -6968,6 +6997,14 @@ react-native-paper@^5.12.5:
     "@callstack/react-theme-provider" "^3.0.9"
     color "^3.1.2"
     use-latest-callback "^0.1.5"
+
+react-native-picker-select@^9.3.1:
+  version "9.3.1"
+  resolved "https://registry.npmjs.org/react-native-picker-select/-/react-native-picker-select-9.3.1.tgz"
+  integrity sha512-o621HcsKJfJkpYeP/PZQiZTKbf8W7FT08niLFL0v1pGkIQyak5IfzfinV2t+/l1vktGwAH2Tt29LrP/Hc5fk3A==
+  dependencies:
+    lodash.isequal "^4.5.0"
+    lodash.isobject "^3.0.2"
 
 react-native-raw-bottom-sheet@^3.0.0:
   version "3.0.0"
@@ -7047,7 +7084,7 @@ react-native-vector-icons@*:
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
-react-native@*, "react-native@^0.0.0-0 || >=0.65 <1.0", react-native@>=0.29, react-native@>=0.46, react-native@>=0.62, react-native@0.74.5:
+react-native@*, "react-native@^0.0.0-0 || >=0.65 <1.0", react-native@>=0.29, react-native@>=0.46, react-native@>=0.62, react-native@>=0.65.0, react-native@0.74.5:
   version "0.74.5"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.74.5.tgz"
   integrity sha512-Bgg2WvxaGODukJMTZFTZBNMKVaROHLwSb8VAGEdrlvKwfb1hHg/3aXTUICYk7dwgAnb+INbGMwnF8yeAgIUmqw==

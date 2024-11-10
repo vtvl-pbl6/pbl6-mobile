@@ -45,6 +45,11 @@ const ProfileHeader = ({ user, loadUserInfo }) => {
             {user && <ProfileInfo user={user} />}
             <Pressable
                 style={[styles.editButton, { borderColor: currentColors.gray }]}
+                onPress={() =>
+                    navigation.navigate('Profile', {
+                        screen: 'EditProfile'
+                    })
+                }
             >
                 <Text
                     style={[

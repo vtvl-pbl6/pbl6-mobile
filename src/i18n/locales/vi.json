@@ -146,5 +146,26 @@
         "title": "Hoạt động",
         "empty": "Không còn thông báo nào cũ hơn",
         "comment": "đã trả lời bài viết của bạn"
+    },
+    "updateProfile": {
+        "title": "Chỉnh sửa hồ sơ",
+        "firstName": "Họ",
+        "lastName": "Tên",
+        "birthday": "Ngày sinh",
+        "gender": "Giới tính",
+        "bio": "Tiểu sử",
+        "visibility": "Riêng tư",
+        "save": "Lưu",
+        "scope": {
+            "public": "Công khai",
+            "friend": "Chỉ bạn bè",
+            "private": "Riêng tư"
+        },
+        "genderSelection": {
+            "male": "Nam",
+            "female": "Nữ",
+            "other": "Khác"
+        },
+        "updateSuccessfully": "Cập nhật thành công"
     }
 }

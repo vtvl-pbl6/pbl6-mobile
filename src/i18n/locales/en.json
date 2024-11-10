@@ -146,5 +146,26 @@
         "title": "Activity",
         "empty": "No notifications available.",
         "comment": "commented on your thread"
+    },
+    "updateProfile": {
+        "title": "Update profile",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "birthday": "Birthday",
+        "gender": "Gender",
+        "bio": "Bio",
+        "visibility": "Privacy",
+        "save": "Save",
+        "scope": {
+            "public": "Public",
+            "friend": "Friends only",
+            "private": "Private"
+        },
+        "genderSelection": {
+            "male": "Male",
+            "female": "Female",
+            "other": "Other"
+        },
+        "updateSuccessfully": "Update successfully"
     }
 }

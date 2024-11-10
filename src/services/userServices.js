@@ -4,6 +4,9 @@ const userService = {
     getInfo: async () => {
         return await apiClient.get('/user')
     },
+    updateInfo: async data => {
+        return await apiClient.patch('/user', data)
+    },
     getById: async id => {
         return await apiClient.get(`/user?id=${id}`)
     },
