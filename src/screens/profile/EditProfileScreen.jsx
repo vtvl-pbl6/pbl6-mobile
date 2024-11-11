@@ -1,4 +1,6 @@
 import { Ionicons } from '@expo/vector-icons'
+import * as FileSystem from 'expo-file-system'
+import * as ImagePicker from 'expo-image-picker'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -9,6 +11,7 @@ import {
     StyleSheet,
     Text,
     TextInput,
+    TouchableOpacity,
     TouchableWithoutFeedback,
     View
 } from 'react-native'
@@ -20,7 +23,7 @@ import { BaseButton, BaseHeader, Loading, ScreenWapper } from '../../components'
 import theme from '../../constants/theme'
 import { useTheme } from '../../contexts'
 import userService from '../../services/userServices'
-import { showToast } from '../../store/slices'
+import { setUpdate, showToast } from '../../store/slices'
 import { wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
 
@@ -35,6 +38,7 @@ const EditProfileScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false)
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
     const [selectedDate, setSelectedDate] = useState(new Date())
+    const [avatarUri, setAvatarUri] = useState(null)
 
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -78,12 +82,12 @@ const EditProfileScreen = ({ navigation }) => {
                             type: 'success'
                         })
                     )
-                    navigation.goBack()
                 }
             }
         } catch (error) {
             handleError(error)
         } finally {
+            dispatch(setUpdate(true))
             setLoading(false)
         }
     }
@@ -101,6 +105,73 @@ const EditProfileScreen = ({ navigation }) => {
         const formattedDate = date.toISOString().split('T')[0]
         handleInputChange('birthday', formattedDate)
         hideDatePicker()
+    }
+
+    const requestPermission = async () => {
+        const { status } =
+            await ImagePicker.requestMediaLibraryPermissionsAsync()
+        if (status !== 'granted') {
+            dispatch(
+                showToast({
+                    message: t('compose.noAccessToLibrary'),
+                    type: 'warning'
+                })
+            )
+            return false
+        }
+        return true
+    }
+
+    // Image picker function
+    const pickAvatar = async () => {
+        const permissionResult = await requestPermission()
+        if (!permissionResult) return
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            quality: 1
+        })
+
+        if (!result.canceled && result.assets && result.assets.length > 0) {
+            const uri = result.assets[0].uri
+            await uploadAvatar(uri)
+            setAvatarUri(uri)
+            handleInputChange('avatar', uri)
+        }
+    }
+
+    const uploadAvatar = async avatarUri => {
+        if (loading) return
+        setLoading(true)
+
+        const formData = new FormData()
+        const fileInfo = await FileSystem.getInfoAsync(avatarUri)
+        formData.append('avatar', {
+            name: fileInfo.uri.split('/').pop(),
+            type: fileInfo.mimeType || 'image/jpeg',
+            uri:
+                Platform.OS === 'ios'
+                    ? fileInfo.uri.replace('file://', '')
+                    : fileInfo.uri
+        })
+
+        try {
+            const response = await userService.updateAvatar(formData)
+
+            if (response.is_success) {
+                dispatch(
+                    showToast({
+                        message: t('updateProfile.updateSuccessfully'),
+                        type: 'success'
+                    })
+                )
+            }
+        } catch (error) {
+            handleError(error)
+        } finally {
+            dispatch(setUpdate(true))
+            setLoading(false)
+        }
     }
 
     if (loading) {
@@ -135,20 +206,47 @@ const EditProfileScreen = ({ navigation }) => {
                     <View style={{ alignItems: 'center' }}>
                         <View style={[styles.content]}>
                             {/* Avatar */}
-                            {profile?.avatar ? (
-                                <View style={styles.avatarContainer}>
-                                    <Image
-                                        source={{ uri: profile.avatar }}
-                                        style={styles.avatarImage}
+                            <View>
+                                {avatarUri ? (
+                                    <View style={styles.avatarContainer}>
+                                        <Image
+                                            source={{ uri: avatarUri }}
+                                            style={styles.avatarImage}
+                                        />
+                                    </View>
+                                ) : profile?.avatar_file ? (
+                                    <View style={styles.avatarContainer}>
+                                        <Image
+                                            source={{
+                                                uri: profile.avatar_file.url
+                                            }}
+                                            style={styles.avatarImage}
+                                        />
+                                    </View>
+                                ) : (
+                                    <Ionicons
+                                        name="person-circle-outline"
+                                        size={wp(30)}
+                                        color={currentColors.lightGray}
                                     />
-                                </View>
-                            ) : (
-                                <Ionicons
-                                    name="person-circle-outline"
-                                    size={wp(30)}
-                                    color={currentColors.lightGray}
-                                />
-                            )}
+                                )}
+                                <TouchableOpacity
+                                    onPress={pickAvatar}
+                                    style={[
+                                        styles.editButton,
+                                        {
+                                            borderColor:
+                                                currentColors.background
+                                        }
+                                    ]}
+                                >
+                                    <Ionicons
+                                        name="pencil-outline"
+                                        size={wp(3.5)}
+                                        color={currentColors.background}
+                                    />
+                                </TouchableOpacity>
+                            </View>
 
                             {/* First and Last Name in the same row */}
                             <View
@@ -436,6 +534,19 @@ const styles = StyleSheet.create({
         width: wp(30),
         height: wp(30),
         borderRadius: wp(15)
+    },
+    editButton: {
+        width: wp(8),
+        height: wp(8),
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 50,
+        position: 'absolute',
+        bottom: wp(2),
+        right: wp(4),
+        borderWidth: wp(1),
+        backgroundColor: theme.colors.blue
     }
 })
 

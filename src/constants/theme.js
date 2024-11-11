@@ -17,7 +17,8 @@ const theme = {
             overlay: 'rgba(0, 0, 0, 0.6)'
         },
         rose: '#EF4444',
-        green: '#209d5c'
+        green: '#209d5c',
+        blue: '#0095F6'
     },
     fonts: {
         medium: '500',

@@ -9,7 +9,7 @@ import { useLanguage, useTheme } from '../../contexts'
 import repostService from '../../services/repostService'
 import threadService from '../../services/threadServices'
 import userService from '../../services/userServices'
-import { setNotificationStatus, showToast } from '../../store/slices'
+import { setNotificationStatus, setUpdate, showToast } from '../../store/slices'
 import {
     clearMyThreads,
     clearReposts,
@@ -156,6 +156,7 @@ const ProfileScreen = ({ navigation }) => {
         setThreadPage(1)
         setRepostPage(1)
         setIsStateReset(true)
+        dispatch(setUpdate(false))
     }
 
     useEffect(() => {

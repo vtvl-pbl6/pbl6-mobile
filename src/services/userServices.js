@@ -7,6 +7,9 @@ const userService = {
     updateInfo: async data => {
         return await apiClient.patch('/user', data)
     },
+    updateAvatar: async formData => {
+        return await apiClient.patch('/user/avatar', formData)
+    },
     getById: async id => {
         return await apiClient.get(`/user?id=${id}`)
     },
