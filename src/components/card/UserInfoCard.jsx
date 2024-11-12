@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import React, { useState } from 'react'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
@@ -97,9 +98,17 @@ const UserInfoCard = ({ user, onGoToProfile }) => {
             onPress={handleGotoProfile}
         >
             {avatar_file ? (
-                <Image source={{ uri: avatar_file }} style={styles.avatar} />
+                <Image
+                    source={{ uri: avatar_file.url }}
+                    style={styles.avatar}
+                />
             ) : (
-                <View style={styles.avatarPlaceholder} />
+                <Ionicons
+                    name="person-circle-outline"
+                    size={wp(18)}
+                    color={currentColors.lightGray}
+                    style={styles.avatarPlaceholder}
+                />
             )}
             <View style={styles.infoContainer}>
                 <Text
@@ -180,11 +189,8 @@ const styles = StyleSheet.create({
         marginRight: wp(4)
     },
     avatarPlaceholder: {
-        width: wp(16),
-        height: wp(16),
         borderRadius: 50,
-        backgroundColor: '#ccc',
-        marginRight: wp(4)
+        marginRight: wp(2)
     },
     infoContainer: {
         flex: 1,

@@ -23,6 +23,16 @@ const userService = {
     },
     unfollow: async id => {
         return await apiClient.post(`/user/${id}/unfollow`)
+    },
+    getFollowers: async (id, page) => {
+        return await apiClient.get(
+            `/user/${id}/followers?limit=10&page=${page}`
+        )
+    },
+    getFollowed: async (id, page) => {
+        return await apiClient.get(
+            `/user/${id}/following?limit=10&page=${page}`
+        )
     }
 }
 
