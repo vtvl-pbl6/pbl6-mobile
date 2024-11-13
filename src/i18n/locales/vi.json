@@ -3,6 +3,10 @@
         "confirm": "Xác nhận",
         "cancel": "Huỷ"
     },
+    "reportModal": {
+        "placeholder": "Nhập lí do",
+        "defaultReason": "Không có lý do cụ thể."
+    },
     "validation": {
         "usernameRequired": "Tên đăng nhập là bắt buộc",
         "usernameMinLength": "Tên đăng nhập phải lớn hơn 5 ký tự",
@@ -145,12 +149,14 @@
         "delete": "Xoá",
         "edit": "Chỉnh sửa thread",
         "pin": "Ghim vào trang cá nhân",
+        "report": "Yêu cầu kiểm duyệt lại",
         "shareSuccess": "Đăng lại thành công!",
         "unshareConfirmTitle": "Bỏ đăng lại",
         "unshareConfirmMessage": "Bạn có chắc chắn muốn bỏ đăng lại bài viết này?",
         "deleteThreadTitle": "Xoá thread",
         "deleteThreadMessage": "Bạn có chắc chắn muốn xoá thread này?",
-        "deleteSuccess": "Xoá thành công!"
+        "deleteSuccess": "Xoá thành công!",
+        "reportSuccess": "Yêu cầu đã được gửi"
     },
     "activity": {
         "followed": "đã theo dõi bạn",

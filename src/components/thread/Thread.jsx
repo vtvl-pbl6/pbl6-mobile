@@ -15,6 +15,7 @@ import useHandleError from '../../utils/handlers/errorHandler'
 import BaseModal from '../base/BaseModal'
 import ActionButton from '../button/ActionButton'
 import ImageThread from './ImageThread'
+import ReportThreadModal from './ReportThreadModal'
 
 const Thread = memo(
     ({ thread, onGoToProfile, onEdit, onPin, onDelete }) => {
@@ -35,6 +36,7 @@ const Thread = memo(
         const [isShared, setIsShared] = useState(false)
         const [isUnsharedModalVisible, setIsUnsharedModalVisible] =
             useState(false)
+        const [isReportModalVisible, setIsReportModalVisible] = useState(false)
         const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
         const [isLiking, setIsLiking] = useState(false)
 
@@ -121,6 +123,13 @@ const Thread = memo(
             }
         }
 
+        const handleShowReport = () => {
+            refOwnThreadAction.current.close()
+            setTimeout(() => {
+                setIsReportModalVisible(true)
+            }, 300)
+        }
+
         const handleComment = () => {
             navigation.navigate('ThreadDetail', { threadId: thread.id })
         }
@@ -188,6 +197,23 @@ const Thread = memo(
         const handleUnsharedConfirm = () => {
             setIsUnsharedModalVisible(false)
             performShareUnshare()
+        }
+
+        const handleReportConfirm = async data => {
+            setIsReportModalVisible(false)
+            try {
+                const response = await threadService.moderation(thread.id, data)
+                if (response.is_success) {
+                    dispatch(
+                        showToast({
+                            message: t('action.reportSuccess'),
+                            type: 'success'
+                        })
+                    )
+                }
+            } catch (error) {
+                handleError(error)
+            }
         }
 
         const toggleLike = async () => {
@@ -457,7 +483,7 @@ const Thread = memo(
                             width: wp(10)
                         }
                     }}
-                    height={hp(35)}
+                    height={hp(40)}
                     openDuration={250}
                     ref={refOwnThreadAction}
                     draggable={true}
@@ -475,6 +501,15 @@ const Thread = memo(
                             buttonStyle={{
                                 borderTopLeftRadius: theme.radius.xxl,
                                 borderTopRightRadius: theme.radius.xxl,
+                                borderBottomWidth: 0.6,
+                                borderColor: currentColors.extraLightGray
+                            }}
+                        />
+                        <ActionButton
+                            iconName="alert-circle-outline"
+                            label={t('action.report')}
+                            onPress={handleShowReport}
+                            buttonStyle={{
                                 borderBottomWidth: 0.6,
                                 borderColor: currentColors.extraLightGray
                             }}
@@ -548,6 +583,16 @@ const Thread = memo(
                     onConfirm={handleDeleteConfirm}
                     onCancel={() => {
                         setIsDeleteModalVisible(false)
+                    }}
+                />
+
+                {/* Report modal */}
+                <ReportThreadModal
+                    visible={isReportModalVisible}
+                    title={t('action.report')}
+                    onConfirm={handleReportConfirm}
+                    onCancel={() => {
+                        setIsReportModalVisible(false)
                     }}
                 />
             </View>

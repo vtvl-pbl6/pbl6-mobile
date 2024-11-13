@@ -4,8 +4,8 @@ const threadService = {
     getNewFeed: async page => {
         return await apiClient.get(`/thread?page=${page}&limit=10`)
     },
-    create: async threadData => {
-        return await apiClient.post('/thread', threadData)
+    create: async data => {
+        return await apiClient.post('/thread', data)
     },
     getByAuthorId: async (page, author_id) => {
         return await apiClient.get(
@@ -15,23 +15,26 @@ const threadService = {
     getById: async id => {
         return await apiClient.get('/thread/' + id)
     },
-    like: async threadId => {
-        return await apiClient.patch(`/thread/${threadId}/like`)
+    like: async id => {
+        return await apiClient.patch(`/thread/${id}/like`)
     },
-    unlike: async threadId => {
-        return await apiClient.patch(`/thread/${threadId}/unlike`)
+    unlike: async id => {
+        return await apiClient.patch(`/thread/${id}/unlike`)
     },
-    share: async threadId => {
-        return await apiClient.post(`/thread/${threadId}/share`)
+    share: async id => {
+        return await apiClient.post(`/thread/${id}/share`)
     },
-    unshared: async threadId => {
-        return await apiClient.post(`/thread/${threadId}/unshared`)
+    unshared: async id => {
+        return await apiClient.post(`/thread/${id}/unshared`)
     },
-    delete: async threadId => {
-        return await apiClient.delete(`/thread/${threadId}`)
+    delete: async id => {
+        return await apiClient.delete(`/thread/${id}`)
     },
     update: async (id, data) => {
         return await apiClient.put(`/thread/${id}`, data)
+    },
+    moderation: async (id, data) => {
+        return await apiClient.post(`/thread/${id}/moderation/request`, data)
     }
 }
 

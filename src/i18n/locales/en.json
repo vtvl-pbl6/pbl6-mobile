@@ -3,6 +3,10 @@
         "confirm": "Confirm",
         "cancel": "Cancel"
     },
+    "reportModal": {
+        "placeholder": "Enter reason",
+        "defaultReason": "No specific reason."
+    },
     "validation": {
         "usernameRequired": "Username is required",
         "usernameMinLength": "Username must be more than 5 characters",
@@ -145,12 +149,14 @@
         "delete": "Delete",
         "edit": "Edit thread",
         "pin": "Pin to profile",
+        "report": "Request moderation",
         "shareSuccess": "Repost successfully!",
         "unshareConfirmTitle": "Unrepost",
         "unshareConfirmMessage": "Are you sure you want to remove this repost?",
         "deleteThreadTitle": "Delete thread",
         "deleteThreadMessage": "Are you sure you want to remove this thread?",
-        "deleteSuccess": "Delete successfully!"
+        "deleteSuccess": "Delete successfully!",
+        "reportSuccess": "The request has been sent"
     },
     "activity": {
         "followed": "followed you",
