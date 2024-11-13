@@ -12,7 +12,9 @@
         "passwordMinLength": "Password must be at least 6 characters",
         "confirmPasswordRequired": "Confirm password is required",
         "passwordMismatch": "Passwords do not match",
-        "passwordCriteria": "Password must contain at least one uppercase letter, one lowercase letter, one digit, no spaces, and be 8 to 32 characters long."
+        "passwordCriteria": "Password must contain at least one uppercase letter, one lowercase letter, one digit, no spaces, and be 8 to 32 characters long.",
+        "oldPasswordRequired": "Old password is required.",
+        "newPasswordRequired": "New password is required."
     },
     "error": {
         "default": "Something went wrong!",
@@ -105,6 +107,7 @@
         "logout": "Log out",
         "changeLanguage": "Change Language",
         "changeMode": "Interface Mode",
+        "changePassword": "Change password",
         "aboutUs": "About Us",
         "language": {
             "title": "Please select your language!",
@@ -112,6 +115,14 @@
             "vietnamese": "Vietnamese"
         },
         "selectMode": "Please select interface mode"
+    },
+    "changePassword": {
+        "header": "Change password",
+        "updateButton": "Save",
+        "oldPassword": "Current password",
+        "newPassword": "New password",
+        "confirmPassword": "Confirm password",
+        "success": "Change password successfully"
     },
     "home": {
         "noMoreThread": "No more threads available"

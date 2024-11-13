@@ -31,3 +31,29 @@ export const validateRegisterForm = (values, t) => {
 
     return errors
 }
+
+export const validatePassword = (values, t) => {
+    let errors = {}
+
+    if (!values.oldPassword) {
+        errors.oldPassword = t('validation.oldPasswordRequired')
+    }
+
+    if (!values.newPassword) {
+        errors.newPassword = t('validation.newPasswordRequired')
+    } else if (
+        !/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,32}$/.test(
+            values.newPassword
+        )
+    ) {
+        errors.newPassword = t('validation.passwordCriteria')
+    }
+
+    if (!values.confirmPassword) {
+        errors.confirmPassword = t('validation.confirmPasswordRequired')
+    } else if (values.confirmPassword !== values.newPassword) {
+        errors.confirmPassword = t('validation.passwordMismatch')
+    }
+
+    return errors
+}

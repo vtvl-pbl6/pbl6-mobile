@@ -13,4 +13,4 @@ export {
     saveThemeToStorage,
     saveTokensToStorage
 } from './storageUtils'
-export { validateRegisterForm } from './validationUtils'
+export { validatePassword, validateRegisterForm } from './validationUtils'

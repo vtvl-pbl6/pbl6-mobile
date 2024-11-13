@@ -248,7 +248,7 @@ const EditProfileScreen = ({ navigation }) => {
                                 </TouchableOpacity>
                             </View>
 
-                            {/* First and Last Name in the same row */}
+                            {/* First and Last Name */}
                             <View
                                 style={[
                                     styles.formGroup,
@@ -353,7 +353,7 @@ const EditProfileScreen = ({ navigation }) => {
                                 />
                             </View>
 
-                            {/* Bio (2 rows input) */}
+                            {/* Bio */}
                             <View style={styles.formGroup}>
                                 <Text
                                     style={[

@@ -84,6 +84,27 @@ const SettingScreen = ({ navigation }) => {
                 </Text>
             </Pressable>
 
+            {/* Change password */}
+            <Pressable
+                style={styles.actionButton}
+                onPress={() => {
+                    navigation.navigate('Profile', {
+                        screen: 'ChangePassword'
+                    })
+                }}
+            >
+                <Ionicons
+                    name="lock-closed-outline"
+                    size={wp(6)}
+                    style={[styles.icon, { color: currentColors.text }]}
+                />
+                <Text
+                    style={[styles.actionText, { color: currentColors.text }]}
+                >
+                    {t('setting.changePassword')}
+                </Text>
+            </Pressable>
+
             {/* Information */}
             <Pressable
                 style={styles.actionButton}

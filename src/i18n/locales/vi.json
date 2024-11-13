@@ -12,7 +12,9 @@
         "passwordMinLength": "Mật khẩu phải có ít nhất 6 ký tự",
         "confirmPasswordRequired": "Xác nhận mật khẩu là bắt buộc",
         "passwordMismatch": "Mật khẩu không khớp",
-        "passwordCriteria": "Mật khẩu phải chứa ít nhất một chữ cái viết hoa, một chữ cái thường, một chữ số, không có khoảng trắng và có độ dài từ 8 đến 32 ký tự"
+        "passwordCriteria": "Mật khẩu phải chứa ít nhất một chữ cái viết hoa, một chữ cái thường, một chữ số, không có khoảng trắng và có độ dài từ 8 đến 32 ký tự",
+        "oldPasswordRequired": "Mật khẩu cũ là bắt buộc",
+        "newPasswordRequired": "Mật khẩu mới là bắt buộc"
     },
     "error": {
         "default": "Có lỗi xảy ra!",
@@ -105,6 +107,7 @@
         "logout": "Đăng xuất",
         "changeLanguage": "Thay đổi ngôn ngữ",
         "changeMode": "Giao diện",
+        "changePassword": "Đổi mật khẩu",
         "aboutUs": "Giới thiệu về chúng tôi",
         "language": {
             "title": "Hãy chọn ngôn ngữ của bạn!",
@@ -112,6 +115,14 @@
             "vietnamese": "Tiếng Việt"
         },
         "selectMode": "Hãy chọn chế độ hiển thị"
+    },
+    "changePassword": {
+        "header": "Đổi mật khẩu",
+        "updateButton": "Lưu",
+        "oldPassword": "Mật khẩu hiện tại",
+        "newPassword": "Mật khẩu mới",
+        "confirmPassword": "Nhập lại mật khẩu",
+        "success": "Đổi mật khẩu thành công"
     },
     "home": {
         "noMoreThread": "Không còn thread nào cũ hơn"
