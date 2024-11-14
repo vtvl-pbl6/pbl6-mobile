@@ -10,6 +10,7 @@ import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
 import threadService from '../../services/threadServices'
 import { showToast } from '../../store/slices'
+import { deleteMyThreadById } from '../../store/slices/threadSlice'
 import { daysUntilToday, hp, wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
 import BaseModal from '../base/BaseModal'
@@ -146,6 +147,7 @@ const Thread = memo(
             try {
                 const response = await threadService.delete(thread.id)
                 if (response.is_success) {
+                    dispatch(deleteMyThreadById({ id: thread.id }))
                     dispatch(
                         showToast({
                             message: t('action.deleteSuccess'),

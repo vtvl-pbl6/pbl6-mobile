@@ -120,6 +120,57 @@ const threadsSlice = createSlice({
             state.hasMore = true
             state.hasMoreMyThread = true
             state.hasMoreRepost = true
+        },
+        deleteThreadById(state, action) {
+            const { id } = action.payload
+            state.threads = state.threads.filter(thread => thread.id !== id)
+        },
+        deleteMyThreadById(state, action) {
+            const { id } = action.payload
+            state.myThreads = state.myThreads.filter(
+                myThread => myThread.id !== id
+            )
+        },
+        deleteRepostById(state, action) {
+            const { id } = action.payload
+            state.reposts = state.reposts.filter(repost => repost.id !== id)
+        },
+        deleteCommentById(state, action) {
+            const { id } = action.payload
+            state.comments = state.comments.filter(comment => comment.id !== id)
+        },
+        updateThreadById(state, action) {
+            const { id, newData } = action.payload
+            const index = state.threads.findIndex(thread => thread.id === id)
+            if (index !== -1) {
+                state.threads[index] = { ...state.threads[index], ...newData }
+            }
+        },
+        updateMyThreadById(state, action) {
+            const { id, newData } = action.payload
+            const index = state.myThreads.findIndex(
+                myThread => myThread.id === id
+            )
+            if (index !== -1) {
+                state.myThreads[index] = {
+                    ...state.myThreads[index],
+                    ...newData
+                }
+            }
+        },
+        updateRepostById(state, action) {
+            const { id, newData } = action.payload
+            const index = state.reposts.findIndex(repost => repost.id === id)
+            if (index !== -1) {
+                state.reposts[index] = { ...state.reposts[index], ...newData }
+            }
+        },
+        updateCommentById(state, action) {
+            const { id, newData } = action.payload
+            const index = state.comments.findIndex(comment => comment.id === id)
+            if (index !== -1) {
+                state.comments[index] = { ...state.comments[index], ...newData }
+            }
         }
     }
 })
@@ -137,6 +188,14 @@ export const {
     clearComments,
     setThreadDetail,
     clearThreadDetail,
-    updateInteractionAndListComment
+    updateInteractionAndListComment,
+    deleteThreadById,
+    deleteMyThreadById,
+    deleteRepostById,
+    deleteCommentById,
+    updateThreadById,
+    updateMyThreadById,
+    updateRepostById,
+    updateCommentById
 } = threadsSlice.actions
 export default threadsSlice.reducer
