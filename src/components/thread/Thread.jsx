@@ -10,7 +10,10 @@ import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
 import threadService from '../../services/threadServices'
 import { showToast } from '../../store/slices'
-import { deleteMyThreadById } from '../../store/slices/threadSlice'
+import {
+    deleteMyThreadById,
+    deleteRepostById
+} from '../../store/slices/threadSlice'
 import { daysUntilToday, hp, wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
 import BaseModal from '../base/BaseModal'
@@ -178,6 +181,7 @@ const Thread = memo(
                     response = await threadService.unshared(thread.id)
                     if (response.is_success) {
                         setIsShared(false)
+                        dispatch(deleteRepostById({ id: thread.id }))
                     }
                 } else {
                     response = await threadService.share(thread.id)

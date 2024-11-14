@@ -1,23 +1,32 @@
-import React, { memo, useEffect, useState } from 'react'
+import { useNavigation } from '@react-navigation/native'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import { Facebook } from 'react-content-loader/native'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import ImageSize from 'react-native-image-size'
+import RBSheet from 'react-native-raw-bottom-sheet'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
-import { daysUntilToday, wp } from '../../utils'
+import { daysUntilToday, hp, wp } from '../../utils'
+import ActionButton from '../button/ActionButton'
+import EditReplyThread from './EditReplyThread'
 import ImageThread from './ImageThread'
 
 const ReplyThread = memo(({ thread, action = true }) => {
     const dispatch = useDispatch()
     const { currentColors } = useTheme()
     const { t } = useLanguage()
+    const navigation = useNavigation()
+    const user = useSelector(state => state.user.user)
 
     const [liked, setLiked] = useState(false)
     const [loading, setLoading] = useState(false)
     const [imageDimensions, setImageDimensions] = useState([])
     const [dots, setDots] = useState('')
+    const [replyThreadId, setReplyThreadId] = useState(null)
+    const refOwnThreadAction = useRef()
+    const refEditThreadAction = useRef()
 
     const toggleLike = () => {
         setLiked(!liked)
@@ -62,6 +71,18 @@ const ReplyThread = memo(({ thread, action = true }) => {
 
     if (!thread || !thread.author) {
         return null
+    }
+
+    const handleShowBottomSheet = () => {
+        if (user.id == thread.author.id) refOwnThreadAction.current.open()
+    }
+
+    const handleEdit = id => {
+        refOwnThreadAction.current.close()
+        setReplyThreadId(id)
+        setTimeout(() => {
+            refEditThreadAction.current.open()
+        }, 300)
     }
 
     const isCreating = thread.status === 'CREATING'
@@ -129,7 +150,10 @@ const ReplyThread = memo(({ thread, action = true }) => {
                                     {daysUntilToday(thread.created_at)}
                                 </Text>
                             </View>
-                            <Pressable style={styles.more}>
+                            <Pressable
+                                style={styles.more}
+                                onPress={handleShowBottomSheet}
+                            >
                                 {action && (
                                     <Ionicons
                                         name="ellipsis-horizontal"
@@ -230,6 +254,79 @@ const ReplyThread = memo(({ thread, action = true }) => {
                     </View>
                 )}
             </View>
+
+            {/* Bottom Sheet Own Thread Action */}
+            <RBSheet
+                customStyles={{
+                    container: [
+                        styles.bottomSheetContainer,
+                        { backgroundColor: currentColors.extraLightGray }
+                    ],
+                    draggableIcon: {
+                        backgroundColor: currentColors.gray,
+                        width: wp(10)
+                    }
+                }}
+                height={hp(35)}
+                openDuration={250}
+                ref={refOwnThreadAction}
+                draggable={true}
+            >
+                <View
+                    style={[
+                        styles.contentBottomSheetContainer,
+                        { backgroundColor: currentColors.extraLightGray }
+                    ]}
+                >
+                    <ActionButton
+                        iconName="settings-outline"
+                        label={t('action.edit')}
+                        onPress={() => handleEdit(thread.id)}
+                        buttonStyle={{
+                            borderTopLeftRadius: theme.radius.xxl,
+                            borderTopRightRadius: theme.radius.xxl,
+                            borderBottomWidth: 0.6,
+                            borderColor: currentColors.extraLightGray
+                        }}
+                    />
+                    <ActionButton
+                        iconName="document-attach-outline"
+                        label={t('action.pin')}
+                        // onPress={handlePin}
+                        onPress={() => {}}
+                        buttonStyle={{
+                            borderBottomLeftRadius: theme.radius.xxl,
+                            borderBottomRightRadius: theme.radius.xxl
+                        }}
+                    />
+
+                    <ActionButton
+                        iconName="trash-outline"
+                        label={t('action.delete')}
+                        // onPress={handleDelete}
+                        buttonStyle={{
+                            borderRadius: theme.radius.xxl,
+                            marginTop: wp(4)
+                        }}
+                        color={theme.colors.rose}
+                    />
+                </View>
+            </RBSheet>
+
+            {/* Bottom Sheet edit thread */}
+            <RBSheet
+                customStyles={{
+                    container: [
+                        styles.bottomSheetContainer,
+                        { backgroundColor: currentColors.background }
+                    ]
+                }}
+                height={hp(56)}
+                openDuration={250}
+                ref={refEditThreadAction}
+            >
+                <EditReplyThread threadId={replyThreadId} />
+            </RBSheet>
         </View>
     )
 })
@@ -296,5 +393,14 @@ const styles = StyleSheet.create({
     numberAction: {
         fontSize: wp(3.6),
         marginLeft: wp(1)
+    },
+    bottomSheetContainer: {
+        borderTopLeftRadius: theme.radius.xxl,
+        borderTopRightRadius: theme.radius.xxl
+    },
+    contentBottomSheetContainer: {
+        flex: 1,
+        alignItems: 'center',
+        padding: wp(4)
     }
 })

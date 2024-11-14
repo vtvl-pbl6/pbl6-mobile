@@ -143,7 +143,10 @@ const threadsSlice = createSlice({
             const { id, newData } = action.payload
             const index = state.threads.findIndex(thread => thread.id === id)
             if (index !== -1) {
-                state.threads[index] = { ...state.threads[index], ...newData }
+                state.threads[index] = {
+                    ...state.threads[index],
+                    ...newData
+                }
             }
         },
         updateMyThreadById(state, action) {
@@ -162,14 +165,20 @@ const threadsSlice = createSlice({
             const { id, newData } = action.payload
             const index = state.reposts.findIndex(repost => repost.id === id)
             if (index !== -1) {
-                state.reposts[index] = { ...state.reposts[index], ...newData }
+                state.reposts[index] = {
+                    ...state.reposts[index],
+                    ...newData
+                }
             }
         },
         updateCommentById(state, action) {
             const { id, newData } = action.payload
             const index = state.comments.findIndex(comment => comment.id === id)
             if (index !== -1) {
-                state.comments[index] = { ...state.comments[index], ...newData }
+                state.comments[index] = {
+                    ...state.comments[index],
+                    ...newData
+                }
             }
         }
     }

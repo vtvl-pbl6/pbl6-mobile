@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLanguage } from '../contexts'
 import UserProfileScreen from '../screens/main/UserProfileScreen'
+import EditThreadScreen from '../screens/profile/EditThreadScreen'
 import {
     connectSocket,
     disconnectSocket,
@@ -124,6 +125,11 @@ const AppNavigator = ({ navigation }) => {
                     <RootStack.Screen
                         name="UserProfile"
                         component={UserProfileScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <RootStack.Screen
+                        name="EditThread"
+                        component={EditThreadScreen}
                         options={{ headerShown: false }}
                     />
                 </>

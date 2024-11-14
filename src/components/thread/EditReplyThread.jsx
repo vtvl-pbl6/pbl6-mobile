@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons'
-import { useRoute } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
 import {
     Image,
@@ -13,9 +13,8 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
-import { BaseHeader, ImagePreview } from '../../components'
+import { ImagePreview, Loading } from '../../components'
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
 import threadService from '../../services/threadServices'
@@ -24,24 +23,23 @@ import { updateMyThreadById } from '../../store/slices/threadSlice'
 import { hp, wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
 
-const EditThreadScreen = ({ navigation }) => {
+const EditReplyThread = ({ threadId }) => {
     const dispatch = useDispatch()
     const { currentColors } = useTheme()
     const { t } = useLanguage()
     const route = useRoute()
+    const navigation = useNavigation()
 
-    const thread = route.params?.thread || {}
-
-    const insets = useSafeAreaInsets()
-
-    const loading = useSelector(state => state.loading)
     const user = useSelector(state => state.user.user)
     const update = useSelector(state => state.update)
+    const loading = useSelector(state => state.loading)
 
-    const [selectedScope, setSelectedScope] = useState('PUBLIC')
+    const [selectedScope, setSelectedScope] = useState(null)
     const [isDropdownVisible, setDropdownVisible] = useState(false)
     const [selectedImages, setSelectedImages] = useState([])
     const [content, setContent] = useState('')
+    const [load, setLoad] = useState(false)
+    const [thread, setThread] = useState(false)
 
     const handleError = useHandleError(navigation)
 
@@ -50,6 +48,25 @@ const EditThreadScreen = ({ navigation }) => {
         { label: t('editThread.scope.friend'), value: 'FRIEND_ONLY' },
         { label: t('editThread.scope.private'), value: 'PRIVATE' }
     ]
+
+    useEffect(() => {
+        const fetchThread = async () => {
+            if (load) return
+            setLoad(true)
+            try {
+                const response = await threadService.getById(threadId)
+                const { data, is_success } = response
+                if (is_success) {
+                    setThread(data)
+                }
+            } catch (error) {
+                handleError(error)
+            } finally {
+                setLoad(false)
+            }
+        }
+        fetchThread()
+    }, [threadId])
 
     useEffect(() => {
         if (thread) {
@@ -128,22 +145,46 @@ const EditThreadScreen = ({ navigation }) => {
         }
     }
 
+    if (load) {
+        return (
+            <View
+                style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}
+            >
+                <Loading />
+            </View>
+        )
+    }
+
     return (
         <KeyboardAvoidingView
             style={[
                 styles.container,
                 {
-                    backgroundColor: currentColors.background,
-                    paddingTop: insets.top
+                    backgroundColor: currentColors.background
                 }
             ]}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
             {/* Header */}
-            <BaseHeader
-                title={t('editThread.editThread')}
-                onBackPress={() => navigation.goBack()}
-            />
+            <View
+                style={[
+                    styles.header,
+                    { borderBottomColor: currentColors.lightGray }
+                ]}
+            >
+                <Text
+                    style={[
+                        styles.newThreadText,
+                        { color: currentColors.text }
+                    ]}
+                >
+                    {t('editThread.editThread')}
+                </Text>
+            </View>
 
             {/* Scrollable Body */}
             <ScrollView
@@ -315,7 +356,7 @@ const EditThreadScreen = ({ navigation }) => {
     )
 }
 
-export default EditThreadScreen
+export default EditReplyThread
 
 const styles = StyleSheet.create({
     container: {
@@ -401,7 +442,7 @@ const styles = StyleSheet.create({
         borderRadius: 50
     },
     footer: {
-        paddingHorizontal: wp(2),
+        paddingHorizontal: wp(4),
         paddingVertical: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
