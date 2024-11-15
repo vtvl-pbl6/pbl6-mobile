@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
+import activitiesReducer from './slices/activitiesSlice'
 import authReducer from './slices/authSlice'
 import languageReducer from './slices/languageSlice'
 import loadingReducer from './slices/loadingSlice'
@@ -19,7 +20,8 @@ const store = configureStore({
         loading: loadingReducer,
         update: updateReducer,
         notification: notificationReducer,
-        threads: threadReducer
+        threads: threadReducer,
+        activities: activitiesReducer
     }
 })
 

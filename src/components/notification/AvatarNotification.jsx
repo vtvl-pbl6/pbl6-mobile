@@ -1,13 +1,9 @@
 import { Ionicons } from '@expo/vector-icons'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Image, StyleSheet, View } from 'react-native'
 import { wp } from '../../utils'
 
 const AvatarNotification = ({ user, type, currentColors }) => {
-    useEffect(() => {
-        console.log('USER: ', user.avatar_file.url)
-    }, [user])
-
     return (
         <View style={{ position: 'relative' }}>
             {user?.avatar_file ? (

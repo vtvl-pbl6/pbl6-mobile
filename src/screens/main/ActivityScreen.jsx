@@ -7,12 +7,20 @@ import CommentNotification from '../../components/notification/CommentNotificati
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
 import notificationService from '../../services/notificationService'
+import {
+    addActivityToFront,
+    clearActivities,
+    setActivities
+} from '../../store/slices/activitiesSlice'
 import { hp, wp } from '../../utils'
 
 const ActivityScreen = ({ navigation }) => {
     const dispatch = useDispatch()
     const { currentColors } = useTheme()
     const { t } = useLanguage()
+
+    const notifications = useSelector(state => state.activities.activities)
+    const hasMore = useSelector(state => state.activities.hasMore)
     const notificationsQuick = useSelector(
         state => state.notification.notifications
     )
@@ -24,32 +32,24 @@ const ActivityScreen = ({ navigation }) => {
 
     const [loading, setLoading] = useState(false)
     const [page, setPage] = useState(1)
-    const [hasMore, setHasMore] = useState(true)
-    const [notifications, setNotifications] = useState([])
     const [refreshing, setRefreshing] = useState(false)
 
-    const fetchNotification = async () => {
+    const fetchNotification = async (pageNumber = page) => {
         if (loading || !hasMore) return
         setLoading(true)
 
         try {
-            const response = await notificationService.getAll(page)
+            const response = await notificationService.getAll(pageNumber)
             const { data, is_success, metadata } = response
 
             if (is_success) {
-                setNotifications(prev => {
-                    const newNotifications = data.filter(
-                        notification =>
-                            !prev.some(t => t.id === notification.id)
-                    )
-                    return [...prev, ...newNotifications]
-                })
-
-                if (metadata.current_page >= metadata.total_page) {
-                    setHasMore(false)
-                }
+                dispatch(
+                    setActivities({
+                        activities: data,
+                        hasMore: metadata.current_page < metadata.total_page
+                    })
+                )
             } else {
-                setHasMore(false)
                 dispatch(
                     showToast({
                         message: t('error.fetchFailed'),
@@ -69,28 +69,26 @@ const ActivityScreen = ({ navigation }) => {
     }, [])
 
     useEffect(() => {
-        setNotifications(prev => {
-            const newNotifications = notificationsQuick.filter(
-                notification => !prev.some(t => t.id === notification.id)
-            )
-            return [...newNotifications, ...prev]
-        })
+        dispatch(addActivityToFront(notificationsQuick))
     }, [notificationsQuick])
 
     const loadMoreNotification = () => {
-        if (hasMore && !loading) {
+        if (hasMore && !loading && !refreshing) {
             setPage(prevPage => prevPage + 1)
         }
     }
 
     const handleRefresh = async () => {
-        if (refreshing) return
+        if (refreshing || loading) return
         setRefreshing(true)
-        setNotifications([])
+        dispatch(clearActivities())
         setPage(1)
-        setHasMore(true)
-        await fetchNotification()
-        setRefreshing(false)
+
+        try {
+            await fetchNotification(1)
+        } finally {
+            setRefreshing(false)
+        }
     }
 
     const renderNotification = ({ item }) => {
@@ -105,8 +103,10 @@ const ActivityScreen = ({ navigation }) => {
     }
 
     useEffect(() => {
-        fetchNotification()
-    }, [page, refreshing])
+        if (page > 1) {
+            fetchNotification(page)
+        }
+    }, [page])
 
     if (loading && notifications.length === 0) {
         return (

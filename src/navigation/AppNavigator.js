@@ -16,12 +16,12 @@ import {
     addNotification,
     setNotificationStatus,
     setUnreadNotification,
-    setUpdate,
     showToast
 } from '../store/slices'
 import {
     updateInteraction,
-    updateInteractionAndListComment
+    updateInteractionAndListComment,
+    updateMyThreadById
 } from '../store/slices/threadSlice'
 import useHandleError from '../utils/handlers/errorHandler'
 import AuthNavigator from './AuthNavigator'
@@ -55,13 +55,26 @@ const AppNavigator = ({ navigation }) => {
                             dispatch(addNotification(notification))
                         }
                     })
-                    subscribeThreadPrivateChannel(user.email, notification => {
-                        console.log('Notification received:', notification)
-                        const { read, type, sender } = notification
-                        if (type == 'CREATE_THREAD_DONE') {
-                            dispatch(setUpdate(true))
+                    subscribeThreadPrivateChannel(
+                        user.email,
+                        async notification => {
+                            console.log('Notification received:', notification)
+                            const { object_id, type, sender } = notification
+                            if (type == 'CREATE_THREAD_DONE') {
+                                // dispatch(setUpdate(true))
+
+                                const response =
+                                    await threadService.getById(object_id)
+                                const { data } = response
+                                dispatch(
+                                    updateMyThreadById({
+                                        id: object_id,
+                                        newData: data
+                                    })
+                                )
+                            }
                         }
-                    })
+                    )
                     subscribeThreadChannel(user.email, async thread => {
                         console.log('Thread received:', thread)
                         const { read, object_id, type, content } = thread
