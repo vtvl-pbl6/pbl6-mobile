@@ -8,7 +8,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { useDispatch, useSelector } from 'react-redux'
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
+import threadService from '../../services/threadServices'
+import { showToast } from '../../store/slices'
+import { deleteCommentById } from '../../store/slices/threadSlice'
 import { daysUntilToday, hp, wp } from '../../utils'
+import useHandleError from '../../utils/handlers/errorHandler'
+import BaseModal from '../base/BaseModal'
 import ActionButton from '../button/ActionButton'
 import EditReplyThread from './EditReplyThread'
 import ImageThread from './ImageThread'
@@ -19,6 +24,7 @@ const ReplyThread = memo(({ thread, action = true }) => {
     const { t } = useLanguage()
     const navigation = useNavigation()
     const user = useSelector(state => state.user.user)
+    const handleError = useHandleError(navigation)
 
     const [liked, setLiked] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -27,6 +33,7 @@ const ReplyThread = memo(({ thread, action = true }) => {
     const [replyThreadId, setReplyThreadId] = useState(null)
     const refOwnThreadAction = useRef()
     const refEditThreadAction = useRef()
+    const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
 
     const toggleLike = () => {
         setLiked(!liked)
@@ -83,6 +90,42 @@ const ReplyThread = memo(({ thread, action = true }) => {
         setTimeout(() => {
             refEditThreadAction.current.open()
         }, 300)
+    }
+
+    const handleDelete = async () => {
+        refOwnThreadAction.current.close()
+        setTimeout(() => {
+            setIsDeleteModalVisible(true)
+        }, 300)
+    }
+
+    const handleDeleteConfirm = async () => {
+        if (thread.author.id != user.id) return
+        try {
+            const response = await threadService.delete(thread.id)
+            if (response.is_success) {
+                dispatch(
+                    deleteCommentById({
+                        id: thread.id,
+                        parent_id: thread.parent_thread.id,
+                        type: 'DELETE_COMMENT',
+                        comment: thread
+                    })
+                )
+                dispatch(
+                    showToast({
+                        message: t('action.deleteSuccess'),
+                        type: 'success'
+                    })
+                )
+            }
+        } catch (error) {
+            console.log(error)
+
+            handleError(error)
+        } finally {
+            setIsDeleteModalVisible(false)
+        }
     }
 
     const isCreating = thread.status === 'CREATING'
@@ -303,7 +346,7 @@ const ReplyThread = memo(({ thread, action = true }) => {
                     <ActionButton
                         iconName="trash-outline"
                         label={t('action.delete')}
-                        // onPress={handleDelete}
+                        onPress={handleDelete}
                         buttonStyle={{
                             borderRadius: theme.radius.xxl,
                             marginTop: wp(4)
@@ -327,6 +370,17 @@ const ReplyThread = memo(({ thread, action = true }) => {
             >
                 <EditReplyThread threadId={replyThreadId} />
             </RBSheet>
+
+            {/* Modal confirm delete */}
+            <BaseModal
+                visible={isDeleteModalVisible}
+                title={t('action.deleteThreadTitle')}
+                message={t('action.deleteThreadMessage')}
+                onConfirm={handleDeleteConfirm}
+                onCancel={() => {
+                    setIsDeleteModalVisible(false)
+                }}
+            />
         </View>
     )
 })

@@ -14,7 +14,6 @@ import {
     View
 } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { ImagePreview, Loading } from '../../components'
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
 import threadService from '../../services/threadServices'
@@ -22,6 +21,8 @@ import { setLoading, showToast } from '../../store/slices'
 import { updateMyThreadById } from '../../store/slices/threadSlice'
 import { hp, wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
+import Loading from '../Loading'
+import ImagePreview from './ImagePreview'
 
 const EditReplyThread = ({ threadId }) => {
     const dispatch = useDispatch()

@@ -28,6 +28,9 @@ const updateProperty = (item, type) => {
         case 'COMMENT':
             item.comment_num += 1
             break
+        case 'DELETE_COMMENT':
+            item.comment_num -= 1
+            break
         case 'EDIT_THREAD':
             return true
         default:
@@ -136,8 +139,16 @@ const threadsSlice = createSlice({
             state.reposts = state.reposts.filter(repost => repost.id !== id)
         },
         deleteCommentById(state, action) {
-            const { id } = action.payload
+            const { id, comment, type, parent_id } = action.payload
             state.comments = state.comments.filter(comment => comment.id !== id)
+
+            updateItem(state.threads, parent_id, type)
+            updateItem(state.myThreads, parent_id, type)
+            updateItem(state.reposts, parent_id, type)
+
+            if (state.threadDetail && state.threadDetail.id === parent_id) {
+                updateProperty(state.threadDetail, type)
+            }
         },
         updateThreadById(state, action) {
             const { id, newData } = action.payload
