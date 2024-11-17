@@ -18,13 +18,16 @@ import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
 import threadService from '../../services/threadServices'
 import { setLoading, showToast } from '../../store/slices'
-import { updateMyThreadById } from '../../store/slices/threadSlice'
+import {
+    updateCommentById,
+    updateMyThreadById
+} from '../../store/slices/threadSlice'
 import { hp, wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
 import Loading from '../Loading'
 import ImagePreview from './ImagePreview'
 
-const EditReplyThread = ({ threadId }) => {
+const EditReplyThread = ({ threadId, onClose }) => {
     const dispatch = useDispatch()
     const { currentColors } = useTheme()
     const { t } = useLanguage()
@@ -109,7 +112,6 @@ const EditReplyThread = ({ threadId }) => {
 
         const data = {
             content: content,
-            visibility: selectedScope,
             delete_file_ids: delete_file_ids
         }
 
@@ -122,7 +124,12 @@ const EditReplyThread = ({ threadId }) => {
             const response = await threadService.update(thread.id, data)
 
             if (response.is_success) {
-                navigation.navigate('ProfileMain')
+                dispatch(
+                    updateCommentById({
+                        id: threadId,
+                        newData: response.data
+                    })
+                )
                 dispatch(
                     showToast({
                         message: t('editThread.success'),
@@ -137,6 +144,7 @@ const EditReplyThread = ({ threadId }) => {
                         newData: response.data
                     })
                 )
+                onClose(true)
             }
         } catch (error) {
             handleError(error)
@@ -296,38 +304,6 @@ const EditReplyThread = ({ threadId }) => {
                         }
                     </Text>
                 </Pressable>
-
-                {/* Dropdown menu */}
-                {isDropdownVisible && (
-                    <View
-                        style={[
-                            styles.dropdown,
-                            {
-                                backgroundColor: currentColors.background,
-                                borderColor: currentColors.lightGray
-                            }
-                        ]}
-                    >
-                        {scopeOptions.map(option => (
-                            <Pressable
-                                key={option.value}
-                                onPress={() => {
-                                    setSelectedScope(option.value)
-                                    setDropdownVisible(false)
-                                }}
-                                style={{
-                                    padding: wp(3),
-                                    borderColor: currentColors.extraLightGray,
-                                    borderWidth: 0.5
-                                }}
-                            >
-                                <Text style={{ color: currentColors.text }}>
-                                    {option.label}
-                                </Text>
-                            </Pressable>
-                        ))}
-                    </View>
-                )}
 
                 <TouchableOpacity
                     style={[

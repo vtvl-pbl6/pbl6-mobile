@@ -19,6 +19,7 @@ import {
     showToast
 } from '../store/slices'
 import {
+    updateCommentById,
     updateInteraction,
     updateInteractionAndListComment,
     updateMyThreadById
@@ -61,8 +62,6 @@ const AppNavigator = ({ navigation }) => {
                             console.log('Notification received:', notification)
                             const { object_id, type, sender } = notification
                             if (type == 'CREATE_THREAD_DONE') {
-                                // dispatch(setUpdate(true))
-
                                 const response =
                                     await threadService.getById(object_id)
                                 const { data } = response
@@ -71,7 +70,13 @@ const AppNavigator = ({ navigation }) => {
                                         id: object_id,
                                         newData: data
                                     })
-                                )
+                                ),
+                                    dispatch(
+                                        updateCommentById({
+                                            id: object_id,
+                                            newData: data
+                                        })
+                                    )
                             }
                         }
                     )

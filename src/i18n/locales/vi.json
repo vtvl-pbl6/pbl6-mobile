@@ -25,7 +25,9 @@
         "fetchFailed": "Tải thất bại!"
     },
     "status": {
-        "creating": "Đang xử lí"
+        "creating": "Đang xử lí",
+        "pending": "Đang giải quyết",
+        "rejected": "Bị từ chối"
     },
     "welcome": {
         "title": "Kết nối!",

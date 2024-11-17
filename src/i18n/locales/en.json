@@ -25,7 +25,9 @@
         "fetchFailed": "Failed to fetch threads!"
     },
     "status": {
-        "creating": "In progress"
+        "creating": "In progress",
+        "pending": "Pending",
+        "rejected": "Rejected"
     },
     "welcome": {
         "title": "LinkUp!",

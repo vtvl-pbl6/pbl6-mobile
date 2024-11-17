@@ -368,7 +368,14 @@ const ReplyThread = memo(({ thread, action = true }) => {
                 openDuration={250}
                 ref={refEditThreadAction}
             >
-                <EditReplyThread threadId={replyThreadId} />
+                <EditReplyThread
+                    threadId={replyThreadId}
+                    onClose={isClose => {
+                        if (isClose) {
+                            refEditThreadAction.current.close()
+                        }
+                    }}
+                />
             </RBSheet>
 
             {/* Modal confirm delete */}

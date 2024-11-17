@@ -328,46 +328,80 @@ const Thread = memo(
                                         {daysUntilToday(thread.created_at)}
                                     </Text>
                                 </Pressable>
-                                <Pressable
-                                    style={styles.more}
-                                    onPress={() =>
-                                        handleShowActionSheet(
-                                            thread.author.id === currentUser.id
-                                        )
-                                    }
-                                >
-                                    {isCreating ? (
-                                        <View style={styles.creating}>
+                                <View style={styles.more}>
+                                    <View
+                                        style={{
+                                            padding: wp(2),
+                                            flexDirection: 'row',
+                                            justifyContent: 'flex-end'
+                                        }}
+                                    >
+                                        {thread.status === 'PENDING' ? (
                                             <Text
                                                 style={[
                                                     styles.text,
                                                     {
-                                                        color: currentColors.text,
-                                                        fontWeight:
-                                                            theme.fonts.semibold
+                                                        color: currentColors.gray
                                                     }
                                                 ]}
                                             >
-                                                {t('status.creating')}
+                                                {t('status.pending')}
                                             </Text>
-                                            <View style={{ width: wp(5) }}>
+                                        ) : thread.status === 'REJECTED' ? (
+                                            <Text
+                                                style={[
+                                                    styles.text,
+                                                    {
+                                                        color: currentColors.gray
+                                                    }
+                                                ]}
+                                            >
+                                                {t('status.rejected')}
+                                            </Text>
+                                        ) : null}
+                                    </View>
+                                    <Pressable
+                                        onPress={() =>
+                                            handleShowActionSheet(
+                                                thread.author.id ===
+                                                    currentUser.id
+                                            )
+                                        }
+                                    >
+                                        {isCreating ? (
+                                            <View style={styles.creating}>
                                                 <Text
-                                                    style={{
-                                                        color: currentColors.text
-                                                    }}
+                                                    style={[
+                                                        styles.text,
+                                                        {
+                                                            color: currentColors.text,
+                                                            fontWeight:
+                                                                theme.fonts
+                                                                    .semibold
+                                                        }
+                                                    ]}
                                                 >
-                                                    {dots}
+                                                    {t('status.creating')}
                                                 </Text>
+                                                <View style={{ width: wp(5) }}>
+                                                    <Text
+                                                        style={{
+                                                            color: currentColors.text
+                                                        }}
+                                                    >
+                                                        {dots}
+                                                    </Text>
+                                                </View>
                                             </View>
-                                        </View>
-                                    ) : (
-                                        <Ionicons
-                                            name="ellipsis-horizontal"
-                                            size={24}
-                                            color={currentColors.gray}
-                                        />
-                                    )}
-                                </Pressable>
+                                        ) : (
+                                            <Ionicons
+                                                name="ellipsis-horizontal"
+                                                size={24}
+                                                color={currentColors.gray}
+                                            />
+                                        )}
+                                    </Pressable>
+                                </View>
                             </View>
 
                             {/* Content */}
