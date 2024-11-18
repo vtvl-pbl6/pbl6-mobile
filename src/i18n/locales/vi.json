@@ -140,7 +140,8 @@
         "follow": "Theo dõi",
         "unfollow": "Bỏ theo dõi",
         "confirmUnfollow": "Bạn có chắc chắn muốn bỏ theo dõi người dùng này không?",
-        "loadMore": "Xem thêm..."
+        "loadMore": "Xem thêm...",
+        "searchTextHistory": "Lịch sử tìm kiếm"
     },
     "threadDetail": {
         "header": "Thead",

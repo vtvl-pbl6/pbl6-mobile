@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     FlatList,
     Pressable,
@@ -35,6 +35,7 @@ const SearchScreen = ({ navigation }) => {
     const [page, setPage] = useState(1)
     const [hasMore, setHasMore] = useState(true)
     const [isStateReset, setIsStateReset] = useState(false)
+    const [searchHistory, setSearchHistory] = useState([])
 
     // Modal states
     const [modalVisible, setModalVisible] = useState(false)
@@ -84,22 +85,22 @@ const SearchScreen = ({ navigation }) => {
         } finally {
             setLoading(false)
         }
+
+        setSearchHistory(prev => {
+            if (!prev.includes(searchInput)) {
+                return [searchInput, ...prev]
+            }
+            return prev
+        })
     }
 
-    const debouncedSearch = useCallback(
-        debounce(text => {
-            if (text.trim()) {
-                handleSearch(true)
-            } else {
-                setSearchResults([])
-            }
-        }, 300),
-        []
-    )
-
     useEffect(() => {
-        debouncedSearch(searchInput)
-    }, [searchInput, debouncedSearch])
+        if (searchInput.trim()) {
+            debounce(handleSearch(true), 300)
+        } else {
+            handleReset()
+        }
+    }, [searchInput])
 
     const reloadAPIs = async () => {
         setSearchResults([])
@@ -132,13 +133,13 @@ const SearchScreen = ({ navigation }) => {
     }
 
     useEffect(() => {
-        if (page != 1) {
+        if (page !== 1) {
             handleSearch()
         }
     }, [page])
 
     const handleProfileNavigation = userId => {
-        navigation.navigate('UserProfile', { userId: userId })
+        navigation.navigate('UserProfile', { userId })
     }
 
     const handleUnfollow = userId => {
@@ -213,6 +214,45 @@ const SearchScreen = ({ navigation }) => {
                 </View>
             </View>
 
+            {(searchHistory.length && searchResults.length == 0) > 0 && (
+                <View>
+                    <Text
+                        style={[
+                            styles.historyTitle,
+                            { color: currentColors.text }
+                        ]}
+                    >
+                        {t('search.searchTextHistory')}
+                    </Text>
+                    <FlatList
+                        data={searchHistory}
+                        renderItem={({ item }) => (
+                            <Pressable
+                                style={styles.historyButton}
+                                onPress={() => setSearchInput(item)}
+                            >
+                                <Text
+                                    style={[
+                                        styles.historyItem,
+                                        { color: currentColors.text }
+                                    ]}
+                                >
+                                    {item}
+                                </Text>
+                                <Ionicons
+                                    // name="arrow-forward-circle"
+                                    name="chevron-forward-sharp"
+                                    size={hp(2.3)}
+                                    color={currentColors.gray}
+                                    style={{ paddingRight: wp(1) }}
+                                />
+                            </Pressable>
+                        )}
+                        keyExtractor={(item, index) => index.toString()}
+                    />
+                </View>
+            )}
+
             {searchResults.length > 0 && (
                 <FlatList
                     data={searchResults}
@@ -282,6 +322,22 @@ const styles = StyleSheet.create({
     loadMoreText: {
         fontSize: wp(4),
         fontWeight: theme.fonts.semibold
+    },
+    historyTitle: {
+        fontSize: wp(5),
+        fontWeight: theme.fonts.semibold,
+        marginHorizontal: wp(2),
+        marginTop: 10
+    },
+    historyButton: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    historyItem: {
+        fontSize: wp(4),
+        paddingVertical: wp(4),
+        paddingHorizontal: wp(2)
     }
 })
 
