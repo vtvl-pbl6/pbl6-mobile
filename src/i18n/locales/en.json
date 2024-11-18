@@ -158,7 +158,9 @@
         "deleteThreadTitle": "Delete thread",
         "deleteThreadMessage": "Are you sure you want to remove this thread?",
         "deleteSuccess": "Delete successfully!",
-        "reportSuccess": "The request has been sent"
+        "reportSuccess": "The request has been sent",
+        "updateProfileTitle": "Update profile",
+        "updateProfileMessage": "Are you sure you want to update profile?"
     },
     "activity": {
         "followed": "followed you",

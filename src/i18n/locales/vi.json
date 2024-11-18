@@ -158,7 +158,9 @@
         "deleteThreadTitle": "Xoá thread",
         "deleteThreadMessage": "Bạn có chắc chắn muốn xoá thread này?",
         "deleteSuccess": "Xoá thành công!",
-        "reportSuccess": "Yêu cầu đã được gửi"
+        "reportSuccess": "Yêu cầu đã được gửi",
+        "updateProfileTitle": "Cập nhật hồ sơ",
+        "updateProfileMessage": "Bạn có chắc chắn muốn thay đổi hồ sơ?"
     },
     "activity": {
         "followed": "đã theo dõi bạn",

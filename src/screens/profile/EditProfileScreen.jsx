@@ -19,7 +19,13 @@ import ModalDateTimePicker from 'react-native-modal-datetime-picker'
 import { Divider } from 'react-native-paper'
 import RNPickerSelect from 'react-native-picker-select'
 import { useDispatch } from 'react-redux'
-import { BaseButton, BaseHeader, Loading, ScreenWapper } from '../../components'
+import {
+    BaseButton,
+    BaseHeader,
+    BaseModal,
+    Loading,
+    ScreenWapper
+} from '../../components'
 import theme from '../../constants/theme'
 import { useTheme } from '../../contexts'
 import userService from '../../services/userServices'
@@ -39,6 +45,7 @@ const EditProfileScreen = ({ navigation }) => {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
     const [selectedDate, setSelectedDate] = useState(new Date())
     const [avatarUri, setAvatarUri] = useState(null)
+    const [isUpdateModalVisible, setIsDeleteModalVisible] = useState(false)
 
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -87,6 +94,7 @@ const EditProfileScreen = ({ navigation }) => {
         } catch (error) {
             handleError(error)
         } finally {
+            setIsDeleteModalVisible(false)
             dispatch(setUpdate(true))
             setLoading(false)
         }
@@ -485,12 +493,25 @@ const EditProfileScreen = ({ navigation }) => {
                                 buttonStyle={{ height: wp(12), width: wp(95) }}
                                 textStyle={{ fontSize: wp(4) }}
                                 title={t('updateProfile.save')}
-                                onPress={handleSaveProfile}
+                                onPress={() => {
+                                    setIsDeleteModalVisible(true)
+                                }}
                             />
                         </View>
                     </View>
                 </ScreenWapper>
             </TouchableWithoutFeedback>
+
+            {/* Modal confirm update */}
+            <BaseModal
+                visible={isUpdateModalVisible}
+                title={t('action.updateProfileTitle')}
+                message={t('action.updateProfileMessage')}
+                onConfirm={handleSaveProfile}
+                onCancel={() => {
+                    setIsDeleteModalVisible(false)
+                }}
+            />
         </KeyboardAvoidingView>
     )
 }
