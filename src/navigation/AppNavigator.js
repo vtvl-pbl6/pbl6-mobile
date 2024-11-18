@@ -60,7 +60,8 @@ const AppNavigator = ({ navigation }) => {
                         user.email,
                         async notification => {
                             console.log('Notification received:', notification)
-                            const { object_id, type, sender } = notification
+                            const { object_id, type, sender, content } =
+                                notification
                             if (type == 'CREATE_THREAD_DONE') {
                                 const response =
                                     await threadService.getById(object_id)
@@ -77,6 +78,35 @@ const AppNavigator = ({ navigation }) => {
                                             newData: data
                                         })
                                     )
+                            }
+                            if (
+                                type == 'REQUEST_THREAD_MODERATION_FAILED' ||
+                                type == 'REQUEST_THREAD_MODERATION_SUCCESS'
+                            ) {
+                                dispatch(
+                                    setNotificationStatus({
+                                        type: type,
+                                        status: true
+                                    })
+                                )
+                                dispatch(setUnreadNotification(true))
+                                const response =
+                                    await threadService.getById(object_id)
+                                const { data } = response
+
+                                dispatch(
+                                    updateMyThreadById({
+                                        id: object_id,
+                                        newData: data
+                                    })
+                                )
+                                dispatch(
+                                    showToast({
+                                        message: content,
+                                        type: 'info'
+                                    })
+                                )
+                                dispatch(addNotification(notification))
                             }
                         }
                     )

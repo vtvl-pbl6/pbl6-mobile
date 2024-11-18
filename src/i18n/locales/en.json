@@ -164,7 +164,9 @@
         "followed": "followed you",
         "title": "Activity",
         "empty": "No notifications available.",
-        "comment": "commented on your thread"
+        "comment": "commented on your thread",
+        "moderation_failed": "moderation request denied",
+        "moderation_success": "moderation request accepted"
     },
     "updateProfile": {
         "title": "Update profile",

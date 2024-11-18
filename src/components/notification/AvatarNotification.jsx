@@ -31,6 +31,14 @@ const AvatarNotification = ({ user, type, currentColors }) => {
                 <View style={[styles.type, { backgroundColor: '#24C3FE' }]}>
                     <Ionicons name="arrow-undo" size={wp(3)} color={'white'} />
                 </View>
+            ) : type === 'REQUEST_THREAD_MODERATION_SUCCESS' ? (
+                <View style={[styles.type, { backgroundColor: '#209d5c' }]}>
+                    <Ionicons name="thumbs-up" size={wp(3)} color={'white'} />
+                </View>
+            ) : type === 'REQUEST_THREAD_MODERATION_FAILED' ? (
+                <View style={[styles.type, { backgroundColor: '#EF4444' }]}>
+                    <Ionicons name="thumbs-down" size={wp(3)} color={'white'} />
+                </View>
             ) : null}
         </View>
     )

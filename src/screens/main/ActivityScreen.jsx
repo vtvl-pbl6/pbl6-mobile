@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { FollowNotification, ScreenWapper } from '../../components'
 import NotificationLoader from '../../components/load/NotificationLoader'
 import CommentNotification from '../../components/notification/CommentNotification'
+import RequestThreadModeration from '../../components/notification/RequestThreadModeration'
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
 import notificationService from '../../services/notificationService'
@@ -97,6 +98,9 @@ const ActivityScreen = ({ navigation }) => {
                 return <FollowNotification notification={item} />
             case 'COMMENT':
                 return <CommentNotification notification={item} />
+            case 'REQUEST_THREAD_MODERATION_FAILED':
+            case 'REQUEST_THREAD_MODERATION_SUCCESS':
+                return <RequestThreadModeration notification={item} />
             default:
                 return null
         }

@@ -164,7 +164,9 @@
         "followed": "đã theo dõi bạn",
         "title": "Hoạt động",
         "empty": "Không còn thông báo nào cũ hơn",
-        "comment": "đã trả lời bài viết của bạn"
+        "comment": "đã trả lời bài viết của bạn",
+        "moderation_failed": "yêu cầu kiểm duyệt bị từ chối",
+        "moderation_success": "yêu cầu kiểm duyệt được chấp nhận"
     },
     "updateProfile": {
         "title": "Chỉnh sửa hồ sơ",
