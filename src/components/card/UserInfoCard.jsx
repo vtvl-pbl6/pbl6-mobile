@@ -32,7 +32,7 @@ const UserInfoCard = ({ user, onGoToProfile }) => {
     const update = useSelector(state => state.update)
     const [loading, setLoading] = useState(false)
     const [isFollowed, setIsFollowed] = useState(is_followed_by_current_user)
-    const [followerNum, setFollowerNum] = useState(follower_num)
+    const [followerNum, setFollowerNum] = useState(follower_num ?? 0)
     const [isModalVisible, setIsModalVisible] = useState(false)
 
     const handleConfirm = () => {

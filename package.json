@@ -5,7 +5,7 @@
     "scripts": {
         "start": "expo start --tunnel --reset-cache",
         "android": "expo start --android",
-        "ios": "expo start --ios",
+        "ios": "expo start --ios --reset-cache",
         "web": "expo start --web",
         "lint": "prettier --check .",
         "format": "prettier --write .",
@@ -46,6 +46,7 @@
         "react-native-appearance": "^0.3.4",
         "react-native-device-info": "^13.0.0",
         "react-native-dotenv": "^3.4.11",
+        "react-native-dropdown-picker": "^5.4.6",
         "react-native-expo-image-cache": "^4.1.0",
         "react-native-htmlview": "^0.17.0",
         "react-native-image-picker": "^7.1.2",

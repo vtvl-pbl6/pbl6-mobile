@@ -31,12 +31,11 @@ const SettingScreen = ({ navigation }) => {
     const handleLogout = async () => {
         try {
             const response = await authService.logout()
-            if (response.is_success) {
-                dispatch(logout())
-                dispatch(clearAllThreads())
-            }
         } catch (error) {
             useHandleError(error)
+        } finally {
+            dispatch(logout())
+            dispatch(clearAllThreads())
         }
     }
 

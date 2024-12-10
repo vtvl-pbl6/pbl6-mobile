@@ -145,28 +145,31 @@ const ComposeScreen = ({ navigation }) => {
             dispatch(
                 showToast({ message: t('compose.creating'), type: 'info' })
             )
-
             dispatch(setLoading(true))
 
-            await threadServices.create(formData)
+            const response = await threadServices.create(formData)
 
-            dispatch(
-                showToast({ message: t('compose.success'), type: 'success' })
-            )
+            if (response.is_success) {
+                dispatch(
+                    showToast({
+                        message: t('compose.success'),
+                        type: 'success'
+                    })
+                )
 
-            // Clear input and images after submission
-            setSelectedImages([])
-            if (inputRef.current) {
-                inputRef.current.clear()
+                setSelectedImages([])
+                if (inputRef.current) {
+                    inputRef.current.clear()
+                }
+
+                dispatch(setUpdate(true))
             }
-
-            dispatch(setUpdate(true))
         } catch (error) {
             handleError(error)
             console.error('Error creating thread:', error)
         } finally {
             dispatch(setLoading(false))
-            dispatch(setUpdate(false))
+            // dispatch(setUpdate(false))
         }
     }
 

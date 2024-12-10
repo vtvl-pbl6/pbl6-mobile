@@ -1,14 +1,17 @@
 import { Ionicons } from '@expo/vector-icons'
 import React, { useRef, useState } from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { useDispatch, useSelector } from 'react-redux'
 import {
-    BackButton,
-    BaseButton,
-    BaseInput,
-    Loading,
-    ScreenWapper
-} from '../../components'
+    KeyboardAvoidingView,
+    Platform,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View
+} from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useDispatch, useSelector } from 'react-redux'
+import { BackButton, BaseButton, BaseInput, Loading } from '../../components'
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
 import authService from '../../services/authServices'
@@ -21,6 +24,7 @@ const LoginScreen = ({ navigation }) => {
 
     const { currentColors } = useTheme()
     const { t } = useLanguage()
+    const insets = useSafeAreaInsets()
 
     const loading = useSelector(state => state.loading)
     const handleError = useHandleError(navigation)
@@ -73,119 +77,140 @@ const LoginScreen = ({ navigation }) => {
     }
 
     return (
-        <ScreenWapper styles={{ backgroundColor: currentColors.background }}>
-            <View style={styles.container}>
-                <BackButton />
+        <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+            <ScrollView
+                styles={{ backgroundColor: currentColors.background }}
+                style={{
+                    backgroundColor: currentColors.background,
+                    paddingTop: insets.top
+                }}
+                showsVerticalScrollIndicator={false}
+            >
+                <View style={styles.container}>
+                    <BackButton />
 
-                {/* welcome */}
-                <View>
-                    <Text
-                        style={[
-                            styles.welcomeText,
-                            { color: currentColors.text }
-                        ]}
-                    >
-                        {t('login.welcomeBack')}
-                    </Text>
-                </View>
+                    {/* welcome */}
+                    <View>
+                        <Text
+                            style={[
+                                styles.welcomeText,
+                                { color: currentColors.text }
+                            ]}
+                        >
+                            {t('login.welcomeBack')}
+                        </Text>
+                    </View>
 
-                {/* form */}
-                <View style={styles.form}>
-                    <Text
-                        style={{ fontSize: wp(4), color: currentColors.text }}
-                    >
-                        {t('login.loginPrompt')}
-                    </Text>
+                    {/* form */}
+                    <View style={styles.form}>
+                        <Text
+                            style={{
+                                fontSize: wp(4),
+                                color: currentColors.text
+                            }}
+                        >
+                            {t('login.loginPrompt')}
+                        </Text>
 
-                    <View style={styles.formGroup}>
-                        <BaseInput
-                            icon={
-                                <Ionicons
-                                    name="mail-outline"
-                                    size={hp(2)}
-                                    color={currentColors.gray}
-                                />
+                        <View style={styles.formGroup}>
+                            <BaseInput
+                                icon={
+                                    <Ionicons
+                                        name="mail-outline"
+                                        size={hp(2)}
+                                        color={currentColors.gray}
+                                    />
+                                }
+                                placeholder={t('login.emailPlaceholder')}
+                                onChangeText={value =>
+                                    (emailRef.current = value)
+                                }
+                            />
+                            {errors.email && (
+                                <Text style={{ color: theme.colors.rose }}>
+                                    {errors.email}
+                                </Text>
+                            )}
+                        </View>
+
+                        <View style={styles.formGroup}>
+                            <BaseInput
+                                icon={
+                                    <Ionicons
+                                        name="lock-closed-outline"
+                                        size={hp(2)}
+                                        color={currentColors.gray}
+                                    />
+                                }
+                                placeholder={t('login.passwordPlaceholder')}
+                                secureTextEntry
+                                onChangeText={value =>
+                                    (passwordRef.current = value)
+                                }
+                            />
+                            {errors.password && (
+                                <Text style={{ color: theme.colors.rose }}>
+                                    {errors.password}
+                                </Text>
+                            )}
+                        </View>
+
+                        <Text
+                            style={[
+                                styles.forgotPassword,
+                                { color: currentColors.text, fontSize: wp(4) }
+                            ]}
+                            onPress={() =>
+                                navigation.navigate('ForgotPassword')
                             }
-                            placeholder={t('login.emailPlaceholder')}
-                            onChangeText={value => (emailRef.current = value)}
-                        />
-                        {errors.email && (
-                            <Text style={{ color: theme.colors.rose }}>
-                                {errors.email}
-                            </Text>
+                        >
+                            {t('login.forgotPassword')}
+                        </Text>
+
+                        {/* Show button or loading based on state */}
+                        {loading ? (
+                            <Loading />
+                        ) : (
+                            <BaseButton
+                                title={t('login.loginButton')}
+                                loading={loading}
+                                onPress={onSubmit}
+                            />
                         )}
                     </View>
 
-                    <View style={styles.formGroup}>
-                        <BaseInput
-                            icon={
-                                <Ionicons
-                                    name="lock-closed-outline"
-                                    size={hp(2)}
-                                    color={currentColors.gray}
-                                />
-                            }
-                            placeholder={t('login.passwordPlaceholder')}
-                            secureTextEntry
-                            onChangeText={value =>
-                                (passwordRef.current = value)
-                            }
-                        />
-                        {errors.password && (
-                            <Text style={{ color: theme.colors.rose }}>
-                                {errors.password}
-                            </Text>
-                        )}
-                    </View>
-
-                    <Text
-                        style={[
-                            styles.forgotPassword,
-                            { color: currentColors.text, fontSize: wp(4) }
-                        ]}
-                        onPress={() => navigation.navigate('ForgotPassword')}
-                    >
-                        {t('login.forgotPassword')}
-                    </Text>
-
-                    {/* Show button or loading based on state */}
-                    {loading ? (
-                        <Loading />
-                    ) : (
-                        <BaseButton
-                            title={t('login.loginButton')}
-                            loading={loading}
-                            onPress={onSubmit}
-                        />
-                    )}
-                </View>
-
-                {/* footer */}
-                <View style={styles.footer}>
-                    <Text
-                        style={[
-                            styles.footerText,
-                            { color: currentColors.text }
-                        ]}
-                    >
-                        {t('login.noAccount')}
-                    </Text>
-                    <Pressable onPress={() => navigation.navigate('Register')}>
+                    {/* footer */}
+                    <View style={styles.footer}>
                         <Text
                             style={[
                                 styles.footerText,
-                                {
-                                    color: currentColors.text,
-                                    fontWeight: theme.fonts.semibold
-                                }
+                                { color: currentColors.text }
                             ]}
                         >
-                            {t('login.signUp')}
+                            {t('login.noAccount')}
                         </Text>
-                    </Pressable>
+                        <Pressable
+                            onPress={() => navigation.navigate('Register')}
+                        >
+                            <Text
+                                style={[
+                                    styles.footerText,
+                                    {
+                                        color: currentColors.text,
+                                        fontWeight: theme.fonts.semibold
+                                    }
+                                ]}
+                            >
+                                {t('login.signUp')}
+                            </Text>
+                        </Pressable>
+                    </View>
                 </View>
-            </View>
-        </ScreenWapper>
+            </ScrollView>
+        </KeyboardAvoidingView>
     )
 }
 

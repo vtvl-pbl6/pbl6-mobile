@@ -1,7 +1,6 @@
 export { capitalizeFirstLetter, debounce } from './commonUtils'
 export { daysUntilToday } from './dateUtils'
 export { hp, wp } from './dimensionUtils'
-export { getSafeAreaBottom, getSafeAreaTop } from './safeAreaUtils'
 export {
     clearLanguage,
     clearThemeFromStorage,

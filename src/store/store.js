@@ -4,6 +4,7 @@ import authReducer from './slices/authSlice'
 import languageReducer from './slices/languageSlice'
 import loadingReducer from './slices/loadingSlice'
 import notificationReducer from './slices/notificationSlice'
+import searchReducer from './slices/searchSlice'
 import themeReducer from './slices/themeSlice'
 import threadReducer from './slices/threadSlice'
 import toastReducer from './slices/toastSlice'
@@ -21,7 +22,8 @@ const store = configureStore({
         update: updateReducer,
         notification: notificationReducer,
         threads: threadReducer,
-        activities: activitiesReducer
+        activities: activitiesReducer,
+        search: searchReducer
     }
 })
 

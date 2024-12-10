@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { FollowNotification, ScreenWapper } from '../../components'
+import { FollowNotification, Footer, ScreenWapper } from '../../components'
 import NotificationLoader from '../../components/load/NotificationLoader'
 import CommentNotification from '../../components/notification/CommentNotification'
 import RequestThreadModeration from '../../components/notification/RequestThreadModeration'
@@ -147,7 +147,7 @@ const ActivityScreen = ({ navigation }) => {
                 data={notifications}
                 renderItem={renderNotification}
                 keyExtractor={(item, index) => index.toString()}
-                ListFooterComponent={<NotificationLoader />}
+                ListFooterComponent={<Footer />}
                 onEndReachedThreshold={0.5}
                 style={styles.notification}
                 onEndReached={loadMoreNotification}

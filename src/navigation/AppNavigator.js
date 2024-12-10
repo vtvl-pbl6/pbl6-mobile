@@ -66,6 +66,7 @@ const AppNavigator = ({ navigation }) => {
                                 const response =
                                     await threadService.getById(object_id)
                                 const { data } = response
+                                console.log('DATA: ', data)
                                 dispatch(
                                     updateMyThreadById({
                                         id: object_id,

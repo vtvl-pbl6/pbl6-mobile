@@ -4,7 +4,12 @@ import { useTranslation } from 'react-i18next'
 import { Image, StyleSheet, Text, TextInput, View } from 'react-native'
 import { Divider } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
-import { BaseButton, BaseHeader, Loading, ScreenWapper } from '../../components'
+import {
+    BaseButton,
+    BaseHeader,
+    KeyboardWrapper,
+    Loading
+} from '../../components'
 import theme from '../../constants/theme'
 import { useTheme } from '../../contexts'
 import authService from '../../services/authServices'
@@ -60,7 +65,7 @@ const ChangePassword = ({ navigation }) => {
     }
 
     return (
-        <ScreenWapper style={styles.functions}>
+        <KeyboardWrapper style={styles.functions}>
             <BaseHeader
                 title={t('changePassword.header')}
                 onBackPress={() => navigation.goBack()}
@@ -176,7 +181,7 @@ const ChangePassword = ({ navigation }) => {
                     )}
                 </View>
             </View>
-        </ScreenWapper>
+        </KeyboardWrapper>
     )
 }
 

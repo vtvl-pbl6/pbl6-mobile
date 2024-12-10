@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { useDispatch, useSelector } from 'react-redux'
 import theme from '../constants/theme'
 import { setUnreadNotification } from '../store/slices'
 import { hp, wp } from '../utils/dimensionUtils'
-import { getSafeAreaBottom } from '../utils/safeAreaUtils'
 
 const TabBar = ({ state, navigation }) => {
     const dispatch = useDispatch()
     const isDarkMode = useSelector(state => state.theme.isDarkMode)
+    const insets = useSafeAreaInsets()
     const unreadNotifications = useSelector(
         state => state.notification.unreadNotifications
     )
@@ -43,7 +44,7 @@ const TabBar = ({ state, navigation }) => {
                 styles.tabBar,
                 {
                     backgroundColor: currentColors.background,
-                    paddingBottom: getSafeAreaBottom() / 2
+                    paddingBottom: insets.bottom / 2
                 }
             ]}
         >

@@ -1,6 +1,7 @@
 export { default as Footer } from './Footer'
+export { default as KeyboardWrapper } from './KeyboardWrapper'
 export { default as Loading } from './Loading'
-export { default as ScreenWapper } from './ScreenWapper'
+export { default as ScreenWapper } from './ScreenWrapper'
 export { default as TabBar } from './TabBar'
 
 // base

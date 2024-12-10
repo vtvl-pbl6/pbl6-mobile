@@ -9,13 +9,14 @@ import {
     Text,
     View
 } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
 import { BackButton, BaseButton, BaseInput, Loading } from '../../components'
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
 import authService from '../../services/authServices'
 import { setLoading, showToast } from '../../store/slices'
-import { getSafeAreaTop, hp, validateRegisterForm, wp } from '../../utils'
+import { hp, validateRegisterForm, wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
 
 const RegisterScreen = ({ navigation }) => {
@@ -24,6 +25,7 @@ const RegisterScreen = ({ navigation }) => {
     const { t } = useLanguage()
     const loading = useSelector(state => state.loading)
     const handleError = useHandleError(navigation)
+    const insets = useSafeAreaInsets()
 
     const [formValues, setFormValues] = useState({
         email: '',
@@ -76,7 +78,7 @@ const RegisterScreen = ({ navigation }) => {
             <ScrollView
                 style={{
                     backgroundColor: currentColors.background,
-                    paddingTop: getSafeAreaTop()
+                    paddingTop: insets.top
                 }}
                 showsVerticalScrollIndicator={false}
             >

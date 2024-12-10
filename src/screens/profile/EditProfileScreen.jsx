@@ -5,24 +5,23 @@ import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
     Image,
-    Keyboard,
-    KeyboardAvoidingView,
     Platform,
     StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
-    TouchableWithoutFeedback,
     View
 } from 'react-native'
+import DropDownPicker from 'react-native-dropdown-picker'
 import ModalDateTimePicker from 'react-native-modal-datetime-picker'
 import { Divider } from 'react-native-paper'
-import RNPickerSelect from 'react-native-picker-select'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useDispatch } from 'react-redux'
 import {
     BaseButton,
     BaseHeader,
     BaseModal,
+    KeyboardWrapper,
     Loading,
     ScreenWapper
 } from '../../components'
@@ -39,6 +38,7 @@ const EditProfileScreen = ({ navigation }) => {
     const { t, i18n } = useTranslation()
     const handleError = useHandleError(navigation)
     const currentLanguage = i18n.language
+    const insets = useSafeAreaInsets()
 
     const [profile, setProfile] = useState(null)
     const [loading, setLoading] = useState(false)
@@ -46,6 +46,42 @@ const EditProfileScreen = ({ navigation }) => {
     const [selectedDate, setSelectedDate] = useState(new Date())
     const [avatarUri, setAvatarUri] = useState(null)
     const [isUpdateModalVisible, setIsDeleteModalVisible] = useState(false)
+
+    const [openGender, setOpenGender] = useState(false)
+    const [valueGender, setValueGender] = useState(profile?.gender || 'OTHER')
+    const [genderItems, setGenderItems] = useState([
+        {
+            label: t('updateProfile.genderSelection.male'),
+            value: 'MALE'
+        },
+        {
+            label: t('updateProfile.genderSelection.female'),
+            value: 'FEMALE'
+        },
+        {
+            label: t('updateProfile.genderSelection.other'),
+            value: 'OTHER'
+        }
+    ])
+
+    const [openVisibility, setOpenVisibility] = useState(false)
+    const [valueVisibility, setValueVisibility] = useState(
+        profile?.visibility || 'PUBLIC'
+    )
+    const [visibilityItems, setVisibilityItems] = useState([
+        {
+            label: t('updateProfile.scope.public'),
+            value: 'PUBLIC'
+        },
+        {
+            label: t('updateProfile.scope.private'),
+            value: 'PRIVATE'
+        },
+        {
+            label: t('updateProfile.scope.friend'),
+            value: 'FRIEND_ONLY'
+        }
+    ])
 
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -61,6 +97,7 @@ const EditProfileScreen = ({ navigation }) => {
                         data.birthday = formattedBirthday
                     }
                     setProfile(data)
+                    setValueGender(data?.gender)
                 }
             } catch (error) {
                 handleError(error)
@@ -182,7 +219,7 @@ const EditProfileScreen = ({ navigation }) => {
         }
     }
 
-    if (loading) {
+    if (loading || !profile) {
         return (
             <ScreenWapper styles={styles.container}>
                 <Loading />
@@ -191,317 +228,273 @@ const EditProfileScreen = ({ navigation }) => {
     }
 
     return (
-        <KeyboardAvoidingView
-            style={{ flex: 1 }}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        <KeyboardWrapper
+            styles={{
+                backgroundColor: currentColors.background,
+                paddingTop: insets.top
+            }}
         >
-            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-                <ScreenWapper
-                    styles={{
-                        backgroundColor: currentColors.background
-                    }}
-                >
-                    <BaseHeader
-                        title={t('updateProfile.title')}
-                        onBackPress={() => navigation.goBack()}
-                    />
-                    <Divider
-                        style={{
-                            backgroundColor: currentColors.lightGray,
-                            marginBottom: 16
-                        }}
-                    />
-                    <View style={{ alignItems: 'center' }}>
-                        <View style={[styles.content]}>
-                            {/* Avatar */}
-                            <View>
-                                {avatarUri ? (
-                                    <View style={styles.avatarContainer}>
-                                        <Image
-                                            source={{ uri: avatarUri }}
-                                            style={styles.avatarImage}
-                                        />
-                                    </View>
-                                ) : profile?.avatar_file ? (
-                                    <View style={styles.avatarContainer}>
-                                        <Image
-                                            source={{
-                                                uri: profile.avatar_file.url
-                                            }}
-                                            style={styles.avatarImage}
-                                        />
-                                    </View>
-                                ) : (
-                                    <Ionicons
-                                        name="person-circle-outline"
-                                        size={wp(30)}
-                                        color={currentColors.lightGray}
-                                    />
-                                )}
-                                <TouchableOpacity
-                                    onPress={pickAvatar}
-                                    style={[
-                                        styles.editButton,
-                                        {
-                                            borderColor:
-                                                currentColors.background
-                                        }
-                                    ]}
-                                >
-                                    <Ionicons
-                                        name="pencil-outline"
-                                        size={wp(3.5)}
-                                        color={currentColors.background}
-                                    />
-                                </TouchableOpacity>
+            <BaseHeader
+                title={t('updateProfile.title')}
+                onBackPress={() => navigation.goBack()}
+            />
+            <Divider
+                style={{
+                    backgroundColor: currentColors.lightGray,
+                    marginBottom: 16
+                }}
+            />
+            <View style={{ alignItems: 'center' }}>
+                <View style={[styles.content]}>
+                    {/* Avatar */}
+                    <View>
+                        {avatarUri ? (
+                            <View style={styles.avatarContainer}>
+                                <Image
+                                    source={{ uri: avatarUri }}
+                                    style={styles.avatarImage}
+                                />
                             </View>
+                        ) : profile?.avatar_file ? (
+                            <View style={styles.avatarContainer}>
+                                <Image
+                                    source={{
+                                        uri: profile.avatar_file.url
+                                    }}
+                                    style={styles.avatarImage}
+                                />
+                            </View>
+                        ) : (
+                            <Ionicons
+                                name="person-circle-outline"
+                                size={wp(30)}
+                                color={currentColors.lightGray}
+                            />
+                        )}
+                        <TouchableOpacity
+                            onPress={pickAvatar}
+                            style={[
+                                styles.editButton,
+                                {
+                                    borderColor: currentColors.background
+                                }
+                            ]}
+                        >
+                            <Ionicons
+                                name="pencil-outline"
+                                size={wp(3.5)}
+                                color={currentColors.background}
+                            />
+                        </TouchableOpacity>
+                    </View>
 
-                            {/* First and Last Name */}
-                            <View
+                    {/* First and Last Name */}
+                    <View
+                        style={[
+                            styles.formGroup,
+                            {
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                gap: 10
+                            }
+                        ]}
+                    >
+                        <View style={{ width: wp(45) }}>
+                            <Text
                                 style={[
-                                    styles.formGroup,
-                                    {
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        gap: 10
-                                    }
+                                    styles.label,
+                                    { color: currentColors.text }
                                 ]}
                             >
-                                <View style={{ width: wp(45) }}>
-                                    <Text
-                                        style={[
-                                            styles.label,
-                                            { color: currentColors.text }
-                                        ]}
-                                    >
-                                        {t('updateProfile.firstName')}
-                                    </Text>
-                                    <TextInput
-                                        style={[
-                                            styles.input,
-                                            {
-                                                color: currentColors.text,
-                                                borderColor:
-                                                    currentColors.lightGray
-                                            }
-                                        ]}
-                                        placeholder={t(
-                                            'updateProfile.firstName'
-                                        )}
-                                        value={profile?.first_name || ''}
-                                        onChangeText={text =>
-                                            handleInputChange(
-                                                'first_name',
-                                                text
-                                            )
-                                        }
-                                    />
-                                </View>
-                                <View style={{ width: wp(45) }}>
-                                    <Text
-                                        style={[
-                                            styles.label,
-                                            { color: currentColors.text }
-                                        ]}
-                                    >
-                                        {t('updateProfile.lastName')}
-                                    </Text>
-                                    <TextInput
-                                        style={[
-                                            styles.input,
-                                            {
-                                                color: currentColors.text,
-                                                borderColor:
-                                                    currentColors.lightGray
-                                            }
-                                        ]}
-                                        placeholder={t(
-                                            'updateProfile.lastName'
-                                        )}
-                                        value={profile?.last_name || ''}
-                                        onChangeText={text =>
-                                            handleInputChange('last_name', text)
-                                        }
-                                    />
-                                </View>
-                            </View>
-
-                            {/* Birthday */}
-                            <View style={styles.formGroup}>
-                                <Text
-                                    style={[
-                                        styles.label,
-                                        { color: currentColors.text }
-                                    ]}
-                                >
-                                    {t('updateProfile.birthday')}
-                                </Text>
-                                <TextInput
-                                    style={[
-                                        styles.input,
-                                        {
-                                            color: currentColors.text,
-                                            borderColor: currentColors.lightGray
-                                        }
-                                    ]}
-                                    placeholder={t('updateProfile.birthday')}
-                                    value={profile?.birthday || ''}
-                                    onPress={showDatePicker}
-                                    editable={false}
-                                />
-                                <ModalDateTimePicker
-                                    isVisible={isDatePickerVisible}
-                                    mode="date"
-                                    onConfirm={handleDateConfirm}
-                                    onCancel={hideDatePicker}
-                                    date={selectedDate}
-                                    locale={currentLanguage}
-                                    confirmTextIOS={t('modal.confirm')}
-                                    cancelTextIOS={t('modal.cancel')}
-                                />
-                            </View>
-
-                            {/* Bio */}
-                            <View style={styles.formGroup}>
-                                <Text
-                                    style={[
-                                        styles.label,
-                                        { color: currentColors.text }
-                                    ]}
-                                >
-                                    {t('updateProfile.bio')}
-                                </Text>
-                                <TextInput
-                                    style={[
-                                        styles.input,
-                                        {
-                                            color: currentColors.text,
-                                            borderColor: currentColors.lightGray
-                                        }
-                                    ]}
-                                    placeholder={t('updateProfile.bio')}
-                                    value={profile?.bio || ''}
-                                    onChangeText={text =>
-                                        handleInputChange('bio', text)
+                                {t('updateProfile.firstName')}
+                            </Text>
+                            <TextInput
+                                style={[
+                                    styles.input,
+                                    {
+                                        color: currentColors.text,
+                                        borderColor: currentColors.lightGray
                                     }
-                                />
-                            </View>
-
-                            {/* Gender Picker */}
-                            <View style={styles.formGroup}>
-                                <Text
-                                    style={[
-                                        styles.label,
-                                        { color: currentColors.text }
-                                    ]}
-                                >
-                                    {t('updateProfile.gender')}
-                                </Text>
-                                <RNPickerSelect
-                                    onValueChange={value =>
-                                        handleInputChange('gender', value)
+                                ]}
+                                placeholder={t('updateProfile.firstName')}
+                                value={profile?.first_name || ''}
+                                onChangeText={text =>
+                                    handleInputChange('first_name', text)
+                                }
+                            />
+                        </View>
+                        <View style={{ width: wp(45) }}>
+                            <Text
+                                style={[
+                                    styles.label,
+                                    { color: currentColors.text }
+                                ]}
+                            >
+                                {t('updateProfile.lastName')}
+                            </Text>
+                            <TextInput
+                                style={[
+                                    styles.input,
+                                    {
+                                        color: currentColors.text,
+                                        borderColor: currentColors.lightGray
                                     }
-                                    items={[
-                                        {
-                                            label: t(
-                                                'updateProfile.genderSelection.male'
-                                            ),
-                                            value: 'MALE'
-                                        },
-                                        {
-                                            label: t(
-                                                'updateProfile.genderSelection.female'
-                                            ),
-                                            value: 'FEMALE'
-                                        },
-                                        {
-                                            label: t(
-                                                'updateProfile.genderSelection.other'
-                                            ),
-                                            value: 'OTHER'
-                                        }
-                                    ]}
-                                    value={profile?.gender || ''}
-                                    style={{
-                                        ...pickerSelectStyles,
-                                        inputIOS: {
-                                            ...pickerSelectStyles.inputIOS,
-                                            color: currentColors.text,
-                                            borderColor: currentColors.lightGray
-                                        },
-                                        inputAndroid: {
-                                            ...pickerSelectStyles.inputAndroid,
-                                            color: currentColors.text,
-                                            borderColor: currentColors.lightGray
-                                        }
-                                    }}
-                                />
-                            </View>
-
-                            {/* Visibility Picker */}
-                            <View style={styles.formGroup}>
-                                <Text
-                                    style={[
-                                        styles.label,
-                                        { color: currentColors.text }
-                                    ]}
-                                >
-                                    {t('updateProfile.visibility')}
-                                </Text>
-                                <RNPickerSelect
-                                    onValueChange={value =>
-                                        handleInputChange('visibility', value)
-                                    }
-                                    items={[
-                                        {
-                                            label: t(
-                                                'updateProfile.scope.public'
-                                            ),
-                                            value: 'PUBLIC'
-                                        },
-                                        {
-                                            label: t(
-                                                'updateProfile.scope.private'
-                                            ),
-                                            value: 'PRIVATE'
-                                        },
-                                        {
-                                            label: t(
-                                                'updateProfile.scope.friend'
-                                            ),
-                                            value: 'FRIEND_ONLY'
-                                        }
-                                    ]}
-                                    value={profile?.visibility || ''}
-                                    style={{
-                                        ...pickerSelectStyles,
-                                        inputIOS: {
-                                            ...pickerSelectStyles.inputIOS,
-                                            color: currentColors.text,
-                                            borderColor: currentColors.lightGray
-                                        },
-                                        inputAndroid: {
-                                            ...pickerSelectStyles.inputAndroid,
-                                            color: currentColors.text,
-                                            borderColor: currentColors.lightGray
-                                        }
-                                    }}
-                                />
-                            </View>
-
-                            <BaseButton
-                                buttonStyle={{ height: wp(12), width: wp(95) }}
-                                textStyle={{ fontSize: wp(4) }}
-                                title={t('updateProfile.save')}
-                                onPress={() => {
-                                    setIsDeleteModalVisible(true)
-                                }}
+                                ]}
+                                placeholder={t('updateProfile.lastName')}
+                                value={profile?.last_name || ''}
+                                onChangeText={text =>
+                                    handleInputChange('last_name', text)
+                                }
                             />
                         </View>
                     </View>
-                </ScreenWapper>
-            </TouchableWithoutFeedback>
 
+                    {/* Birthday */}
+                    <View style={styles.formGroup}>
+                        <Text
+                            style={[
+                                styles.label,
+                                { color: currentColors.text }
+                            ]}
+                        >
+                            {t('updateProfile.birthday')}
+                        </Text>
+                        <TextInput
+                            style={[
+                                styles.input,
+                                {
+                                    color: currentColors.text,
+                                    borderColor: currentColors.lightGray
+                                }
+                            ]}
+                            placeholder={t('updateProfile.birthday')}
+                            value={profile?.birthday || ''}
+                            onPress={showDatePicker}
+                            editable={false}
+                        />
+                        <ModalDateTimePicker
+                            isVisible={isDatePickerVisible}
+                            mode="date"
+                            onConfirm={handleDateConfirm}
+                            onCancel={hideDatePicker}
+                            date={selectedDate}
+                            locale={currentLanguage}
+                            confirmTextIOS={t('modal.confirm')}
+                            cancelTextIOS={t('modal.cancel')}
+                        />
+                    </View>
+
+                    {/* Bio */}
+                    <View style={styles.formGroup}>
+                        <Text
+                            style={[
+                                styles.label,
+                                { color: currentColors.text }
+                            ]}
+                        >
+                            {t('updateProfile.bio')}
+                        </Text>
+                        <TextInput
+                            style={[
+                                styles.input,
+                                {
+                                    color: currentColors.text,
+                                    borderColor: currentColors.lightGray
+                                }
+                            ]}
+                            placeholder={t('updateProfile.bio')}
+                            value={profile?.bio || ''}
+                            onChangeText={text =>
+                                handleInputChange('bio', text)
+                            }
+                        />
+                    </View>
+
+                    {/* Gender Picker */}
+                    <View style={styles.formGroup}>
+                        <Text
+                            style={[
+                                styles.label,
+                                { color: currentColors.text }
+                            ]}
+                        >
+                            {t('updateProfile.gender')}
+                        </Text>
+                        <DropDownPicker
+                            open={openGender}
+                            value={valueGender}
+                            setOpen={setOpenGender}
+                            setValue={setValueGender}
+                            onChangeValue={valueGender =>
+                                handleInputChange('gender', valueGender)
+                            }
+                            items={genderItems}
+                            dropDownDirection="TOP"
+                            style={{
+                                borderColor: currentColors.lightGray,
+                                backgroundColor: currentColors.background,
+                                borderWidth: 1,
+                                borderRadius: 5,
+                                paddingHorizontal: 10,
+                                marginTop: 4
+                            }}
+                            textStyle={{
+                                color: currentColors.text
+                            }}
+                            dropDownContainerStyle={{
+                                backgroundColor: currentColors.extraLightGray,
+                                borderColor: currentColors.lightGray
+                            }}
+                        />
+                    </View>
+
+                    {/* Visibility Picker */}
+                    <View style={styles.formGroup}>
+                        <Text
+                            style={[
+                                styles.label,
+                                { color: currentColors.text }
+                            ]}
+                        >
+                            {t('updateProfile.visibility')}
+                        </Text>
+                        <DropDownPicker
+                            open={openVisibility}
+                            value={valueVisibility}
+                            setOpen={setOpenVisibility}
+                            setValue={setValueVisibility}
+                            onChangeValue={value =>
+                                handleInputChange('visibility', value)
+                            }
+                            items={visibilityItems}
+                            style={{
+                                borderColor: currentColors.lightGray,
+                                backgroundColor: currentColors.background,
+                                borderWidth: 1,
+                                borderRadius: 5,
+                                paddingHorizontal: 10,
+                                marginTop: 4
+                            }}
+                            textStyle={{
+                                color: currentColors.text
+                            }}
+                            dropDownContainerStyle={{
+                                backgroundColor: currentColors.extraLightGray,
+                                borderColor: currentColors.lightGray
+                            }}
+                        />
+                    </View>
+
+                    <BaseButton
+                        buttonStyle={{ height: wp(12), width: wp(95) }}
+                        textStyle={{ fontSize: wp(4) }}
+                        title={t('updateProfile.save')}
+                        onPress={() => {
+                            setIsDeleteModalVisible(true)
+                        }}
+                    />
+                </View>
+            </View>
             {/* Modal confirm update */}
             <BaseModal
                 visible={isUpdateModalVisible}
@@ -512,7 +505,7 @@ const EditProfileScreen = ({ navigation }) => {
                     setIsDeleteModalVisible(false)
                 }}
             />
-        </KeyboardAvoidingView>
+        </KeyboardWrapper>
     )
 }
 
@@ -541,7 +534,7 @@ const styles = StyleSheet.create({
         fontWeight: theme.fonts.semibold
     },
     input: {
-        height: 40,
+        height: 50,
         borderWidth: 1,
         borderRadius: 5,
         paddingHorizontal: 10,
@@ -568,22 +561,5 @@ const styles = StyleSheet.create({
         right: wp(4),
         borderWidth: wp(1),
         backgroundColor: theme.colors.blue
-    }
-})
-
-const pickerSelectStyles = StyleSheet.create({
-    inputIOS: {
-        height: 40,
-        borderWidth: 1,
-        borderRadius: 5,
-        paddingHorizontal: 10,
-        marginTop: 4
-    },
-    inputAndroid: {
-        height: 40,
-        borderWidth: 1,
-        borderRadius: 5,
-        paddingHorizontal: 10,
-        marginTop: 4
     }
 })

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
 import ThreadLoader from '../../components/load/ThreadLoader'
 import ProfileHeader from '../../components/profile/ProfileHeader'
@@ -16,7 +17,7 @@ import {
     setMyThreads,
     setReposts
 } from '../../store/slices/threadSlice'
-import { getSafeAreaTop, wp } from '../../utils'
+import { wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
 
 const ProfileScreen = ({ navigation }) => {
@@ -24,6 +25,7 @@ const ProfileScreen = ({ navigation }) => {
     const { currentColors } = useTheme()
     const { t } = useLanguage()
     const handleError = useHandleError(navigation)
+    const insets = useSafeAreaInsets()
 
     const loading = useSelector(state => state.loading)
     const update = useSelector(state => state.update)
@@ -91,11 +93,17 @@ const ProfileScreen = ({ navigation }) => {
             const { data, is_success, metadata } = response
 
             if (is_success) {
+                const uniqueThreads = data.filter(
+                    thread => !threads.some(t => t.id === thread.id)
+                )
+
+                if (threadPage === 1) {
+                    dispatch(clearMyThreads())
+                }
+
                 dispatch(
                     setMyThreads({
-                        myThreads: data.filter(
-                            thread => !threads.some(t => t.id === thread.id)
-                        ),
+                        myThreads: uniqueThreads,
                         hasMoreMyThread:
                             metadata.current_page < metadata.total_page
                     })
@@ -151,8 +159,12 @@ const ProfileScreen = ({ navigation }) => {
 
     const reloadAPIs = async () => {
         setRefreshing(true)
-        dispatch(clearMyThreads())
-        dispatch(clearReposts())
+
+        await Promise.all([
+            dispatch(clearMyThreads()),
+            dispatch(clearReposts())
+        ])
+
         setThreadPage(1)
         setRepostPage(1)
         setIsStateReset(true)
@@ -309,7 +321,7 @@ const ProfileScreen = ({ navigation }) => {
         <FlatList
             style={{
                 backgroundColor: currentColors.background,
-                marginTop: getSafeAreaTop()
+                marginTop: insets.top
             }}
             data={[{ key: 'header' }, { key: 'tabs' }, { key: 'content' }]}
             stickyHeaderIndices={[1]}

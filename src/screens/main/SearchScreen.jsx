@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons'
+import { useRoute } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
 import {
     FlatList,
@@ -11,13 +12,17 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import {
     BaseModal,
+    KeyboardWrapper,
     ProfileSearchLoader,
-    ScreenWapper,
     UserInfoCard
 } from '../../components'
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
 import userService from '../../services/userServices'
+import {
+    resetSearchResults,
+    setSearchResults
+} from '../../store/slices/searchSlice'
 import { debounce, hp, wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
 
@@ -27,9 +32,11 @@ const SearchScreen = ({ navigation }) => {
     const { t } = useLanguage()
     const handleError = useHandleError(navigation)
     const update = useSelector(state => state.update)
+    const route = useRoute()
+
+    const searchResults = useSelector(state => state.search.results)
 
     const [isFocused, setIsFocused] = useState(false)
-    const [searchResults, setSearchResults] = useState([])
     const [searchInput, setSearchInput] = useState('')
     const [loading, setLoading] = useState(false)
     const [page, setPage] = useState(1)
@@ -46,7 +53,7 @@ const SearchScreen = ({ navigation }) => {
 
     const handleReset = () => {
         setSearchInput('')
-        setSearchResults([])
+        dispatch(resetSearchResults())
         setPage(1)
         setHasMore(false)
     }
@@ -62,23 +69,16 @@ const SearchScreen = ({ navigation }) => {
             const { data, is_success, metadata } = response
 
             if (is_success) {
-                if (isNewSearch || currentPage === 1) {
-                    setSearchResults(data)
-                    setPage(1)
-                } else {
-                    setSearchResults(prev => {
-                        const newUsers = data.filter(
-                            user => !prev.some(u => u.id === user.id)
-                        )
-                        return [...prev, ...newUsers]
-                    })
-                }
+                const filteredData = data.filter(
+                    user => !searchResults.some(u => u.id === user.id)
+                )
+                const updatedResults = isNewSearch
+                    ? data
+                    : [...searchResults, ...filteredData]
+                dispatch(setSearchResults(updatedResults))
 
-                if (metadata.current_page >= metadata.total_page) {
-                    setHasMore(false)
-                } else {
-                    setHasMore(true)
-                }
+                setPage(isNewSearch ? 1 : currentPage)
+                setHasMore(metadata.current_page < metadata.total_page)
             }
         } catch (error) {
             handleError(error)
@@ -88,7 +88,7 @@ const SearchScreen = ({ navigation }) => {
 
         setSearchHistory(prev => {
             if (!prev.includes(searchInput)) {
-                return [searchInput, ...prev]
+                return [searchInput, ...prev].slice(0, 10)
             }
             return prev
         })
@@ -103,10 +103,9 @@ const SearchScreen = ({ navigation }) => {
     }, [searchInput])
 
     const reloadAPIs = async () => {
-        setSearchResults([])
+        dispatch(resetSearchResults())
         setPage(1)
         setHasMore(false)
-
         setIsStateReset(true)
     }
 
@@ -159,7 +158,7 @@ const SearchScreen = ({ navigation }) => {
     }
 
     return (
-        <ScreenWapper
+        <KeyboardWrapper
             styles={[
                 styles.container,
                 { backgroundColor: currentColors.background }
@@ -289,7 +288,7 @@ const SearchScreen = ({ navigation }) => {
                 onConfirm={confirmUnfollow}
                 onCancel={cancelUnfollow}
             />
-        </ScreenWapper>
+        </KeyboardWrapper>
     )
 }
 

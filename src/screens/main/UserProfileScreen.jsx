@@ -19,6 +19,13 @@ import repostService from '../../services/repostService'
 import threadService from '../../services/threadServices'
 import userService from '../../services/userServices'
 import { setUpdate, showToast } from '../../store/slices'
+import { updateSearchResult } from '../../store/slices/searchSlice'
+import {
+    clearUserReposts,
+    clearUserThreads,
+    setUserReposts,
+    setUserThreads
+} from '../../store/slices/threadSlice'
 import { hp, wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
 
@@ -33,13 +40,13 @@ const UserProfileScreen = ({ navigation }) => {
     const { userId } = route.params
 
     const [selectedTab, setSelectedTab] = useState('thread')
-    const [threads, setThreads] = useState([])
-    const [reposts, setReposts] = useState([])
+    const threads = useSelector(state => state.threads.userThreads)
+    const hasThreadMore = useSelector(state => state.threads.hasMoreUserThread)
+    const reposts = useSelector(state => state.threads.userReposts)
+    const hasRepostMore = useSelector(state => state.threads.hasMoreUserRepost)
     const [user, setUser] = useState(null)
     const [threadPage, setThreadPage] = useState(1)
     const [repostPage, setRepostPage] = useState(1)
-    const [hasThreadMore, setThreadHasMore] = useState(true)
-    const [hasRepostMore, setRepostHasMore] = useState(true)
     const [refreshing, setRefreshing] = useState(false)
     const [loadUserInfo, setLoadUserInfo] = useState(false)
     const [loadThread, setLoadThread] = useState(false)
@@ -92,13 +99,21 @@ const UserProfileScreen = ({ navigation }) => {
             const { data, is_success, metadata } = response
 
             if (is_success) {
-                setThreads(prev => {
-                    const newThreads = data.filter(
-                        thread => !prev.some(t => t.id === thread.id)
-                    )
-                    return [...prev, ...newThreads]
-                })
-                setThreadHasMore(metadata.current_page < metadata.total_page)
+                const uniqueThreads = data.filter(
+                    thread => !threads.some(t => t.id === thread.id)
+                )
+
+                if (threadPage === 1) {
+                    dispatch(clearUserThreads())
+                }
+
+                dispatch(
+                    setUserThreads({
+                        userThreads: uniqueThreads,
+                        hasMoreUserThread:
+                            metadata.current_page < metadata.total_page
+                    })
+                )
             } else {
                 dispatch(
                     showToast({
@@ -124,13 +139,20 @@ const UserProfileScreen = ({ navigation }) => {
             const { data, is_success, metadata } = response
 
             if (is_success) {
-                setReposts(prev => {
-                    const newRepost = data.filter(
-                        thread => !prev.some(t => t.id === thread.id)
-                    )
-                    return [...prev, ...newRepost]
-                })
-                setRepostHasMore(metadata.current_page < metadata.total_page)
+                const uniqueReposts = data.filter(
+                    thread => !reposts.some(t => t.id === thread.id)
+                )
+
+                if (repostPage === 1) {
+                    dispatch(clearUserReposts())
+                }
+                dispatch(
+                    setUserReposts({
+                        userReposts: uniqueReposts,
+                        hasMoreUserRepost:
+                            metadata.current_page < metadata.total_page
+                    })
+                )
             } else {
                 dispatch(
                     showToast({
@@ -151,12 +173,10 @@ const UserProfileScreen = ({ navigation }) => {
             setIsResetDone(false)
 
             setSelectedTab('thread')
-            setThreads([])
-            setReposts([])
+            dispatch(clearUserThreads())
+            dispatch(clearUserReposts())
             setThreadPage(1)
             setRepostPage(1)
-            setThreadHasMore(true)
-            setRepostHasMore(true)
 
             setIsResetDone(true)
         }, [])
@@ -173,13 +193,11 @@ const UserProfileScreen = ({ navigation }) => {
     const handleRefresh = async () => {
         setRefreshing(true)
         if (selectedTab === 'thread') {
-            setThreads([])
+            dispatch(clearUserThreads())
             setThreadPage(1)
-            setThreadHasMore(true)
         } else if (selectedTab === 'reposts') {
-            setReposts([])
+            dispatch(clearUserReposts())
             setRepostPage(1)
-            setRepostHasMore(true)
         }
 
         setIsRefreshStateReset(true)
@@ -239,7 +257,18 @@ const UserProfileScreen = ({ navigation }) => {
 
             if (response.is_success) {
                 setIsFollowed(response.is_success)
+
+                const updatedFollowerNum = user.follower_num + 1
+                user.follower_num = updatedFollowerNum
             }
+
+            dispatch(
+                updateSearchResult({
+                    id: userId,
+                    follower_num: user.follower_num,
+                    is_followed_by_current_user: true
+                })
+            )
 
             dispatch(setUpdate(true))
         } catch (error) {
@@ -259,6 +288,16 @@ const UserProfileScreen = ({ navigation }) => {
 
             if (response.is_success) {
                 setIsFollowed(!response.is_success)
+                const updatedFollowerNum = user.follower_num - 1
+                user.follower_num = updatedFollowerNum
+
+                dispatch(
+                    updateSearchResult({
+                        id: userId,
+                        follower_num: updatedFollowerNum,
+                        is_followed_by_current_user: false
+                    })
+                )
             }
 
             dispatch(setUpdate(true))
@@ -416,7 +455,9 @@ const UserProfileScreen = ({ navigation }) => {
             <BaseHeader
                 title={t('profile.title')}
                 border={false}
-                onBackPress={() => navigation.goBack()}
+                onBackPress={() => {
+                    navigation.navigate('Search', { user: user })
+                }}
             />
             <FlatList
                 style={{

@@ -5,10 +5,14 @@ const initialState = {
     myThreads: [],
     reposts: [],
     comments: [],
+    userThreads: [],
+    userReposts: [],
     threadDetail: null,
     hasMore: true,
     hasMoreMyThread: true,
-    hasMoreRepost: true
+    hasMoreRepost: true,
+    hasMoreUserThread: true,
+    hasMoreUserRepost: true
 }
 
 const updateProperty = (item, type) => {
@@ -77,6 +81,28 @@ const threadsSlice = createSlice({
             state.reposts = []
             state.hasMoreRepost = true
         },
+        setUserThreads(state, action) {
+            state.userThreads = [
+                ...state.userThreads,
+                ...action.payload.userThreads
+            ]
+            state.hasMoreUserThread = action.payload.hasMoreUserThread
+        },
+        clearUserThreads(state) {
+            state.userThreads = []
+            state.hasMoreUserThread = true
+        },
+        setUserReposts(state, action) {
+            state.userReposts = [
+                ...state.userReposts,
+                ...action.payload.userReposts
+            ]
+            state.hasMoreUserRepost = action.payload.hasMoreUserRepost
+        },
+        clearUserReposts(state) {
+            state.reposts = []
+            state.hasMoreRepost = true
+        },
         setThreadDetail(state, action) {
             state.threadDetail = action.payload
         },
@@ -95,6 +121,8 @@ const threadsSlice = createSlice({
             updateItem(state.threads, id, type)
             updateItem(state.myThreads, id, type)
             updateItem(state.reposts, id, type)
+            updateItem(state.userThreads, id, type)
+            updateItem(state.userReposts, id, type)
 
             if (state.threadDetail && state.threadDetail.id === id) {
                 updateProperty(state.threadDetail, type)
@@ -112,6 +140,9 @@ const threadsSlice = createSlice({
             }
 
             if (comment) {
+                if (!Array.isArray(state.comments)) {
+                    state.comments = []
+                }
                 state.comments = [comment, ...state.comments]
             }
         },
@@ -216,6 +247,10 @@ export const {
     updateThreadById,
     updateMyThreadById,
     updateRepostById,
-    updateCommentById
+    updateCommentById,
+    setUserThreads,
+    clearUserThreads,
+    setUserReposts,
+    clearUserReposts
 } = threadsSlice.actions
 export default threadsSlice.reducer
