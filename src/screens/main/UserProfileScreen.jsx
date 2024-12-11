@@ -258,17 +258,17 @@ const UserProfileScreen = ({ navigation }) => {
             if (response.is_success) {
                 setIsFollowed(response.is_success)
 
-                const updatedFollowerNum = user.follower_num + 1
+                const updatedFollowerNum = (user.follower_num ?? 0) + 1
                 user.follower_num = updatedFollowerNum
-            }
 
-            dispatch(
-                updateSearchResult({
-                    id: userId,
-                    follower_num: user.follower_num,
-                    is_followed_by_current_user: true
-                })
-            )
+                dispatch(
+                    updateSearchResult({
+                        id: userId,
+                        follower_num: user.follower_num,
+                        is_followed_by_current_user: true
+                    })
+                )
+            }
 
             dispatch(setUpdate(true))
         } catch (error) {
@@ -288,7 +288,7 @@ const UserProfileScreen = ({ navigation }) => {
 
             if (response.is_success) {
                 setIsFollowed(!response.is_success)
-                const updatedFollowerNum = user.follower_num - 1
+                const updatedFollowerNum = (user.follower_num ?? 0) - 1
                 user.follower_num = updatedFollowerNum
 
                 dispatch(

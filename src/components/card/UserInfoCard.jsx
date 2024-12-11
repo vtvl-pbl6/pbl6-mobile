@@ -1,8 +1,8 @@
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
 import userService from '../../services/userServices'
@@ -10,6 +10,7 @@ import { wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
 import Loading from '../Loading'
 import BaseModal from '../base/BaseModal'
+import { updateSearchResult } from '../../store/slices/searchSlice'
 
 const UserInfoCard = ({ user, onGoToProfile }) => {
     const dispatch = useDispatch()
@@ -29,10 +30,9 @@ const UserInfoCard = ({ user, onGoToProfile }) => {
         is_followed_by_current_user
     } = user
 
-    const update = useSelector(state => state.update)
     const [loading, setLoading] = useState(false)
-    const [isFollowed, setIsFollowed] = useState(is_followed_by_current_user)
-    const [followerNum, setFollowerNum] = useState(follower_num ?? 0)
+    const [isFollowed, setIsFollowed] = useState(false)
+    const [followerNum, setFollowerNum] = useState(0)
     const [isModalVisible, setIsModalVisible] = useState(false)
 
     const handleConfirm = () => {
@@ -61,6 +61,14 @@ const UserInfoCard = ({ user, onGoToProfile }) => {
                 setIsFollowed(response.is_success)
                 const prev = followerNum
                 setFollowerNum(prev + 1)
+
+                dispatch(
+                    updateSearchResult({
+                        id: id,
+                        follower_num: prev + 1,
+                        is_followed_by_current_user: true
+                    })
+                )
             }
         } catch (error) {
             handleError(error)
@@ -80,6 +88,14 @@ const UserInfoCard = ({ user, onGoToProfile }) => {
                 setIsFollowed(!response.is_success)
                 const prev = followerNum
                 setFollowerNum(prev - 1)
+
+                dispatch(
+                    updateSearchResult({
+                        id: id,
+                        follower_num: prev - 1,
+                        is_followed_by_current_user: false
+                    })
+                )
             }
         } catch (error) {
             handleError(error)
@@ -91,6 +107,17 @@ const UserInfoCard = ({ user, onGoToProfile }) => {
     const showModal = () => {
         setIsModalVisible(true)
     }
+
+    useEffect(() => {
+        if (follower_num !== null && follower_num !== undefined)
+            setFollowerNum(follower_num)
+
+        if (
+            is_followed_by_current_user !== null &&
+            is_followed_by_current_user !== undefined
+        )
+            setIsFollowed(is_followed_by_current_user)
+    }, [follower_num, is_followed_by_current_user])
 
     return (
         <Pressable

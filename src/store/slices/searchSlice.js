@@ -10,7 +10,6 @@ const searchSlice = createSlice({
             state.results = action.payload
         },
         updateSearchResult(state, action) {
-            console.log('UPDATe')
             const { id, follower_num, is_followed_by_current_user } =
                 action.payload
             state.results = state.results
@@ -20,7 +19,6 @@ const searchSlice = createSlice({
                         : item
                 )
                 .slice()
-            state.results = [...state.results]
         },
         resetSearchResults(state) {
             state.results = []
