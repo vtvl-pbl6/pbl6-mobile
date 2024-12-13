@@ -8,7 +8,7 @@ import useHandleError from '../../utils/handlers/errorHandler'
 import UserInfoCard from '../card/UserInfoCard'
 import ProfileSearchLoader from '../load/ProfileSearchLoader'
 
-const ListFollowed = () => {
+const ListFollowed = ({ user }) => {
     const dispatch = useDispatch()
     const { currentColors } = useTheme()
     const { t } = useLanguage()
@@ -27,7 +27,10 @@ const ListFollowed = () => {
         setLoading(true)
 
         try {
-            const response = await userService.getFollowed(currentUser.id, page)
+            const response = await userService.getFollowed(
+                user?.id || currentUser.id,
+                page
+            )
             const { data, is_success, metadata } = response
 
             if (is_success) {

@@ -8,7 +8,7 @@ import useHandleError from '../../utils/handlers/errorHandler'
 import UserInfoCard from '../card/UserInfoCard'
 import ProfileSearchLoader from '../load/ProfileSearchLoader'
 
-const ListFollowers = () => {
+const ListFollowers = ({ user }) => {
     const dispatch = useDispatch()
     const { currentColors } = useTheme()
     const { t } = useLanguage()
@@ -28,7 +28,7 @@ const ListFollowers = () => {
 
         try {
             const response = await userService.getFollowers(
-                currentUser.id,
+                user?.id || currentUser.id,
                 page
             )
             const { data, is_success, metadata } = response

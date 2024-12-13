@@ -133,11 +133,17 @@ const ProfileScreen = ({ navigation }) => {
             const { data, is_success, metadata } = response
 
             if (is_success) {
+                const uniqueReposts = data.filter(
+                    thread => !reposts.some(t => t.id === thread.id)
+                )
+
+                if (repostPage === 1) {
+                    dispatch(clearReposts())
+                }
+
                 dispatch(
                     setReposts({
-                        reposts: data.filter(
-                            repost => !reposts.some(t => t.id === repost.id)
-                        ),
+                        repost: uniqueReposts,
                         hasMoreRepost:
                             metadata.current_page < metadata.total_page
                     })
@@ -232,12 +238,22 @@ const ProfileScreen = ({ navigation }) => {
     const loadMoreThreads = tab => {
         if (tab === 'thread' && hasThreadMore && !loadThread) {
             setThreadPage(prevPage => prevPage + 1)
-            fetchThread()
         } else if (tab === 'reposts' && hasRepostMore && !loadRepost) {
             setRepostPage(prevPage => prevPage + 1)
-            fetchRepost()
         }
     }
+
+    useEffect(() => {
+        if (threadPage > 1) {
+            fetchThread()
+        }
+    }, [threadPage])
+
+    useEffect(() => {
+        if (repostPage > 1) {
+            fetchRepost()
+        }
+    }, [repostPage])
 
     const renderList = (data, tab) => {
         if (tab === 'thread' && !data.length && loadThread == false) {

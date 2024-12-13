@@ -109,8 +109,6 @@ const Thread = memo(
         const handleShowActionSheet = isOwnThread => {
             if (isOwnThread) {
                 refOwnThreadAction.current.open()
-            } else {
-                refThreadAction.current.open()
             }
         }
 
@@ -574,33 +572,6 @@ const Thread = memo(
                             }}
                             color={theme.colors.rose}
                         />
-                    </View>
-                </RBSheet>
-
-                {/* Bottom Sheet Thread Action */}
-                <RBSheet
-                    customStyles={{
-                        container: [
-                            styles.bottomSheetContainer,
-                            { backgroundColor: currentColors.background }
-                        ],
-                        draggableIcon: {
-                            backgroundColor: currentColors.gray,
-                            width: wp(10)
-                        }
-                    }}
-                    height={hp(30)}
-                    openDuration={250}
-                    ref={refThreadAction}
-                    draggable={true}
-                >
-                    <View
-                        style={[
-                            styles.contentBottomSheetContainer,
-                            { backgroundColor: currentColors.background }
-                        ]}
-                    >
-                        <Text>Hi</Text>
                     </View>
                 </RBSheet>
 

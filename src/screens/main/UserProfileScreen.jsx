@@ -367,12 +367,22 @@ const UserProfileScreen = ({ navigation }) => {
     const loadMoreThreads = tab => {
         if (tab === 'thread' && hasThreadMore && !loadThread) {
             setThreadPage(prevPage => prevPage + 1)
-            fetchThread()
         } else if (tab === 'reposts' && hasRepostMore && !loadRepost) {
             setRepostPage(prevPage => prevPage + 1)
-            fetchRepost()
         }
     }
+
+    useEffect(() => {
+        if (threadPage > 1) {
+            fetchThread()
+        }
+    }, [threadPage])
+
+    useEffect(() => {
+        if (repostPage > 1) {
+            fetchRepost()
+        }
+    }, [repostPage])
 
     const renderList = (data, tab) => {
         if (tab === 'thread' && !data.length && loadThread == false) {

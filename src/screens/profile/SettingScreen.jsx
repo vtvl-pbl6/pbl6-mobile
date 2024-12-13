@@ -166,6 +166,7 @@ const SettingScreen = ({ navigation }) => {
 
             {/* Sheet theme */}
             <RBSheet
+                key={currentColors.background}
                 customStyles={{
                     container: [
                         styles.container,

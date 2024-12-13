@@ -125,11 +125,14 @@ const HomeScreen = ({ navigation }) => {
                 onEndReached={loadMoreThreads}
                 onEndReachedThreshold={0.5}
                 ListFooterComponent={
-                    <Footer
-                        loading={loading}
-                        hasMore={hasMore}
-                        label={t('home.noMoreThread')}
-                    />
+                    !loading &&
+                    threads.length === 0 && (
+                        <Footer
+                            loading={loading}
+                            hasMore={hasMore}
+                            label={t('home.noMoreThread')}
+                        />
+                    )
                 }
                 onRefresh={handleRefresh}
                 refreshing={refreshing}

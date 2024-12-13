@@ -237,63 +237,7 @@ const ReplyThread = memo(({ thread, action = true }) => {
                                 styles.actions,
                                 { paddingRight: wp(2), paddingLeft: wp(14) }
                             ]}
-                        >
-                            <Pressable
-                                style={styles.actionButton}
-                                onPress={toggleLike}
-                            >
-                                <Ionicons
-                                    name={liked ? 'heart' : 'heart-outline'}
-                                    size={wp(6)}
-                                    color={
-                                        liked
-                                            ? theme.colors.rose
-                                            : currentColors.gray
-                                    }
-                                />
-                                <Text
-                                    style={[
-                                        styles.numberAction,
-                                        { color: currentColors.gray }
-                                    ]}
-                                >
-                                    {thread.reaction_num}
-                                </Text>
-                            </Pressable>
-                            <Pressable style={styles.actionButton}>
-                                <Ionicons
-                                    name="chatbubble-outline"
-                                    size={wp(5.8)}
-                                    color={currentColors.gray}
-                                    style={{ transform: [{ scaleX: -1 }] }}
-                                />
-                                <Text
-                                    style={[
-                                        styles.numberAction,
-                                        { color: currentColors.gray }
-                                    ]}
-                                >
-                                    {thread.comments
-                                        ? thread.comments.length
-                                        : 0}
-                                </Text>
-                            </Pressable>
-                            <Pressable style={styles.actionButton}>
-                                <Ionicons
-                                    name="sync-outline"
-                                    size={wp(6)}
-                                    color={currentColors.gray}
-                                />
-                                <Text
-                                    style={[
-                                        styles.numberAction,
-                                        { color: currentColors.gray }
-                                    ]}
-                                >
-                                    {thread.shared_num}
-                                </Text>
-                            </Pressable>
-                        </View>
+                        ></View>
                     </View>
                 )}
             </View>

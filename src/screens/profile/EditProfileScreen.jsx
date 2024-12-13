@@ -15,7 +15,7 @@ import {
     View
 } from 'react-native'
 import DropDownPicker from 'react-native-dropdown-picker'
-import ModalDateTimePicker from 'react-native-modal-datetime-picker'
+import DateTimePickerModal from 'react-native-modal-datetime-picker'
 import { Divider } from 'react-native-paper'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useDispatch } from 'react-redux'
@@ -245,7 +245,7 @@ const EditProfileScreen = ({ navigation }) => {
                     backgroundColor: currentColors.lightGray
                 }}
             />
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={[styles.content]}>
                     {/* Avatar */}
                     <View>
@@ -373,15 +373,15 @@ const EditProfileScreen = ({ navigation }) => {
                             onPress={showDatePicker}
                             editable={false}
                         />
-                        <ModalDateTimePicker
+                        <DateTimePickerModal
                             isVisible={isDatePickerVisible}
                             mode="date"
+                            date={selectedDate}
                             onConfirm={handleDateConfirm}
                             onCancel={hideDatePicker}
-                            date={selectedDate}
-                            locale={currentLanguage || 'en'}
                             confirmTextIOS={t('modal.confirm')}
                             cancelTextIOS={t('modal.cancel')}
+                            // locale="vi"
                         />
                     </View>
 
@@ -426,6 +426,7 @@ const EditProfileScreen = ({ navigation }) => {
                             value={valueGender}
                             setOpen={setOpenGender}
                             setValue={setValueGender}
+                            listMode="SCROLLVIEW"
                             onChangeValue={valueGender =>
                                 handleInputChange('gender', valueGender)
                             }
@@ -464,6 +465,8 @@ const EditProfileScreen = ({ navigation }) => {
                             value={valueVisibility}
                             setOpen={setOpenVisibility}
                             setValue={setValueVisibility}
+                            listMode="SCROLLVIEW"
+                            dropDownDirection="TOP"
                             onChangeValue={value =>
                                 handleInputChange('visibility', value)
                             }

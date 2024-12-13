@@ -267,6 +267,7 @@ const SearchScreen = ({ navigation }) => {
                     onEndReachedThreshold={0.5}
                     showsVerticalScrollIndicator={false}
                     ListFooterComponent={loading && <ProfileSearchLoader />}
+                    contentContainerStyle={{ paddingBottom: 100 }}
                 />
             )}
 

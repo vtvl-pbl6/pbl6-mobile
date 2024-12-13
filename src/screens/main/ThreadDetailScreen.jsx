@@ -1,5 +1,5 @@
-import { useRoute } from '@react-navigation/native'
-import React, { useEffect, useState } from 'react'
+import { useFocusEffect, useRoute } from '@react-navigation/native'
+import React, { useCallback, useState } from 'react'
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -31,27 +31,28 @@ const ThreadDetailScreen = ({ navigation }) => {
 
     const [loading, setLoading] = useState(false)
 
-    useEffect(() => {
-        const getThreadById = async () => {
-            if (loading) return
-            setLoading(true)
-
-            try {
-                const response = await threadService.getById(threadId)
-                const { data, is_success } = response
-                if (is_success) {
-                    dispatch(setThreadDetail(data))
-                    dispatch(setComments(data.comments))
-                }
-            } catch (error) {
-                dispatch(handleError(error))
-            } finally {
-                setLoading(false)
+    const getThreadById = async () => {
+        if (loading) return
+        setLoading(true)
+        try {
+            const response = await threadService.getById(threadId)
+            const { data, is_success } = response
+            if (is_success) {
+                dispatch(setThreadDetail(data))
+                dispatch(setComments(data.comments))
             }
+        } catch (error) {
+            dispatch(handleError(error))
+        } finally {
+            setLoading(false)
         }
+    }
 
-        getThreadById()
-    }, [threadId, dispatch])
+    useFocusEffect(
+        useCallback(() => {
+            getThreadById()
+        }, [threadId])
+    )
 
     const handleThreadPress = thread => {
         navigation.navigate('ThreadDetail', { thread: thread })
@@ -96,7 +97,8 @@ const ThreadDetailScreen = ({ navigation }) => {
                             <Text
                                 style={{
                                     fontWeight: theme.fonts.bold,
-                                    fontSize: wp(3.6)
+                                    fontSize: wp(3.6),
+                                    color: currentColors.text
                                 }}
                             >
                                 {t('threadDetail.replies')}

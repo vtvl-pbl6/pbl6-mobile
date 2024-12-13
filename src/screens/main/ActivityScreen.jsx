@@ -147,7 +147,16 @@ const ActivityScreen = ({ navigation }) => {
                 data={notifications}
                 renderItem={renderNotification}
                 keyExtractor={(item, index) => index.toString()}
-                ListFooterComponent={<Footer />}
+                ListFooterComponent={
+                    !loading &&
+                    notifications.length === 0 && (
+                        <Footer
+                            loading={loading}
+                            hasMore={hasMore}
+                            label={t('home.noMoreThread')}
+                        />
+                    )
+                }
                 onEndReachedThreshold={0.5}
                 style={styles.notification}
                 onEndReached={loadMoreNotification}

@@ -164,10 +164,10 @@ const ProfileInfo = ({ user }) => {
                 </View>
 
                 {/* List follower */}
-                {selectedTab === 'followers' && <ListFollowers />}
+                {selectedTab === 'followers' && <ListFollowers user={user} />}
 
                 {/* List followed */}
-                {selectedTab === 'followed' && <ListFollowed />}
+                {selectedTab === 'followed' && <ListFollowed user={user} />}
             </RBSheet>
         </View>
     )
