@@ -5,7 +5,9 @@ import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
     Image,
+    KeyboardAvoidingView,
     Platform,
+    ScrollView,
     StyleSheet,
     Text,
     TextInput,
@@ -21,7 +23,6 @@ import {
     BaseButton,
     BaseHeader,
     BaseModal,
-    KeyboardWrapper,
     Loading,
     ScreenWapper
 } from '../../components'
@@ -228,11 +229,12 @@ const EditProfileScreen = ({ navigation }) => {
     }
 
     return (
-        <KeyboardWrapper
-            styles={{
+        <KeyboardAvoidingView
+            style={{
                 backgroundColor: currentColors.background,
                 paddingTop: insets.top
             }}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
             <BaseHeader
                 title={t('updateProfile.title')}
@@ -240,11 +242,10 @@ const EditProfileScreen = ({ navigation }) => {
             />
             <Divider
                 style={{
-                    backgroundColor: currentColors.lightGray,
-                    marginBottom: 16
+                    backgroundColor: currentColors.lightGray
                 }}
             />
-            <View style={{ alignItems: 'center' }}>
+            <ScrollView>
                 <View style={[styles.content]}>
                     {/* Avatar */}
                     <View>
@@ -378,7 +379,7 @@ const EditProfileScreen = ({ navigation }) => {
                             onConfirm={handleDateConfirm}
                             onCancel={hideDatePicker}
                             date={selectedDate}
-                            locale={currentLanguage}
+                            locale={currentLanguage || 'en'}
                             confirmTextIOS={t('modal.confirm')}
                             cancelTextIOS={t('modal.cancel')}
                         />
@@ -494,7 +495,7 @@ const EditProfileScreen = ({ navigation }) => {
                         }}
                     />
                 </View>
-            </View>
+            </ScrollView>
             {/* Modal confirm update */}
             <BaseModal
                 visible={isUpdateModalVisible}
@@ -505,7 +506,7 @@ const EditProfileScreen = ({ navigation }) => {
                     setIsDeleteModalVisible(false)
                 }}
             />
-        </KeyboardWrapper>
+        </KeyboardAvoidingView>
     )
 }
 

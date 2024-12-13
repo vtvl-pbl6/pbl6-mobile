@@ -2,7 +2,7 @@ import apiClient from './apiClient'
 
 const threadService = {
     getNewFeed: async page => {
-        return await apiClient.get(`/thread?page=${page}&limit=10`)
+        return await apiClient.get(`/thread?page=${page}&limit=15`)
     },
     create: async data => {
         return await apiClient.post('/thread', data)
