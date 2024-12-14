@@ -381,7 +381,7 @@ const EditProfileScreen = ({ navigation }) => {
                             onCancel={hideDatePicker}
                             confirmTextIOS={t('modal.confirm')}
                             cancelTextIOS={t('modal.cancel')}
-                            // locale="vi"
+                            locale="vi"
                         />
                     </View>
 

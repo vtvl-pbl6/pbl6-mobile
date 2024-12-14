@@ -37,7 +37,7 @@ const UserProfileScreen = ({ navigation }) => {
     const update = useSelector(state => state.update)
 
     const route = useRoute()
-    const { userId } = route.params
+    const { userId } = route?.params
 
     const [selectedTab, setSelectedTab] = useState('thread')
     const threads = useSelector(state => state.threads.userThreads)
@@ -179,16 +179,18 @@ const UserProfileScreen = ({ navigation }) => {
             setRepostPage(1)
 
             setIsResetDone(true)
-        }, [])
+        }, [userId])
     )
 
-    useEffect(() => {
-        if (isResetDone) {
-            getUserInfo()
-            fetchThread()
-            fetchRepost()
-        }
-    }, [isResetDone])
+    useFocusEffect(
+        React.useCallback(() => {
+            if (isResetDone) {
+                getUserInfo()
+                fetchThread()
+                fetchRepost()
+            }
+        }, [isResetDone])
+    )
 
     const handleRefresh = async () => {
         setRefreshing(true)
@@ -219,11 +221,11 @@ const UserProfileScreen = ({ navigation }) => {
         }
     }, [isRefreshStateReset])
 
-    useEffect(() => {
-        getUserInfo()
-        fetchThread()
-        fetchRepost()
-    }, [userId])
+    // useEffect(() => {
+    //     getUserInfo()
+    //     fetchThread()
+    //     fetchRepost()
+    // }, [userId])
 
     const reloadAPIs = async () => {
         setRefreshing(true)

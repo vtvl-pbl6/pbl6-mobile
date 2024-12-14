@@ -58,7 +58,7 @@ const Thread = memo(
                     thread.react_users.some(user => user.id === currentUser.id)
                 )
             }
-        }, [thread.react_users, currentUser])
+        }, [thread, currentUser])
 
         const fetchImageDimensions = async files => {
             setLoading(true)
@@ -226,14 +226,10 @@ const Thread = memo(
                 let response
                 if (liked) {
                     response = await threadService.unlike(thread.id)
-                    if (response.is_success) {
-                        setLiked(false)
-                    }
+                    if (response.is_success) setLiked(false)
                 } else {
                     response = await threadService.like(thread.id)
-                    if (response.is_success) {
-                        setLiked(true)
-                    }
+                    if (response.is_success) setLiked(true)
                 }
             } catch (error) {
                 console.log('LIKE ERROR: ', error)

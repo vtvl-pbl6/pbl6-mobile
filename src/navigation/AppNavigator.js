@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLanguage } from '../contexts'
+import ThreadDetailScreen from '../screens/main/ThreadDetailScreen'
 import UserProfileScreen from '../screens/main/UserProfileScreen'
 import EditThreadScreen from '../screens/profile/EditThreadScreen'
 import {
@@ -113,7 +114,8 @@ const AppNavigator = ({ navigation }) => {
                     )
                     subscribeThreadChannel(user.email, async thread => {
                         console.log('Thread received:', thread)
-                        const { read, object_id, type, content } = thread
+                        const { read, object_id, type, content, sender } =
+                            thread
 
                         dispatch(
                             setNotificationStatus({ type: type, status: true })
@@ -127,7 +129,11 @@ const AppNavigator = ({ navigation }) => {
                             type == 'EDIT_THREAD'
                         ) {
                             dispatch(
-                                updateInteraction({ id: object_id, type: type })
+                                updateInteraction({
+                                    id: object_id,
+                                    type: type,
+                                    userId: sender.id
+                                })
                             )
                         }
 
@@ -179,6 +185,11 @@ const AppNavigator = ({ navigation }) => {
                     <RootStack.Screen
                         name="EditThread"
                         component={EditThreadScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <RootStack.Screen
+                        name="ThreadDetail"
+                        component={ThreadDetailScreen}
                         options={{ headerShown: false }}
                     />
                 </>

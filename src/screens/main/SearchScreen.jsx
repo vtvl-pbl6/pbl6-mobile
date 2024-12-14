@@ -3,19 +3,17 @@ import { useRoute } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
 import {
     FlatList,
+    KeyboardAvoidingView,
+    Platform,
     Pressable,
     StyleSheet,
     Text,
     TextInput,
     View
 } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-    BaseModal,
-    KeyboardWrapper,
-    ProfileSearchLoader,
-    UserInfoCard
-} from '../../components'
+import { BaseModal, ProfileSearchLoader, UserInfoCard } from '../../components'
 import theme from '../../constants/theme'
 import { useLanguage, useTheme } from '../../contexts'
 import userService from '../../services/userServices'
@@ -30,6 +28,7 @@ const SearchScreen = ({ navigation }) => {
     const dispatch = useDispatch()
     const { currentColors } = useTheme()
     const { t } = useLanguage()
+    const insets = useSafeAreaInsets()
     const handleError = useHandleError(navigation)
     const update = useSelector(state => state.update)
     const route = useRoute()
@@ -158,11 +157,15 @@ const SearchScreen = ({ navigation }) => {
     }
 
     return (
-        <KeyboardWrapper
-            styles={[
+        <KeyboardAvoidingView
+            style={[
                 styles.container,
-                { backgroundColor: currentColors.background }
+                {
+                    backgroundColor: currentColors.background,
+                    paddingTop: insets.top
+                }
             ]}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
             <Text style={[styles.title, { color: currentColors.text }]}>
                 {t('search.searchText')}
@@ -289,7 +292,7 @@ const SearchScreen = ({ navigation }) => {
                 onConfirm={confirmUnfollow}
                 onCancel={cancelUnfollow}
             />
-        </KeyboardWrapper>
+        </KeyboardAvoidingView>
     )
 }
 

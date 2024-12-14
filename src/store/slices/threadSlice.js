@@ -15,19 +15,25 @@ const initialState = {
     hasMoreUserRepost: true
 }
 
-const updateProperty = (item, type) => {
+const updateProperty = (item, type, userId) => {
     switch (type) {
         case 'SHARE':
-            item.shared_num += 1
+            item.shared_num = (item.shared_num ?? 0) + 1
+            item.sharers = [...(item.sharers ?? []), { id: userId }]
             break
         case 'UNSHARED':
             item.shared_num -= 1
+            item.sharers = item.sharers.filter(user => user.id !== userId)
             break
         case 'LIKE':
-            item.reaction_num += 1
+            item.reaction_num = (item.reaction_num ?? 0) + 1
+            item.react_users = [...(item.react_users ?? []), { id: userId }]
             break
         case 'UNLIKE':
             item.reaction_num -= 1
+            item.react_users = item.react_users.filter(
+                user => user.id !== userId
+            )
             break
         case 'COMMENT':
             item.comment_num += 1
@@ -43,10 +49,11 @@ const updateProperty = (item, type) => {
     return false
 }
 
-const updateItem = (items, id, type) => {
+const updateItem = (items, id, type, userId) => {
     const index = items.findIndex(item => item.id === id)
+
     if (index !== -1) {
-        const shouldDelete = updateProperty(items[index], type)
+        const shouldDelete = updateProperty(items[index], type, userId)
         if (shouldDelete) {
             items.splice(index, 1)
         }
@@ -100,8 +107,8 @@ const threadsSlice = createSlice({
             state.hasMoreUserRepost = action.payload.hasMoreUserRepost
         },
         clearUserReposts(state) {
-            state.reposts = []
-            state.hasMoreRepost = true
+            state.userReposts = []
+            state.hasMoreUserRepost = true
         },
         setThreadDetail(state, action) {
             state.threadDetail = action.payload
@@ -116,16 +123,16 @@ const threadsSlice = createSlice({
             state.comments = []
         },
         updateInteraction(state, action) {
-            const { id, type } = action.payload
+            const { id, type, userId } = action.payload
 
-            updateItem(state.threads, id, type)
-            updateItem(state.myThreads, id, type)
-            updateItem(state.reposts, id, type)
-            updateItem(state.userThreads, id, type)
-            updateItem(state.userReposts, id, type)
+            updateItem(state.threads, id, type, userId)
+            updateItem(state.myThreads, id, type, userId)
+            updateItem(state.reposts, id, type, userId)
+            updateItem(state.userThreads, id, type, userId)
+            updateItem(state.userReposts, id, type, userId)
 
             if (state.threadDetail && state.threadDetail.id === id) {
-                updateProperty(state.threadDetail, type)
+                updateProperty(state.threadDetail, type, userId)
             }
         },
         updateInteractionAndListComment(state, action) {

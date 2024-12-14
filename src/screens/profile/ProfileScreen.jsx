@@ -143,7 +143,7 @@ const ProfileScreen = ({ navigation }) => {
 
                 dispatch(
                     setReposts({
-                        repost: uniqueReposts,
+                        reposts: uniqueReposts,
                         hasMoreRepost:
                             metadata.current_page < metadata.total_page
                     })
