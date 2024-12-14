@@ -1,5 +1,11 @@
 import React, { useRef, useState } from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import {
+    KeyboardAvoidingView,
+    Pressable,
+    StyleSheet,
+    Text,
+    View
+} from 'react-native'
 import RBSheet from 'react-native-raw-bottom-sheet'
 import { useDispatch } from 'react-redux'
 import theme from '../../constants/theme'

@@ -1,6 +1,14 @@
 import { useFocusEffect, useRoute } from '@react-navigation/native'
-import React, { useCallback, useState } from 'react'
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
+import React, { useCallback, useEffect, useState } from 'react'
+import {
+    FlatList,
+    Keyboard,
+    KeyboardAvoidingView,
+    Pressable,
+    StyleSheet,
+    Text,
+    View
+} from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import {
     BaseHeader,
@@ -16,6 +24,7 @@ import threadService from '../../services/threadServices'
 import { setComments, setThreadDetail } from '../../store/slices/threadSlice'
 import { wp } from '../../utils'
 import useHandleError from '../../utils/handlers/errorHandler'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const ThreadDetailScreen = ({ navigation }) => {
     const dispatch = useDispatch()
@@ -28,8 +37,31 @@ const ThreadDetailScreen = ({ navigation }) => {
 
     const comments = useSelector(state => state.threads.comments)
     const thread = useSelector(state => state.threads.threadDetail)
+    const insets = useSafeAreaInsets()
 
     const [loading, setLoading] = useState(false)
+    const [paddingBottom, setPaddingBottom] = useState(insets.bottom)
+
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+                setPaddingBottom(0)
+            }
+        )
+        const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                setPaddingBottom(insets.bottom)
+            }
+        )
+
+        // Cleanup listeners on unmount
+        return () => {
+            keyboardDidShowListener.remove()
+            keyboardDidHideListener.remove()
+        }
+    }, [insets.bottom])
 
     const getThreadById = async () => {
         if (loading) return
@@ -55,7 +87,7 @@ const ThreadDetailScreen = ({ navigation }) => {
     )
 
     const handleThreadPress = thread => {
-        navigation.navigate('ThreadDetail', { thread: thread })
+        // navigation.navigate('ThreadDetail', { thread: thread })
     }
 
     if (loading) {
@@ -107,11 +139,13 @@ const ThreadDetailScreen = ({ navigation }) => {
                     </>
                 )}
             />
-            {thread && <NewReplyThread thread={thread} />}
+            {thread && (
+                <View style={{ marginBottom: paddingBottom }}>
+                    <NewReplyThread thread={thread} />
+                </View>
+            )}
         </ScreenWapper>
     )
 }
 
 export default ThreadDetailScreen
-
-const styles = StyleSheet.create({})
