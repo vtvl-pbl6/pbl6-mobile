@@ -1,48 +1,45 @@
-import LottieView from 'lottie-react-native'
 import React, { useEffect, useState } from 'react'
 import { Facebook } from 'react-content-loader/native'
-import {
-    ActivityIndicator,
-    FlatList,
-    StyleSheet,
-    Text,
-    View
-} from 'react-native'
-import { useDispatch } from 'react-redux'
-import { ScreenWapper, Thread } from '../../components'
+import { FlatList, StyleSheet } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
+import { Footer, ScreenWapper, Thread } from '../../components'
 import { useLanguage, useTheme } from '../../contexts'
 import threadService from '../../services/threadServices'
 import userService from '../../services/userServices'
 import { setUser, showToast } from '../../store/slices'
-import { hp, wp } from '../../utils'
+import { clearThreads, setThreads } from '../../store/slices/threadSlice'
+import { wp } from '../../utils'
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
     const dispatch = useDispatch()
     const { currentColors } = useTheme()
     const { t } = useLanguage()
 
-    const [threads, setThreads] = useState([])
+    const threads = useSelector(state => state.threads.threads)
+    const hasMore = useSelector(state => state.threads.hasMore)
+
     const [loading, setLoading] = useState(false)
     const [refreshing, setRefreshing] = useState(false)
     const [page, setPage] = useState(1)
-    const [hasMore, setHasMore] = useState(true)
 
     const fetchThreads = async () => {
         if (loading || !hasMore) return
         setLoading(true)
 
         try {
-            const response = await threadService.getFollowingUserThreads(page)
+            const response = await threadService.getNewFeed(page)
             const { data, is_success, metadata } = response
 
             if (is_success) {
-                setThreads(prevThreads => [...prevThreads, ...data])
-
-                if (metadata.current_page >= metadata.total_page) {
-                    setHasMore(false)
-                }
+                dispatch(
+                    setThreads({
+                        threads: data.filter(
+                            thread => !threads.some(t => t.id === thread.id)
+                        ),
+                        hasMore: metadata.current_page < metadata.total_page
+                    })
+                )
             } else {
-                setHasMore(false)
                 dispatch(
                     showToast({
                         message: t('error.fetchFailed'),
@@ -57,14 +54,21 @@ const HomeScreen = () => {
         }
     }
 
-    const getCurrentUser = async () => {
-        const userResponse = await userService.getUserInfo()
-        dispatch(setUser(userResponse.data))
+    const handleRefresh = async () => {
+        setRefreshing(true)
+        dispatch(clearThreads())
+        setPage(1)
+        await fetchThreads()
+        setRefreshing(false)
     }
 
     useEffect(() => {
+        const getCurrentUser = async () => {
+            const userResponse = await userService.getInfo()
+            dispatch(setUser(userResponse.data))
+        }
         getCurrentUser()
-    }, [refreshing])
+    }, [])
 
     useEffect(() => {
         fetchThreads()
@@ -76,52 +80,12 @@ const HomeScreen = () => {
         }
     }
 
-    const handleRefresh = async () => {
-        setRefreshing(true)
-        setThreads([])
-        setPage(1)
-        setHasMore(true)
-        await fetchThreads()
-        setRefreshing(false)
-    }
+    // const handleThreadPress = thread => {
+    //     navigation.navigate('ThreadDetail', { threadId: thread.id })
+    // }
 
-    const renderFooter = () => {
-        if (loading) {
-            return (
-                <ActivityIndicator
-                    size="small"
-                    color={currentColors.text}
-                    style={{ paddingVertical: 30 }}
-                />
-            )
-        }
-        if (!hasMore) {
-            const animationSource =
-                currentColors.background === '#FFFFFF'
-                    ? require('../../../assets/animations/notFoundLight.json')
-                    : require('../../../assets/animations/notFoundDark.json')
-
-            return (
-                <View style={{ flex: 1 }}>
-                    <LottieView
-                        source={animationSource}
-                        autoPlay
-                        loop
-                        enableMergePathsAndroidForKitKatAndAbove={true}
-                        style={[styles.animation]}
-                    />
-                    <Text
-                        style={[
-                            styles.noMoreText,
-                            { color: currentColors.text }
-                        ]}
-                    >
-                        {t('home.noMoreThread')}
-                    </Text>
-                </View>
-            )
-        }
-        return null
+    const handleProfileNavigation = userId => {
+        navigation.navigate('UserProfile', { userId: userId })
     }
 
     if (loading && threads.length === 0) {
@@ -151,12 +115,25 @@ const HomeScreen = () => {
                 data={threads}
                 keyExtractor={item => item.id.toString()}
                 renderItem={({ item }) => (
-                    <Thread thread={item} loading={loading} />
+                    <Thread
+                        thread={item}
+                        loading={loading}
+                        onGoToProfile={handleProfileNavigation}
+                    />
                 )}
                 showsVerticalScrollIndicator={false}
                 onEndReached={loadMoreThreads}
                 onEndReachedThreshold={0.5}
-                ListFooterComponent={renderFooter}
+                ListFooterComponent={
+                    !loading &&
+                    threads.length === 0 && (
+                        <Footer
+                            loading={loading}
+                            hasMore={hasMore}
+                            label={t('home.noMoreThread')}
+                        />
+                    )
+                }
                 onRefresh={handleRefresh}
                 refreshing={refreshing}
             />
@@ -170,14 +147,5 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: wp(2)
-    },
-    noMoreText: {
-        textAlign: 'center',
-        padding: 16
-    },
-    animation: {
-        width: wp(100),
-        height: hp(20),
-        alignSelf: 'center'
     }
 })

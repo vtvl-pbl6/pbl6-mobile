@@ -1,14 +1,28 @@
+import { BlurView } from 'expo-blur'
 import React, { useState } from 'react'
 import {
     ActivityIndicator,
     FlatList,
     Image,
+    Modal,
     StyleSheet,
+    TouchableOpacity,
     View
 } from 'react-native'
 import theme from '../../constants/theme'
+import { wp } from '../../utils'
 
 const ImageThread = React.memo(({ files, imageDimensions = [] }) => {
+    const [selectedImage, setSelectedImage] = useState(null)
+
+    const openFullScreen = file => {
+        setSelectedImage(file)
+    }
+
+    const closeFullScreen = () => {
+        setSelectedImage(null)
+    }
+
     return (
         <View style={styles.container}>
             {files.length > 0 ? (
@@ -25,6 +39,8 @@ const ImageThread = React.memo(({ files, imageDimensions = [] }) => {
                                 file={item}
                                 width={calculatedWidth}
                                 height={200}
+                                isNSFW={item.nsfwResult !== null}
+                                onPress={() => openFullScreen(item)}
                             />
                         )
                     }}
@@ -36,30 +52,62 @@ const ImageThread = React.memo(({ files, imageDimensions = [] }) => {
             ) : (
                 <View style={styles.emptyContainer} />
             )}
+            {selectedImage && (
+                <Modal
+                    visible={true}
+                    transparent={true}
+                    onRequestClose={closeFullScreen}
+                >
+                    <View style={styles.modalContainer}>
+                        <TouchableOpacity
+                            style={styles.closeButton}
+                            onPress={closeFullScreen}
+                        >
+                            <Image
+                                source={{ uri: selectedImage.url }}
+                                style={styles.fullscreenImage}
+                                resizeMode="contain"
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </Modal>
+            )}
         </View>
     )
 })
 
-const ImageWithPlaceholder = ({ file, width, height }) => {
+const ImageWithPlaceholder = ({ file, width, height, isNSFW, onPress }) => {
     const [loading, setLoading] = useState(true)
 
     return (
-        <View style={[styles.imageContainer, { width, height }]}>
-            {loading && (
-                <View style={[styles.placeholder, { width, height }]}>
-                    <ActivityIndicator size="small" color={theme.colors.gray} />
-                </View>
-            )}
-            <Image
-                source={{ uri: file.url }}
-                style={[
-                    styles.image,
-                    { width, height, opacity: loading ? 0 : 1 }
-                ]}
-                resizeMode="cover"
-                onLoadEnd={() => setLoading(false)}
-            />
-        </View>
+        <TouchableOpacity onPress={onPress}>
+            <View style={[styles.imageContainer, { width, height }]}>
+                {loading && (
+                    <View style={[styles.placeholder, { width, height }]}>
+                        <ActivityIndicator
+                            size="small"
+                            color={theme.colors.gray}
+                        />
+                    </View>
+                )}
+                <Image
+                    source={{ uri: file.url }}
+                    style={[
+                        styles.image,
+                        { width, height, opacity: loading ? 0 : 1 }
+                    ]}
+                    resizeMode="cover"
+                    onLoadEnd={() => setLoading(false)}
+                />
+                {isNSFW && (
+                    <BlurView
+                        intensity={40}
+                        style={[styles.overlay, { width, height }]}
+                        blurType="light"
+                    />
+                )}
+            </View>
+        </TouchableOpacity>
     )
 }
 
@@ -81,11 +129,29 @@ const styles = StyleSheet.create({
     image: {
         borderRadius: theme.radius.xxs
     },
+    overlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0
+    },
     emptyContainer: {
         height: 0
     },
     listContainer: {
         paddingBottom: 10
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)'
+    },
+    fullscreenImage: {
+        width: wp(100),
+        height: '100%'
+    },
+    closeButton: {
+        flex: 1
     }
 })
 

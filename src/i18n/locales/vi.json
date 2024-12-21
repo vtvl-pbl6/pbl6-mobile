@@ -1,9 +1,11 @@
 {
-    "changeLanguage": "Thay đổi ngôn ngữ",
-    "textLogin": "Đăng nhập",
     "modal": {
         "confirm": "Xác nhận",
         "cancel": "Huỷ"
+    },
+    "reportModal": {
+        "placeholder": "Nhập lí do",
+        "defaultReason": "Không có lý do cụ thể."
     },
     "validation": {
         "usernameRequired": "Tên đăng nhập là bắt buộc",
@@ -14,18 +16,18 @@
         "passwordMinLength": "Mật khẩu phải có ít nhất 6 ký tự",
         "confirmPasswordRequired": "Xác nhận mật khẩu là bắt buộc",
         "passwordMismatch": "Mật khẩu không khớp",
-        "passwordCriteria": "Mật khẩu phải chứa ít nhất một chữ cái viết hoa, một chữ cái thường, một chữ số, không có khoảng trắng và có độ dài từ 8 đến 32 ký tự"
+        "passwordCriteria": "Mật khẩu phải chứa ít nhất một chữ cái viết hoa, một chữ cái thường, một chữ số, không có khoảng trắng và có độ dài từ 8 đến 32 ký tự",
+        "oldPasswordRequired": "Mật khẩu cũ là bắt buộc",
+        "newPasswordRequired": "Mật khẩu mới là bắt buộc"
     },
     "error": {
         "default": "Có lỗi xảy ra!",
         "fetchFailed": "Tải thất bại!"
     },
-    "headerShown": {
-        "back": "Quay lại",
-        "setting": "Cài đặt"
-    },
     "status": {
-        "creating": "Đang xử lí"
+        "creating": "Đang xử lí",
+        "pending": "Đang giải quyết",
+        "rejected": "Bị từ chối"
     },
     "welcome": {
         "title": "Kết nối!",
@@ -80,8 +82,25 @@
         "noContent": "Vui lòng nhập nội dung hoặc chọn ảnh",
         "success": "Thread được thành công!"
     },
+    "editThread": {
+        "scope": {
+            "everybody": "Bất kì ai cũng có thể xem",
+            "friend": "Chỉ có bạn bè mới có thể xem",
+            "private": "Chỉ bạn có thể xem"
+        },
+        "noContent": "Vui lòng nhập nội dung hoặc chọn ảnh",
+        "updating": "Đang chỉnh sửa...",
+        "success": "Thread được chỉnh sửa thành công!",
+        "editThread": "Chỉnh sửa thread",
+        "addThread": "Thêm vào thread...",
+        "submit": "Sửa",
+        "posting": "Đang sửa..."
+    },
     "profile": {
+        "title": "Trang cá nhân",
         "followers": "người theo dõi",
+        "follow": "Theo dõi",
+        "followed": "Đang theo dõi",
         "editProfile": "Chỉnh sửa trang cá nhân",
         "thread": "Thread",
         "reposts": "Bài đăng lại",
@@ -90,9 +109,87 @@
         "noMoreReposts": "Không còn bài đăng lại nào cũ hơn"
     },
     "setting": {
-        "logout": "Đăng xuất"
+        "header": "Cài đặt",
+        "logout": "Đăng xuất",
+        "changeLanguage": "Thay đổi ngôn ngữ",
+        "changeMode": "Giao diện",
+        "changePassword": "Đổi mật khẩu",
+        "aboutUs": "Giới thiệu về chúng tôi",
+        "language": {
+            "title": "Hãy chọn ngôn ngữ của bạn!",
+            "english": "Tiếng Anh",
+            "vietnamese": "Tiếng Việt"
+        },
+        "selectMode": "Hãy chọn chế độ hiển thị"
+    },
+    "changePassword": {
+        "header": "Đổi mật khẩu",
+        "updateButton": "Lưu",
+        "oldPassword": "Mật khẩu hiện tại",
+        "newPassword": "Mật khẩu mới",
+        "confirmPassword": "Nhập lại mật khẩu",
+        "success": "Đổi mật khẩu thành công"
     },
     "home": {
         "noMoreThread": "Không còn thread nào cũ hơn"
+    },
+    "search": {
+        "searchText": "Tìm kiếm",
+        "cancel": "Huỷ",
+        "followers": "người theo dõi",
+        "follow": "Theo dõi",
+        "unfollow": "Bỏ theo dõi",
+        "confirmUnfollow": "Bạn có chắc chắn muốn bỏ theo dõi người dùng này không?",
+        "loadMore": "Xem thêm...",
+        "searchTextHistory": "Lịch sử tìm kiếm"
+    },
+    "threadDetail": {
+        "header": "Thead",
+        "replies": "Thread trả lời",
+        "replyUser": "Trả lời"
+    },
+    "action": {
+        "delete": "Xoá",
+        "edit": "Chỉnh sửa thread",
+        "pin": "Ghim vào trang cá nhân",
+        "report": "Yêu cầu kiểm duyệt lại",
+        "shareSuccess": "Đăng lại thành công!",
+        "unshareConfirmTitle": "Bỏ đăng lại",
+        "unshareConfirmMessage": "Bạn có chắc chắn muốn bỏ đăng lại bài viết này?",
+        "deleteThreadTitle": "Xoá thread",
+        "deleteThreadMessage": "Bạn có chắc chắn muốn xoá thread này?",
+        "deleteSuccess": "Xoá thành công!",
+        "reportSuccess": "Yêu cầu đã được gửi",
+        "updateProfileTitle": "Cập nhật hồ sơ",
+        "updateProfileMessage": "Bạn có chắc chắn muốn thay đổi hồ sơ?"
+    },
+    "activity": {
+        "followed": "đã theo dõi bạn",
+        "title": "Hoạt động",
+        "empty": "Không còn thông báo nào cũ hơn",
+        "comment": "đã trả lời bài viết của bạn",
+        "moderation_failed": "yêu cầu kiểm duyệt bị từ chối",
+        "moderation_success": "yêu cầu kiểm duyệt được chấp nhận"
+    },
+    "updateProfile": {
+        "title": "Chỉnh sửa hồ sơ",
+        "firstName": "Họ",
+        "lastName": "Tên",
+        "birthday": "Ngày sinh",
+        "gender": "Giới tính",
+        "bio": "Tiểu sử",
+        "visibility": "Riêng tư",
+        "save": "Lưu",
+        "scope": {
+            "public": "Công khai",
+            "friend": "Chỉ bạn bè",
+            "private": "Riêng tư"
+        },
+        "genderSelection": {
+            "male": "Nam",
+            "female": "Nữ",
+            "other": "Khác"
+        },
+        "updateSuccessfully": "Cập nhật thành công"
     }
 }

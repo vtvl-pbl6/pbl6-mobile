@@ -9,6 +9,9 @@ const authService = {
     },
     logout: async () => {
         return await apiClient.post('/auth/revoke-token')
+    },
+    changePassword: async data => {
+        return await apiClient.post('/auth/password/change', data)
     }
 }
 

@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, TextInput, View } from 'react-native'
 import { useSelector } from 'react-redux'
 import theme from '../../constants/theme'
-import { hp } from '../../utils/dimensionUtils'
+import { hp, wp } from '../../utils/dimensionUtils'
 
 const BaseInput = props => {
     const isDarkMode = useSelector(state => state.theme.isDarkMode)
@@ -25,7 +25,8 @@ const BaseInput = props => {
             <TextInput
                 style={{
                     flex: 1,
-                    color: currentColors.text
+                    color: currentColors.text,
+                    fontSize: props.fontSize || wp(4)
                 }}
                 placeholderTextColor={currentColors.gray}
                 ref={props.inputRef && props.inputRef}

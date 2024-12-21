@@ -1,8 +1,11 @@
 {
-    "changeLanguage": "Change Language",
     "modal": {
         "confirm": "Confirm",
         "cancel": "Cancel"
+    },
+    "reportModal": {
+        "placeholder": "Enter reason",
+        "defaultReason": "No specific reason."
     },
     "validation": {
         "usernameRequired": "Username is required",
@@ -13,18 +16,18 @@
         "passwordMinLength": "Password must be at least 6 characters",
         "confirmPasswordRequired": "Confirm password is required",
         "passwordMismatch": "Passwords do not match",
-        "passwordCriteria": "Password must contain at least one uppercase letter, one lowercase letter, one digit, no spaces, and be 8 to 32 characters long."
+        "passwordCriteria": "Password must contain at least one uppercase letter, one lowercase letter, one digit, no spaces, and be 8 to 32 characters long.",
+        "oldPasswordRequired": "Old password is required.",
+        "newPasswordRequired": "New password is required."
     },
     "error": {
         "default": "Something went wrong!",
         "fetchFailed": "Failed to fetch threads!"
     },
-    "headerShown": {
-        "back": "Back",
-        "setting": "Setting"
-    },
     "status": {
-        "creating": "In progress"
+        "creating": "In progress",
+        "pending": "Pending",
+        "rejected": "Rejected"
     },
     "welcome": {
         "title": "LinkUp!",
@@ -79,8 +82,25 @@
         "noContent": "Please enter text or select image",
         "success": "Thread has been submitted successfully!"
     },
+    "editThread": {
+        "scope": {
+            "everybody": "Anyone can reply & quote",
+            "friend": "Only friend can reply & quote",
+            "private": "Only me can see"
+        },
+        "noContent": "Please enter text or select image",
+        "updating": "Updating...",
+        "success": "Thread has been updated successfully!",
+        "editThread": "Update thread",
+        "addThread": "Start a thread...",
+        "submit": "Update",
+        "posting": "Updating..."
+    },
     "profile": {
+        "title": "Profile",
         "followers": "followers",
+        "follow": "Follow",
+        "followed": "Following",
         "editProfile": "Edit profile",
         "thread": "Threads",
         "reposts": "Reposts",
@@ -89,9 +109,87 @@
         "noMoreReposts": "No more reposts available"
     },
     "setting": {
-        "logout": "Log out"
+        "header": "Setting",
+        "logout": "Log out",
+        "changeLanguage": "Change Language",
+        "changeMode": "Interface Mode",
+        "changePassword": "Change password",
+        "aboutUs": "About Us",
+        "language": {
+            "title": "Please select your language!",
+            "english": "English",
+            "vietnamese": "Vietnamese"
+        },
+        "selectMode": "Please select interface mode"
+    },
+    "changePassword": {
+        "header": "Change password",
+        "updateButton": "Save",
+        "oldPassword": "Current password",
+        "newPassword": "New password",
+        "confirmPassword": "Confirm password",
+        "success": "Change password successfully"
     },
     "home": {
         "noMoreThread": "No more threads available"
+    },
+    "search": {
+        "searchText": "Search",
+        "cancel": "Cancel",
+        "followers": "followers",
+        "follow": "Follow",
+        "unfollow": "Unfollow",
+        "confirmUnfollow": "Are you sure you want to unfollow this user?",
+        "loadMore": "Load more...",
+        "searchTextHistory": "Search history"
+    },
+    "threadDetail": {
+        "header": "Thead",
+        "replies": "Replies",
+        "replyUser": "Reply"
+    },
+    "action": {
+        "delete": "Delete",
+        "edit": "Edit thread",
+        "pin": "Pin to profile",
+        "report": "Request moderation",
+        "shareSuccess": "Repost successfully!",
+        "unshareConfirmTitle": "Unrepost",
+        "unshareConfirmMessage": "Are you sure you want to remove this repost?",
+        "deleteThreadTitle": "Delete thread",
+        "deleteThreadMessage": "Are you sure you want to remove this thread?",
+        "deleteSuccess": "Delete successfully!",
+        "reportSuccess": "The request has been sent",
+        "updateProfileTitle": "Update profile",
+        "updateProfileMessage": "Are you sure you want to update profile?"
+    },
+    "activity": {
+        "followed": "followed you",
+        "title": "Activity",
+        "empty": "No notifications available.",
+        "comment": "commented on your thread",
+        "moderation_failed": "moderation request denied",
+        "moderation_success": "moderation request accepted"
+    },
+    "updateProfile": {
+        "title": "Update profile",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "birthday": "Birthday",
+        "gender": "Gender",
+        "bio": "Bio",
+        "visibility": "Privacy",
+        "save": "Save",
+        "scope": {
+            "public": "Public",
+            "friend": "Friends only",
+            "private": "Private"
+        },
+        "genderSelection": {
+            "male": "Male",
+            "female": "Female",
+            "other": "Other"
+        },
+        "updateSuccessfully": "Update successfully"
     }
 }

@@ -1,0 +1,16 @@
+services:
+    pbl6-mobile:
+        container_name: pbl6-mobile
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - 19000:19000
+            - 19001:19001
+            - 19002:19002
+            - 8081:8081
+        volumes:
+            - ./:/app
+        env_file:
+            - .env
+        tty: true

@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     punchline: {
         textAlign: 'center',
         paddingHorizontal: wp(4),
-        fontSize: hp(1.7)
+        fontSize: wp(4)
     },
     footer: {
         gap: 20,
@@ -111,6 +111,6 @@ const styles = StyleSheet.create({
     },
     loginText: {
         textAlign: 'center',
-        fontSize: hp(1.6)
+        fontSize: wp(4)
     }
 })

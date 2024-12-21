@@ -1,18 +1,19 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useTheme } from '../contexts'
 
-const ScreenWapper = ({ children, styles }) => {
+const ScreenWrapper = ({ children, styles }) => {
     const insets = useSafeAreaInsets()
+    const { currentColors } = useTheme()
 
     return (
         <View
             style={[
                 {
                     flex: 1,
-                    backgroundColor: '#fff',
                     paddingTop: insets.top,
-                    paddingBottom: insets.bottom
+                    backgroundColor: currentColors.background
                 },
                 styles
             ]}
@@ -24,4 +25,4 @@ const ScreenWapper = ({ children, styles }) => {
 
 const styles = StyleSheet.create({})
 
-export default ScreenWapper
+export default ScreenWrapper

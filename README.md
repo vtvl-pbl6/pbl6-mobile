@@ -2,10 +2,10 @@
 
 Before getting started, make sure you have the following tools installed:
 
--   Node.js (LTS version recommended)
--   npm or Yarn
--   Android Studio (for Android)
--   Xcode (for iOS)
+- Node.js (LTS version recommended)
+- npm or Yarn
+- Android Studio (for Android)
+- Xcode (for iOS)
 
 ## Installation
 

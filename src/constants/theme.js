@@ -9,15 +9,16 @@ const theme = {
             overlay: 'rgba(255, 255, 255, 0.5)'
         },
         darkMode: {
-            background: '#0A0A0A',
-            text: '#FFFFFF',
+            background: '#101010',
+            text: '#F2F5F7',
             lightGray: '#333333',
             gray: '#666666',
             extraLightGray: '#1A1A1A',
             overlay: 'rgba(0, 0, 0, 0.6)'
         },
         rose: '#EF4444',
-        green: '#209d5c'
+        green: '#209d5c',
+        blue: '#0095F6'
     },
     fonts: {
         medium: '500',
